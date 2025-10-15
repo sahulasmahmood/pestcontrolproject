@@ -7,62 +7,55 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Navigation } from "lucide-react";
+import { MapPin, Calendar, Bug } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { useToast } from "@/hooks/use-toast";
-import { useContact } from "@/hooks/use-contact";
+// import { useContact } from "@/hooks/use-contact"; // Commented out for static data
+
+// Static contact info for Perfect Pest Control
+const staticContactInfo = {
+  primaryPhone: "0462-480-2258",
+  secondaryPhone: "9626-341-555",
+  whatsappNumber: "9626341555",
+  email: "perfectpestcontrol555@gmail.com"
+}
 
 export default function QuickBookForm() {
   const { toast } = useToast();
-  const { contactInfo } = useContact();
+  // const { contactInfo } = useContact(); // Commented out for static data
+  const contactInfo = staticContactInfo; // Using static data
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [locations, setLocations] = useState<string[]>([]);
   
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
+    email: "",
     service: "",
-    pickupLocation: "",
-    dropLocation: "",
-    travelDate: "",
-    travelTime: "",
-    returnDate: ""
+    address: "",
+    preferredDate: "",
+    preferredTime: "",
+    description: ""
   });
 
-  // Get dynamic services from contact info or use fallback
-  const services = contactInfo?.servicesOffered 
-    ? contactInfo.servicesOffered.split(',').map(s => s.trim()).filter(s => s.length > 0)
-    : [
-        "One-way Trip",
-        "Round Trip", 
-        "Airport Taxi",
-        "Day Rental",
-        "Hourly Package",
-        "Local Pickup/Drop",
-        "Tour Package"
-      ];
+  // Static services for Perfect Pest Control
+  const services = [
+    "Anti Termite Treatment",
+    "Rat Control", 
+    "Bed Bug Treatment",
+    "Ant Control",
+    "Mosquito Control",
+    "Cockroach Control",
+    "Disinfection Spray Service",
+    "General Pest Control"
+  ];
 
-  // Fetch locations from API
+  // Static locations for Perfect Pest Control service areas
   useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const response = await fetch('/api/locations');
-        const result = await response.json();
-        
-        if (result.success) {
-          setLocations(result.data.map((loc: any) => loc.name));
-        }
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-        // Fallback locations if API fails
-        setLocations([
-          "Madurai", "Chennai", "Mumbai", "Delhi", "Bangalore",
-          "Coimbatore", "Trichy", "Salem", "Erode", "Tirunelveli"
-        ]);
-      }
-    };
-
-    fetchLocations();
+    setLocations([
+      "Tirunelveli", "Tuticorin", "Tenkasi", "Nagercoil", "Madurai",
+      "Ramanathapuram", "Sivakasi", "Virudhunagar", "Kovilpatti", "Sankarankovil"
+    ]);
   }, []);
 
 
@@ -91,21 +84,21 @@ export default function QuickBookForm() {
       // Save lead to database
       const leadData = {
         fullName: formData.name,
-        email: "", // No email provided in quick booking
+        email: formData.email || "",
         phone: formData.phone,
         serviceType: formData.service,
-        travelDate: formData.travelDate,
-        travelTime: formData.travelTime || "",
-        returnDate: formData.returnDate || "",
-        pickupLocation: formData.pickupLocation,
-        dropLocation: formData.dropLocation,
+        travelDate: formData.preferredDate,
+        travelTime: formData.preferredTime || "",
+        returnDate: "",
+        pickupLocation: formData.address,
+        dropLocation: "",
         passengers: 1, // Default value
-        message: `Quick booking request for ${formData.service}. Pickup: ${formData.pickupLocation}, Drop: ${formData.dropLocation}, Date: ${formData.travelDate}${formData.travelTime ? `, Time: ${formData.travelTime}` : ''}${formData.returnDate ? `, Return: ${formData.returnDate}` : ''}`,
+        message: `Pest control enquiry for ${formData.service}. Address: ${formData.address}, Preferred Date: ${formData.preferredDate}${formData.preferredTime ? `, Time: ${formData.preferredTime}` : ''}. Description: ${formData.description}`,
         status: "new",
         priority: "high",
         source: "website",
         estimatedCost: "To be determined",
-        notes: "Quick booking form submission"
+        notes: "Pest control enquiry form submission"
       };
 
       const response = await fetch('/api/leads', {
@@ -123,24 +116,25 @@ export default function QuickBookForm() {
       }
 
       // Create WhatsApp message with form data
-      const message = `🚗 *Quick Booking Request*
+      const message = `🐛 *Pest Control Enquiry*
       
 *Name:* ${formData.name}
 *Phone:* ${formData.phone}
+*Email:* ${formData.email || 'Not provided'}
 *Service:* ${formData.service}
-*Pickup:* ${formData.pickupLocation}
-*Drop:* ${formData.dropLocation}
-*Pickup Date:* ${formData.travelDate}
-*Pickup Time:* ${formData.travelTime}${formData.returnDate ? `\n*Return Date:* ${formData.returnDate}` : ''}
+*Address:* ${formData.address}
+*Preferred Date:* ${formData.preferredDate}
+*Preferred Time:* ${formData.preferredTime || 'Flexible'}
+*Description:* ${formData.description || 'No additional details'}
 
 Please provide availability and pricing details.`;
 
-      const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919876543210';
+      const whatsappNumber = contactInfo.whatsappNumber;
       const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
 
       toast({
-        title: "Booking Request Sent!",
+        title: "Enquiry Sent!",
         description: "We'll contact you shortly with availability and pricing details.",
       });
 
@@ -148,12 +142,12 @@ Please provide availability and pricing details.`;
       setFormData({
         name: "",
         phone: "",
+        email: "",
         service: "",
-        pickupLocation: "",
-        dropLocation: "",
-        travelDate: "",
-        travelTime: "",
-        returnDate: ""
+        address: "",
+        preferredDate: "",
+        preferredTime: "",
+        description: ""
       });
     } catch (error) {
       console.error('Error submitting booking:', error);
@@ -177,13 +171,13 @@ Please provide availability and pricing details.`;
       <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold text-gray-900 flex items-center justify-center">
-            <WhatsAppIcon className="h-6 w-6 mr-2 text-admin-primary" />
-            Quick Book Now
+            <Bug className="h-6 w-6 mr-2 text-admin-primary" />
+            Get Free Quote
           </CardTitle>
-          <p className="text-gray-600">Get instant quote and availability</p>
+          <p className="text-gray-600">Professional pest control services</p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleQuickBook} className="space-y-4">
+          <form onSubmit={handleQuickBook} className="space-y-3 sm:space-y-4">
             {/* Personal Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -216,12 +210,27 @@ Please provide availability and pricing details.`;
               </div>
             </div>
 
+            {/* Email */}
+            <div>
+              <Label htmlFor="email" className="text-gray-700 font-medium">
+                Email Address
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                placeholder="Enter your email address"
+                className="mt-1"
+              />
+            </div>
+
 
 
             {/* Service Selection */}
             <div>
               <Label htmlFor="service" className="text-gray-700 font-medium">
-                Service Type *
+                Pest Control Service *
               </Label>
               <Select
                 value={formData.service}
@@ -229,7 +238,7 @@ Please provide availability and pricing details.`;
                 required
               >
                 <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select service type" />
+                  <SelectValue placeholder="Select pest control service" />
                 </SelectTrigger>
                 <SelectContent>
                   {services.map((service) => (
@@ -241,88 +250,67 @@ Please provide availability and pricing details.`;
               </Select>
             </div>
 
-            {/* Location Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="pickupLocation" className="text-gray-700 font-medium flex items-center">
-                  <Navigation className="h-4 w-4 mr-1 text-green-500" />
-                  Pickup Location *
-                </Label>
-                <Input
-                  id="pickupLocation"
-                  type="text"
-                  required
-                  value={formData.pickupLocation}
-                  onChange={(e) => handleInputChange("pickupLocation", e.target.value)}
-                  placeholder="Enter pickup location"
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="dropLocation" className="text-gray-700 font-medium flex items-center">
-                  <MapPin className="h-4 w-4 mr-1 text-red-500" />
-                  Drop Location *
-                </Label>
-                <Input
-                  id="dropLocation"
-                  type="text"
-                  required
-                  value={formData.dropLocation}
-                  onChange={(e) => handleInputChange("dropLocation", e.target.value)}
-                  placeholder="Enter drop location"
-                  className="mt-1"
-                />
-              </div>
+            {/* Address Field */}
+            <div>
+              <Label htmlFor="address" className="text-gray-700 font-medium flex items-center">
+                <MapPin className="h-4 w-4 mr-1 text-red-500" />
+                 Address *
+              </Label>
+              <Input
+                id="address"
+                type="text"
+                required
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+                placeholder="Enter complete address"
+                className="mt-1"
+              />
             </div>
 
-            {/* Travel Details */}
+            {/* Service Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="travelDate" className="text-gray-700 font-medium">
-                  Pickup Date *
+                <Label htmlFor="preferredDate" className="text-gray-700 font-medium flex items-center">
+                  <Calendar className="h-4 w-4 mr-1 text-blue-500" />
+                  Preferred Date *
                 </Label>
                 <Input
-                  id="travelDate"
+                  id="preferredDate"
                   type="date"
                   required
-                  value={formData.travelDate}
-                  onChange={(e) => handleInputChange("travelDate", e.target.value)}
+                  value={formData.preferredDate}
+                  onChange={(e) => handleInputChange("preferredDate", e.target.value)}
                   className="mt-1"
                   min={new Date().toISOString().split('T')[0]}
                 />
               </div>
               <div>
-                <Label htmlFor="travelTime" className="text-gray-700 font-medium">
-                  Pickup Time
+                <Label htmlFor="preferredTime" className="text-gray-700 font-medium">
+                  Preferred Time
                 </Label>
                 <Input
-                  id="travelTime"
+                  id="preferredTime"
                   type="time"
-                  value={formData.travelTime}
-                  onChange={(e) => handleInputChange("travelTime", e.target.value)}
+                  value={formData.preferredTime}
+                  onChange={(e) => handleInputChange("preferredTime", e.target.value)}
                   className="mt-1"
                 />
               </div>
             </div>
 
-            {/* Return Date (Optional) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="returnDate" className="text-gray-700 font-medium">
-                  Return Date {formData.service === "Round Trip" ? "*" : "(Optional)"}
-                </Label>
-                <Input
-                  id="returnDate"
-                  type="date"
-                  required={formData.service === "Round Trip"}
-                  value={formData.returnDate}
-                  onChange={(e) => handleInputChange("returnDate", e.target.value)}
-                  className="mt-1"
-                  min={formData.travelDate || new Date().toISOString().split('T')[0]}
-                  placeholder="Select return date if needed"
-                />
-              </div>
-              <div></div>
+            {/* Description */}
+            <div>
+              <Label htmlFor="description" className="text-gray-700 font-medium">
+                Problem Description
+              </Label>
+              <textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleInputChange("description", e.target.value)}
+                placeholder="Describe the pest problem, affected areas, severity, etc."
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent resize-none"
+                rows={3}
+              />
             </div>
 
             <Button
@@ -333,12 +321,12 @@ Please provide availability and pricing details.`;
               {isSubmitting ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Submitting Request...
+                  Submitting Enquiry...
                 </>
               ) : (
                 <>
                   <WhatsAppIcon className="h-5 w-5 mr-2" />
-                  Submit Now
+                  Get Free Quote
                 </>
               )}
             </Button>

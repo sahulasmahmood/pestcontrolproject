@@ -14,31 +14,38 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useTheme } from "./providers/theme";
-import { useContact } from "@/hooks/use-contact";
+// import { useContact } from "@/hooks/use-contact"; // Commented out for static data
 import Image from "next/image";
 
 
 
+// Static contact info for Perfect Pest Control
+const staticContactInfo = {
+  primaryPhone: "0462-480-2258",
+  secondaryPhone: "9626-341-555", 
+  whatsappNumber: "9626341555",
+  email: "perfectpestcontrol555@gmail.com",
+  address: "24, Rainbow Colony, Peratchi Amman Kovil Street",
+  city: "Tirunelveli",
+  state: "Tamil Nadu",
+  pincode: "627003",
+  country: "India"
+}
+
+const staticThemeData = {
+  siteName: "Perfect Pest Control",
+  logo: "/images/perfect-pest-control-logo.png"
+}
+
 // Separate client component for pathname functionality
 function NavbarContent() {
   const { themeData } = useTheme();
-  const { contactInfo, isLoading: contactLoading } = useContact();
+  // const { contactInfo, isLoading: contactLoading } = useContact(); // Commented out for static data
+  const contactInfo = staticContactInfo; // Using static data
   const pathname = usePathname();
   
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showFallback, setShowFallback] = useState(false);
-
-  // Add timeout for fallback data
-  useEffect(() => {
-    const fallbackTimer = setTimeout(() => {
-      if (contactLoading) {
-        setShowFallback(true);
-      }
-    }, 5000); // 5 second timeout
-
-    return () => clearTimeout(fallbackTimer);
-  }, [contactLoading]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,8 +58,8 @@ function NavbarContent() {
   const navItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Tariff", href: "/tariff" },
-    { name: "Packages", href: "/packages" },
+    { name: "Services", href: "/tariff" },
+    { name: "Gallery", href: "/packages" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -80,74 +87,56 @@ function NavbarContent() {
     return pathname.startsWith(href);
   };
 
-  // Update contact info section with loading states
+  // Update contact info section with static data
   const renderContactInfo = () => {
-    if (!contactInfo && !showFallback) {
-      return null; // Don't show anything while loading
-    }
-
     return (
       <div className="flex flex-wrap items-center justify-center sm:justify-center lg:justify-start gap-2 sm:gap-4 lg:gap-6">
         {/* Primary Phone */}
-        {(contactInfo?.primaryPhone || showFallback) && (
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Phone className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
-            <a
-              href={`tel:${contactInfo?.primaryPhone}`}
-              className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors"
-            >
-              {contactInfo?.primaryPhone}
-            </a>
-          </div>
-        )}
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Phone className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
+          <a
+            href={`tel:${contactInfo.primaryPhone}`}
+            className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors"
+          >
+            {contactInfo.primaryPhone}
+          </a>
+        </div>
         
-        {/* Secondary Phone - only show if exists */}
-        {contactInfo?.secondaryPhone && (
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Phone className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
-            <a
-              href={`tel:${contactInfo.secondaryPhone}`}
-              className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors"
-            >
-              {contactInfo.secondaryPhone}
-            </a>
-          </div>
-        )}
+        {/* Secondary Phone */}
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Phone className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
+          <a
+            href={`tel:${contactInfo.secondaryPhone}`}
+            className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors"
+          >
+            {contactInfo.secondaryPhone}
+          </a>
+        </div>
 
         {/* Email */}
-        {(contactInfo?.email || showFallback) && (
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Mail className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
-            <a
-              href={`mailto:${contactInfo?.email}`}
-              className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors truncate max-w-[200px] sm:max-w-none"
-            >
-              {contactInfo?.email}
-            </a>
-          </div>
-        )}
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Mail className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
+          <a
+            href={`mailto:${contactInfo.email}`}
+            className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors truncate max-w-[200px] sm:max-w-none"
+          >
+            {contactInfo.email}
+          </a>
+        </div>
       </div>
     );
   };
 
-  // Update address section
+  // Update address section with static data
   const renderAddress = () => {
-    if (!contactInfo && !showFallback) {
-      return null;
-    }
-
-    if (contactInfo) {
-      return (
-        <div className="hidden lg:flex xl:flex items-center gap-2">
-          <MapPin className="h-4 w-4" />
-          <span className="font-medium text-sm">
-            {`${contactInfo.address}, ${contactInfo.city}, ${contactInfo.state}-${contactInfo.pincode}`}
-          </span>
-        </div>
-      );
-    }
-
-    return null;
+    return (
+      <div className="hidden lg:flex xl:flex items-center gap-2">
+        <MapPin className="h-4 w-4" />
+        <span className="font-medium text-sm">
+          {`${contactInfo.address}, ${contactInfo.city}, ${contactInfo.state}-${contactInfo.pincode}`}
+        </span>
+      </div>
+    );
   };
 
   return (
@@ -176,28 +165,24 @@ function NavbarContent() {
               className="flex items-center space-x-1.5 sm:space-x-2 lg:space-x-3 group"
             >
               <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl sm:rounded-2xl overflow-hidden flex items-center justify-center bg-white shadow-md">
-                {themeData?.logo && (
+                {(themeData?.logo || staticThemeData.logo) && (
                   <Image
-                    src={themeData.logo}
-                    alt={`${themeData?.siteName || ''} Logo`}
+                    src={themeData?.logo || staticThemeData.logo}
+                    alt={`${themeData?.siteName || staticThemeData.siteName} Logo`}
                     width={48}
                     height={48}
                     className="w-full h-full object-contain"
                   />
                 )}
               </div>
-              {themeData?.siteName && (
-                <div>
-                  <div className="font-bold text-sm sm:text-lg lg:text-xl xl:text-2xl bg-admin-gradient bg-clip-text text-transparent">
-                    {themeData.siteName.split(' ')[0]}
-                  </div>
-                  <div className="text-xs sm:text-xs lg:text-sm text-gray-600 font-medium">
-                    {themeData.siteName.includes('Tours') 
-                      ? 'Tours & Travels' 
-                      : themeData.siteName.split(' ').slice(1).join(' ')}
-                  </div>
+              <div>
+                <div className="font-bold text-sm sm:text-lg lg:text-xl xl:text-2xl bg-admin-gradient bg-clip-text text-transparent">
+                  {(themeData?.siteName || staticThemeData.siteName).split(' ')[0]}
                 </div>
-              )}
+                <div className="text-xs sm:text-xs lg:text-sm text-gray-600 font-medium">
+                  Pest Control
+                </div>
+              </div>
             </Link>
 
             {/* Desktop Navigation */}
@@ -227,19 +212,16 @@ function NavbarContent() {
                 onClick={handleBookNow}
                 className="bg-admin-gradient text-white border-0 px-4 xl:px-6 py-2 font-semibold text-sm xl:text-base transition-all duration-300 hover:shadow-lg hover:scale-105"
               >
-                Book Now
+                Get Quote
               </Button>
               {/* WhatsApp Button */}
               <Button
                 onClick={() => {
-                  if (contactInfo?.whatsappNumber || contactInfo?.primaryPhone) {
-                    const number = (contactInfo.whatsappNumber || contactInfo.primaryPhone).replace(/[^0-9]/g, '');
-                    window.open(`https://wa.me/${number}?text=Hi, I'm interested in your travel services`, '_blank');
-                  }
+                  const number = contactInfo.whatsappNumber.replace(/[^0-9]/g, '');
+                  window.open(`https://wa.me/${number}?text=Hi, I need pest control services. Please provide more details.`, '_blank');
                 }}
                 variant="outline"
                 className="border-admin-primary text-admin-primary hover:bg-admin-gradient hover:text-white px-4 xl:px-6 py-2 font-semibold text-sm xl:text-base transition-all duration-300 hover:shadow-lg hover:scale-105"
-                disabled={!contactInfo}
               >
                 <Phone className="h-4 w-4 mr-2" />
                 WhatsApp
@@ -302,7 +284,7 @@ function NavbarContent() {
                     onClick={handleBookNow}
                     className="w-full bg-admin-gradient hover:opacity-90 text-white border-0 py-2.5 sm:py-3 font-semibold text-sm sm:text-base transition-all duration-300 hover:shadow-lg"
                   >
-                    Book Now
+                    Get Quote
                   </Button>
                 </motion.div>
 
@@ -315,8 +297,8 @@ function NavbarContent() {
                 >
                   <Button
                     onClick={() => {
-                      const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919003782966';
-                      window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi, I'm interested in your travel services`, '_blank');
+                      const whatsappNumber = contactInfo.whatsappNumber;
+                      window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi, I need pest control services. Please provide more details.`, '_blank');
                     }}
                     variant="outline"
                     className="w-full border-admin-primary text-admin-primary hover:bg-admin-gradient hover:text-white py-2.5 sm:py-3 font-semibold text-sm sm:text-base transition-all duration-300 hover:shadow-lg mb-3"

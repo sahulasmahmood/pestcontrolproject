@@ -11,42 +11,64 @@ import {
   Clock,
   Award,
   Users,
-  Car,
-  Plane,
-  Calendar,
+  Bug,
   Shield,
+  Home,
+  Building,
   IndianRupee,
   Copy
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { useTheme } from "./providers/theme";
-import { useContact } from "@/hooks/use-contact";
+// import { useContact } from "@/hooks/use-contact"; // Commented out for static data
 import Image from "next/image";
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
+// Static data for Perfect Pest Control
+const staticContactInfo = {
+  primaryPhone: "0462-480-2258",
+  secondaryPhone: "9626-341-555",
+  whatsappNumber: "9626341555",
+  email: "perfectpestcontrol555@gmail.com",
+  address: "24, Rainbow Colony, Peratchi Amman Kovil Street",
+  city: "Tirunelveli",
+  state: "Tamil Nadu", 
+  pincode: "627003",
+  country: "India",
+  facebook: "https://facebook.com/perfectpestcontrol",
+  instagram: "https://instagram.com/perfectpestcontrol",
+  whatsapp: "https://wa.me/919626341555"
+}
+
+const staticThemeData = {
+  siteName: "Perfect Pest Control",
+  logo: "/images/perfect-pest-control-logo.png"
+}
+
 export default function Footer() {
   const { themeData } = useTheme();
-  const { contactInfo } = useContact();
+  // const { contactInfo } = useContact(); // Commented out for static data
+  const contactInfo = staticContactInfo; // Using static data
   const { toast } = useToast();
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
-  const travelServices = [
-    { name: 'One-way Trip', href: '/tariff' },
-    { name: 'Round Trip', href: '/tariff' },
-    { name: 'Airport Taxi', href: '/tariff' },
-    { name: 'Day Rental', href: '/tariff' },
-    { name: 'Hourly Package', href: '/tariff' },
-    { name: 'Tour Package', href: '/packages' }
+  const pestControlServices = [
+    { name: 'Anti Termite Treatment', href: '/tariff' },
+    { name: 'Rat Control', href: '/tariff' },
+    { name: 'Bed Bug Treatment', href: '/tariff' },
+    { name: 'Mosquito Control', href: '/tariff' },
+    { name: 'Disinfection Service', href: '/tariff' },
+    { name: 'General Pest Control', href: '/packages' }
   ];
 
   const quickLinks = [
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about' },
-    { name: 'Tariff', href: '/tariff' },
-    { name: 'Packages', href: '/packages' },
+    { name: 'Services', href: '/tariff' },
+    { name: 'Gallery', href: '/packages' },
     { name: 'Contact', href: '/contact' }
   ];
 
@@ -55,14 +77,14 @@ export default function Footer() {
   ] */;
 
   const handleWhatsAppClick = () => {
-    const message = "Hi! I'm interested in your travel services. Please provide more details.";
-    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919003782966';
+    const message = "Hi! I need pest control services. Please provide more details and a free quote.";
+    const whatsappNumber = contactInfo.whatsappNumber;
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleCallClick = () => {
-    window.open(`tel:${contactInfo?.primaryPhone || '+919003782966'}`, '_self');
+    window.open(`tel:${contactInfo.primaryPhone}`, '_self');
   };
 
   return (
@@ -81,11 +103,11 @@ export default function Footer() {
           <div className="space-y-6 sm:col-span-2 lg:col-span-2">
             {/* Logo Section */}
             <Link href="/" className="flex items-center space-x-3 group">
-              {themeData?.logo ? (
+              {(themeData?.logo || staticThemeData.logo) ? (
                 <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20">
                   <Image 
-                    src={themeData.logo} 
-                    alt="Vinushree Tours & Travels Logo" 
+                    src={themeData?.logo || staticThemeData.logo} 
+                    alt="Perfect Pest Control Logo" 
                     width={56} 
                     height={56} 
                     className="w-full h-full object-contain"
@@ -93,69 +115,61 @@ export default function Footer() {
                 </div>
               ) : (
                 <div className="w-12 h-12 sm:w-14 sm:h-14 bg-admin-gradient rounded-2xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-xl sm:text-2xl">V</span>
+                  <span className="text-white font-bold text-xl sm:text-2xl">P</span>
                 </div>
               )}
               <div>
                 <div className="font-bold text-xl sm:text-2xl bg-admin-gradient bg-clip-text text-transparent">
-                  {themeData?.siteName?.split(' ')[0] || "Vinushree"}
+                  {(themeData?.siteName || staticThemeData.siteName).split(' ')[0]}
                 </div>
                 <div className="text-sm sm:text-base font-medium">
-                  {themeData?.siteName?.includes('Tours') 
-                    ? 'Tours & Travels' 
-                    : themeData?.siteName?.split(' ').slice(1).join(' ') || 'Tours & Travels'}
+                  Pest Control
                 </div>
               </div>
             </Link>
 
             {/* Company Description */}
             <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-md">
-              Leading provider of professional travel services across Tamil Nadu, delivering safe, comfortable, and memorable journeys with cutting-edge vehicles and expert drivers.
+              Leading provider of professional pest control services across Tamil Nadu, delivering safe, effective, and reliable pest management solutions for residential, commercial, and industrial properties.
             </p>
 
-            {/* Dynamic Contact Info */}
+            {/* Static Contact Info */}
             <div className="space-y-3">
               {/* Primary Phone */}
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-admin-primary flex-shrink-0" />
                 <a
-                  href={`tel:${contactInfo?.primaryPhone || "+919003782966"}`}
+                  href={`tel:${contactInfo.primaryPhone}`}
                   className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
                 >
-                  {contactInfo?.primaryPhone || "+91 90037 82966"}
+                  {contactInfo.primaryPhone}
                 </a>
               </div>
               
-              {/* Add Secondary Phone */}
-              {contactInfo?.secondaryPhone && (
-                <div className="flex items-center space-x-3">
-                  <Phone className="h-4 w-4 text-admin-primary flex-shrink-0" />
-                  <a
-                    href={`tel:${contactInfo.secondaryPhone}`}
-                    className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
-                  >
-                    {contactInfo.secondaryPhone}
-                  </a>
-                </div>
-              )}
+              {/* Secondary Phone */}
+              <div className="flex items-center space-x-3">
+                <Phone className="h-4 w-4 text-admin-primary flex-shrink-0" />
+                <a
+                  href={`tel:${contactInfo.secondaryPhone}`}
+                  className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                >
+                  {contactInfo.secondaryPhone}
+                </a>
+              </div>
 
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-admin-primary flex-shrink-0" />
                 <a
-                  href={`mailto:${contactInfo?.email || "info@vinushree.com"}`}
+                  href={`mailto:${contactInfo.email}`}
                   className="text-gray-300 hover:text-white transition-colors text-sm font-medium break-all"
                 >
-                  {contactInfo?.email || "info@vinushree.com"}
+                  {contactInfo.email}
                 </a>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-admin-primary mt-0.5 flex-shrink-0" />
                 <span className="text-gray-300 text-sm leading-relaxed">
-                  {contactInfo ? (
-                    `${contactInfo.address}, ${contactInfo.city}, ${contactInfo.state}-${contactInfo.pincode}, ${contactInfo.country}`
-                  ) : (
-                    "mani road, Uthangudi, Othakadai, Madurai, Tamil Nadu-625007, India"
-                  )}
+                  {`${contactInfo.address}, ${contactInfo.city}, ${contactInfo.state}-${contactInfo.pincode}, ${contactInfo.country}`}
                 </span>
               </div>
             </div>
@@ -164,37 +178,31 @@ export default function Footer() {
             <div className="space-y-3">
               <h4 className="text-white font-semibold text-sm">Follow Us</h4>
               <div className="flex flex-wrap gap-3">
-                {contactInfo?.facebook && (
-                  <a
-                    href={contactInfo.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group p-2 bg-white/10 hover:bg-blue-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-blue-500/50"
-                    title="Follow us on Facebook"
-                  >
-                    <Facebook className="h-4 w-4 text-gray-400 group-hover:text-blue-500 transition-colors" />
-                  </a>
-                )}
-                {contactInfo?.instagram && (
-                  <a
-                    href={contactInfo.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group p-2 bg-white/10 hover:bg-pink-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-pink-500/50"
-                    title="Follow us on Instagram"
-                  >
-                    <Instagram className="h-4 w-4 text-gray-400 group-hover:text-pink-500 transition-colors" />
-                  </a>
-                )}
-                {contactInfo?.whatsapp && (
-                  <button
-                    onClick={handleWhatsAppClick}
-                    className="group p-2 bg-white/10 hover:bg-green-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-green-500/50"
-                    title="Contact us on WhatsApp"
-                  >
-                    <WhatsAppIcon className="h-4 w-4 text-gray-400 group-hover:text-green-500 transition-colors" />
-                  </button>
-                )}
+                <a
+                  href={contactInfo.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group p-2 bg-white/10 hover:bg-blue-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-blue-500/50"
+                  title="Follow us on Facebook"
+                >
+                  <Facebook className="h-4 w-4 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                </a>
+                <a
+                  href={contactInfo.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group p-2 bg-white/10 hover:bg-pink-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-pink-500/50"
+                  title="Follow us on Instagram"
+                >
+                  <Instagram className="h-4 w-4 text-gray-400 group-hover:text-pink-500 transition-colors" />
+                </a>
+                <button
+                  onClick={handleWhatsAppClick}
+                  className="group p-2 bg-white/10 hover:bg-green-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-green-500/50"
+                  title="Contact us on WhatsApp"
+                >
+                  <WhatsAppIcon className="h-4 w-4 text-gray-400 group-hover:text-green-500 transition-colors" />
+                </button>
               </div>
             </div>
           </div>
@@ -203,7 +211,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-6 text-white">Our Services</h3>
             <ul className="space-y-3">
-              {travelServices.map((service, index) => (
+              {pestControlServices.map((service, index) => (
                 <li key={index}>
                   <Link
                     href={service.href}
@@ -242,7 +250,7 @@ export default function Footer() {
             {/* Desktop QR Code - Hidden on mobile */}
             <div className="hidden md:block bg-white p-4 rounded-xl mb-4 w-fit">
               <QRCodeSVG
-                value={`upi://pay?pa=vinusree@sbi&pn=${encodeURIComponent("Vinushree Tours and Travels")}`}
+                value={`upi://pay?pa=perfectpest@sbi&pn=${encodeURIComponent("Perfect Pest Control")}`}
                 size={150}
                 level="H"
                 className="rounded-lg"
@@ -253,7 +261,7 @@ export default function Footer() {
             <div className="space-y-4">
               {/* Mobile UPI App Link */}
               <a
-                href="upi://pay?pa=vinusree@sbi&pn=Vinushree%20Tours%20and%20Travels"
+                href="upi://pay?pa=perfectpest@sbi&pn=Perfect%20Pest%20Control"
                 className="md:hidden flex items-center gap-3 p-3 bg-green-500/10 hover:bg-green-500/20 rounded-lg transition-all duration-300 border border-green-500/20 hover:border-green-500/30"
               >
                 <IndianRupee className="h-5 w-5 text-green-500" />
@@ -268,13 +276,13 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <div className="text-sm font-medium text-gray-300">UPI ID:</div>
                 <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
-                  <span className="text-sm font-mono text-gray-300">vinusree@sbi</span>
+                  <span className="text-sm font-mono text-gray-300">perfectpest@sbi</span>
                   <Button 
                     variant="ghost" 
                     size="icon" 
                     className="h-8 w-8 hover:bg-white/10"
                     onClick={() => {
-                      navigator.clipboard.writeText("vinusree@sbi");
+                      navigator.clipboard.writeText("perfectpest@sbi");
                       toast({
                         title: "UPI ID Copied",
                         description: "UPI ID has been copied to clipboard",
@@ -289,21 +297,21 @@ export default function Footer() {
               {/* Payment Apps Links */}
               <div className="flex flex-wrap gap-2">
                 <a
-                  href="phonepe://pay?pa=vinusree@sbi&pn=Vinushree%20Tours%20and%20Travels"
+                  href="phonepe://pay?pa=perfectpest@sbi&pn=Perfect%20Pest%20Control"
                   className="flex items-center gap-2 px-4 py-2.5 bg-admin-gradient hover:opacity-90 rounded-lg transition-all duration-300 group"
                 >
                   <span className="text-xs font-medium text-white">PhonePe</span>
                   <ArrowRight className="h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition-all" />
                 </a>
                 <a
-                  href="gpay://upi/pay?pa=vinusree@sbi&pn=Vinushree%20Tours%20and%20Travels"
+                  href="gpay://upi/pay?pa=perfectpest@sbi&pn=Perfect%20Pest%20Control"
                   className="flex items-center gap-2 px-4 py-2.5 bg-admin-gradient hover:opacity-90 rounded-lg transition-all duration-300 group"
                 >
                   <span className="text-xs font-medium text-white">Google Pay</span>
                   <ArrowRight className="h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition-all" />
                 </a>
                 <a
-                  href="paytmmp://pay?pa=vinusree@sbi&pn=Vinushree%20Tours%20and%20Travels"
+                  href="paytmmp://pay?pa=perfectpest@sbi&pn=Perfect%20Pest%20Control"
                   className="flex items-center gap-2 px-4 py-2.5 bg-admin-gradient hover:opacity-90 rounded-lg transition-all duration-300 group"
                 >
                   <span className="text-xs font-medium text-white">Paytm</span>
@@ -317,7 +325,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 pb-6 sm:pb-8 text-center">
           <p className="text-gray-400 text-xs sm:text-sm leading-relaxed px-2">
-            © 2025 Vinushree Tours & Travels. All rights reserved. ❤️ 
+            © 2025 Perfect Pest Control. All rights reserved. ❤️ 
             <span className="block sm:inline sm:ml-1 hover:text-white transition-colors">
               <a href="https://mntfuture.com/" target="_blank" rel="noopener noreferrer">Developed by MnT</a>
             </span>

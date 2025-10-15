@@ -19,24 +19,26 @@ import {
   Tablet,
   ImageIcon,
   Upload,
-  Plane,
+  Shield,
   MapPin,
-  Camera,
+  Bug,
   Star,
   Users,
   Phone,
   Mail,
+  Camera,
+  Plane
 } from "lucide-react";
 
 export default function ThemePage() {
   const { toast } = useToast();
   const { themeData, loading: themeLoading, refreshTheme } = useTheme();
   
-  const [siteName, setSiteName] = useState("Vinushree Tours & Travels");
+  const [siteName, setSiteName] = useState("Perfect Pest Control");
   const [logo, setLogo] = useState<string | null>(null);
   const [favicon, setFavicon] = useState<string | null>(null);
-  const [primaryColor, setPrimaryColor] = useState("#F59E0B"); // Gold for travel theme
-  const [secondaryColor, setSecondaryColor] = useState("#1F2937"); // Dark navy for travel theme
+  const [primaryColor, setPrimaryColor] = useState("#10B981"); // Green for pest control theme
+  const [secondaryColor, setSecondaryColor] = useState("#059669"); // Darker green for pest control theme
   const [previewDevice, setPreviewDevice] = useState("desktop");
   const [loading, setLoading] = useState(false);
 
@@ -107,10 +109,10 @@ export default function ThemePage() {
 
       if (result.success) {
         // Update local state with default values
-        setSiteName("Vinushree Tours & Travels");
-        setPrimaryColor("#F59E0B");
-        setSecondaryColor("#1F2937");
-        setLogo("/vinushree-tours-logo.png");
+        setSiteName("Perfect Pest Control");
+        setPrimaryColor("#10B981");
+        setSecondaryColor("#059669");
+        setLogo("/perfect-pest-control-logo.png");
         setFavicon(null);
         
         toast({
@@ -181,7 +183,7 @@ export default function ThemePage() {
             Theme Settings
           </h1>
           <p className="text-gray-600 mt-2">
-            Customize your travel website's appearance and branding to match your unique style
+            Customize your pest control website's appearance and branding to match your professional style
           </p>
         </div>
         <div className="flex gap-3">
@@ -244,8 +246,8 @@ export default function ThemePage() {
               <CardTitle className="flex items-center gap-2">
                 <ImageIcon className="h-5 w-5" style={{ color: primaryColor }} />
                 Brand Assets
-                <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full ml-2">
-                  Travel Branding
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full ml-2">
+                  Pest Control Branding
                 </span>
               </CardTitle>
             </CardHeader>
@@ -332,12 +334,12 @@ export default function ThemePage() {
 
           {/* Color Settings */}
           <Card className="shadow-lg border-0">
-            <CardHeader className="bg-gradient-to-r from-amber-50 to-yellow-50">
+            <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
               <CardTitle className="flex items-center gap-2">
                 <Palette className="h-5 w-5" style={{ color: primaryColor }} />
                 Color Settings
-                <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full ml-2">
-                  Travel Themes
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full ml-2">
+                  Pest Control Themes
                 </span>
               </CardTitle>
             </CardHeader>
@@ -404,55 +406,55 @@ export default function ThemePage() {
                   Advanced Gradient Presets
                 </Label>
 
-                {/* Travel-Themed Gradient Collection */}
+                {/* Pest Control Themed Gradient Collection */}
                 <div className="space-y-3">
                   <div className="text-xs font-medium text-gray-600 mb-2 flex items-center gap-2">
-                    <Plane className="w-4 h-4" />
-                    Travel & Tourism Gradients
+                    <Shield className="w-4 h-4" />
+                    Pest Control & Safety Gradients
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     {[
                       {
-                        name: "Vinushree Gold",
-                        primary: "#F59E0B",
-                        secondary: "#1F2937",
-                        description: "Brand Colors",
-                        icon: "⭐",
-                      },
-                      {
-                        name: "Ocean Breeze",
-                        primary: "#0ea5e9",
-                        secondary: "#06b6d4",
-                        description: "Beach Vibes",
-                        icon: "🌊",
-                      },
-                      {
-                        name: "Sunset Paradise",
-                        primary: "#FFDE00",
-                        secondary: "#EF4444",
-                        description: "Golden Hour",
-                        icon: "🌅",
-                      },
-                      {
-                        name: "Mountain Peak",
-                        primary: "#10b981",
+                        name: "Perfect Green",
+                        primary: "#10B981",
                         secondary: "#059669",
-                        description: "Adventure",
-                        icon: "🏔️",
+                        description: "Brand Colors",
+                        icon: "🛡️",
                       },
                       {
-                        name: "Desert Safari",
-                        primary: "#FFDE00",
-                        secondary: "#D97706",
-                        description: "Desert Tours",
-                        icon: "🐪",
+                        name: "Nature Safe",
+                        primary: "#22C55E",
+                        secondary: "#16A34A",
+                        description: "Eco-Friendly",
+                        icon: "🌱",
                       },
                       {
-                        name: "Tropical Sky",
-                        primary: "#3b82f6",
-                        secondary: "#6366f1",
-                        description: "Island Escape",
-                        icon: "🏝️",
+                        name: "Professional Blue",
+                        primary: "#3B82F6",
+                        secondary: "#1D4ED8",
+                        description: "Trust & Reliability",
+                        icon: "💼",
+                      },
+                      {
+                        name: "Safety Orange",
+                        primary: "#F97316",
+                        secondary: "#EA580C",
+                        description: "Warning & Alert",
+                        icon: "⚠️",
+                      },
+                      {
+                        name: "Clean White",
+                        primary: "#F8FAFC",
+                        secondary: "#E2E8F0",
+                        description: "Hygiene & Clean",
+                        icon: "✨",
+                      },
+                      {
+                        name: "Deep Forest",
+                        primary: "#166534",
+                        secondary: "#15803D",
+                        description: "Natural Protection",
+                        icon: "🌲",
                       },
                     ].map((preset) => (
                       <button
@@ -485,55 +487,55 @@ export default function ThemePage() {
                   </div>
                 </div>
 
-                {/* Destination-Inspired Gradients */}
+                {/* Service-Type Inspired Gradients */}
                 <div className="space-y-3">
                   <div className="text-xs font-medium text-gray-600 mb-2 flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
-                    Destination-Inspired Colors
+                    Service-Type Inspired Colors
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     {[
                       {
-                        name: "Goa Sunset",
-                        primary: "#FFDE00",
-                        secondary: "#EC4899",
-                        description: "Beach Paradise",
-                        icon: "🏖️",
+                        name: "Anti Termite",
+                        primary: "#8B5CF6",
+                        secondary: "#7C3AED",
+                        description: "Structural Protection",
+                        icon: "🏠",
                       },
                       {
-                        name: "Kerala Backwaters",
-                        primary: "#10b981",
-                        secondary: "#FFDE00",
-                        description: "Nature's Beauty",
-                        icon: "🛶",
+                        name: "Rodent Control",
+                        primary: "#EF4444",
+                        secondary: "#DC2626",
+                        description: "Rat & Mouse Control",
+                        icon: "🐭",
                       },
                       {
-                        name: "Himalayan Dawn",
-                        primary: "#6366f1",
-                        secondary: "#ec4899",
-                        description: "Mountain Majesty",
-                        icon: "🏔️",
+                        name: "Bed Bug Treatment",
+                        primary: "#F59E0B",
+                        secondary: "#D97706",
+                        description: "Sleep Safe",
+                        icon: "🛏️",
                       },
                       {
-                        name: "Rajasthan Royal",
-                        primary: "#DC2626",
-                        secondary: "#FFDE00",
-                        description: "Royal Heritage",
-                        icon: "🏰",
+                        name: "Mosquito Control",
+                        primary: "#06B6D4",
+                        secondary: "#0891B2",
+                        description: "Disease Prevention",
+                        icon: "🦟",
                       },
                       {
-                        name: "Kashmir Valley",
-                        primary: "#10b981",
-                        secondary: "#3B82F6",
-                        description: "Paradise on Earth",
-                        icon: "🌸",
+                        name: "Disinfection Service",
+                        primary: "#10B981",
+                        secondary: "#059669",
+                        description: "Sanitization",
+                        icon: "🧽",
                       },
                       {
-                        name: "Mumbai Nights",
-                        primary: "#000000",
-                        secondary: "#FFDE00",
-                        description: "City Lights",
-                        icon: "🌃",
+                        name: "General Pest",
+                        primary: "#6366F1",
+                        secondary: "#4F46E5",
+                        description: "All-in-One",
+                        icon: "🐛",
                       },
                     ].map((preset) => (
                       <button
@@ -566,69 +568,69 @@ export default function ThemePage() {
                   </div>
                 </div>
 
-                {/* Professional Travel Gradients */}
+                {/* Professional Pest Control Gradients */}
                 <div className="space-y-3">
                   <div className="text-xs font-medium text-gray-600 mb-2 flex items-center gap-2">
-                    <Camera className="w-4 h-4" />
-                    Professional Travel Themes
+                    <Shield className="w-4 h-4" />
+                    Professional Pest Control Themes
                   </div>
                   <div className="grid grid-cols-4 gap-3">
                     {[
                       {
-                        name: "Corporate Travel",
-                        primary: "#1e40af",
-                        secondary: "#3b82f6",
-                        description: "Business",
-                        icon: "💼",
+                        name: "Industrial",
+                        primary: "#1E40AF",
+                        secondary: "#3B82F6",
+                        description: "Heavy Duty",
+                        icon: "🏭",
                       },
                       {
-                        name: "Eco Tourism",
+                        name: "Commercial",
                         primary: "#059669",
-                        secondary: "#10b981",
-                        description: "Sustainable",
-                        icon: "🌱",
+                        secondary: "#10B981",
+                        description: "Business Safe",
+                        icon: "🏢",
                       },
                       {
-                        name: "Luxury Travel",
-                        primary: "#000000",
-                        secondary: "#FFDE00",
-                        description: "Premium",
-                        icon: "✨",
+                        name: "Residential",
+                        primary: "#F59E0B",
+                        secondary: "#D97706",
+                        description: "Home Care",
+                        icon: "🏠",
                       },
                       {
-                        name: "Adventure Tours",
-                        primary: "#7c3aed",
-                        secondary: "#a855f7",
-                        description: "Thrilling",
-                        icon: "🎒",
-                      },
-                      {
-                        name: "Cultural Tours",
+                        name: "Emergency",
                         primary: "#DC2626",
-                        secondary: "#FFDE00",
-                        description: "Heritage",
-                        icon: "🏛️",
+                        secondary: "#EF4444",
+                        description: "Urgent Response",
+                        icon: "🚨",
                       },
                       {
-                        name: "Wellness Retreat",
-                        primary: "#0f766e",
-                        secondary: "#14b8a6",
-                        description: "Peaceful",
-                        icon: "🧘",
+                        name: "Eco-Friendly",
+                        primary: "#16A34A",
+                        secondary: "#22C55E",
+                        description: "Green Solutions",
+                        icon: "🌿",
                       },
                       {
-                        name: "Family Vacation",
-                        primary: "#FFDE00",
-                        secondary: "#EC4899",
-                        description: "Fun & Safe",
-                        icon: "👨‍👩‍👧‍👦",
+                        name: "Premium Service",
+                        primary: "#7C3AED",
+                        secondary: "#A855F7",
+                        description: "Luxury Care",
+                        icon: "⭐",
                       },
                       {
-                        name: "Honeymoon Special",
-                        primary: "#EC4899",
-                        secondary: "#FFDE00",
-                        description: "Romantic",
-                        icon: "💕",
+                        name: "Health & Safety",
+                        primary: "#0891B2",
+                        secondary: "#06B6D4",
+                        description: "Medical Grade",
+                        icon: "🏥",
+                      },
+                      {
+                        name: "24/7 Service",
+                        primary: "#1F2937",
+                        secondary: "#374151",
+                        description: "Always Available",
+                        icon: "🕐",
                       },
                     ].map((preset) => (
                       <button

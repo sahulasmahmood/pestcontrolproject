@@ -7,44 +7,159 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, MapPin, Clock, Users, Star, Phone, Car, Plane, Shield, Award, Heart } from "lucide-react"
+import { ArrowRight, MapPin, Clock, Users, Star, Phone, Shield, Award, Heart, Bug, Zap, Home } from "lucide-react"
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon"
 import QuickBookForm from "@/components/QuickBookForm"
-import PopularRoutes from "@/components/PopularRoutes"
-import { useBanner } from "@/hooks/use-banner"
-import { useTariff } from "@/hooks/use-tariff"
-import { usePackages } from "@/hooks/use-packages"
-import { useContact } from "@/hooks/use-contact"
+import ApprovedLicenses from "@/components/ApprovedLicenses"
+// Commented out dynamic hooks for static data
+// import { useBanner } from "@/hooks/use-banner"
+// import { useTariff } from "@/hooks/use-tariff"
+// import { usePackages } from "@/hooks/use-packages"
+// import { useContact } from "@/hooks/use-contact"
 import { Testimonials } from "./Testimonial"
 
+// Static data for Perfect Pest Control
+const staticBanner = {
+  title: "Professional Pest Control Services",
+  image: "/images/pest-control-banner.jpg",
+  status: "active"
+}
+
+const staticContactInfo = {
+  primaryPhone: "0462-480-2258",
+  secondaryPhone: "9626-341-555",
+  whatsappNumber: "9626341555",
+  email: "perfectpestcontrol555@gmail.com",
+  address: "24, Rainbow Colony, Peratchi Amman Kovil Street",
+  city: "Tirunelveli",
+  state: "Tamil Nadu",
+  pincode: "627003",
+  country: "India"
+}
+
+const staticServices = [
+  {
+    _id: "1",
+    serviceName: "Anti Termite Treatment",
+    description: "Complete termite protection for your property with advanced pre and post-construction treatment methods",
+    image: "/images/anti-termite.jpg",
+    price: "Contact for Quote",
+    featured: true,
+    category: "Structural Protection"
+  },
+  {
+    _id: "2", 
+    serviceName: "Rat Control",
+    description: "Effective rodent control solutions for residential and commercial properties using safe methods",
+    image: "/images/rat-control.jpg",
+    price: "Contact for Quote",
+    featured: true,
+    category: "Rodent Control"
+  },
+  {
+    _id: "3",
+    serviceName: "Bed Bug Treatment", 
+    description: "Complete bed bug elimination with safe and effective treatment methods for homes and hotels",
+    image: "/images/bed-bug.jpg",
+    price: "Contact for Quote",
+    featured: true,
+    category: "Insect Control"
+  },
+  {
+    _id: "4",
+    serviceName: "Mosquito Control",
+    description: "Comprehensive mosquito control for homes and commercial spaces to prevent disease transmission",
+    image: "/images/mosquito-control.jpg", 
+    price: "Contact for Quote",
+    featured: true,
+    category: "Vector Control"
+  },
+  {
+    _id: "5",
+    serviceName: "Disinfection Spray Service",
+    description: "Professional disinfection using sodium hypochloride sanitizer cleaning spray service",
+    image: "/images/disinfection.jpg",
+    price: "Contact for Quote", 
+    featured: true,
+    category: "Sanitization"
+  },
+  {
+    _id: "6",
+    serviceName: "Cockroach Control",
+    description: "Effective cockroach elimination for kitchens, restaurants and commercial food areas",
+    image: "/images/cockroach-control.jpg",
+    price: "Contact for Quote",
+    featured: false,
+    category: "Insect Control"
+  }
+]
+
+const staticServiceCategories = [
+  {
+    _id: "1",
+    title: "Industrial Pest Control",
+    description: "Comprehensive pest control solutions for industrial facilities, warehouses, and manufacturing units",
+    image: "/images/industrial-pest-control.jpg",
+    services: ["Anti Termite", "Rat Control", "Cockroach Control", "Disinfection"],
+    featured: true
+  },
+  {
+    _id: "2", 
+    title: "Commercial Pest Control",
+    description: "Professional pest management for offices, hotels, restaurants and commercial spaces",
+    image: "/images/commercial-pest-control.jpg",
+    services: ["Bed Bug Treatment", "Mosquito Control", "Ant Control", "Sanitization"],
+    featured: true
+  },
+  {
+    _id: "3",
+    title: "Household Pest Control", 
+    description: "Safe and effective pest control for residential properties and homes",
+    image: "/images/household-pest-control.jpg",
+    services: ["All Pest Types", "Disinfection", "Preventive Treatment", "Emergency Service"],
+    featured: true
+  }
+]
+
+const staticTestimonials = [
+  {
+    _id: "1",
+    name: "Rajesh Kumar",
+    location: "Tirunelveli",
+    rating: 5,
+    comment: "Excellent pest control service! They completely eliminated our termite problem. Very professional team and reasonable pricing.",
+    image: "/images/testimonial1.jpg",
+    status: "published"
+  },
+  {
+    _id: "2",
+    name: "Priya Sharma", 
+    location: "Tuticorin",
+    rating: 5,
+    comment: "Perfect Pest Control solved our rat problem effectively. The team was professional and the service was excellent.",
+    image: "/images/testimonial2.jpg",
+    status: "published"
+  },
+  {
+    _id: "3",
+    name: "Arun Krishnan",
+    location: "Madurai", 
+    rating: 5,
+    comment: "Best pest control service in the region. Highly recommend for both residential and commercial properties.",
+    image: "/images/testimonial3.jpg",
+    status: "published"
+  }
+]
+
 export default function CompleteHome() {
-  const { banner, isLoading } = useBanner("home") // dynamic hero banner for Home
-  const { tariffData } = useTariff() // dynamic tariff services
-  const { packagesData } = usePackages() // dynamic packages
-  const { contactInfo } = useContact() // dynamic contact information
-  const [testimonials, setTestimonials] = useState([])
-  const [testimonialsLoading, setTestimonialsLoading] = useState(true)
-
-  // Fetch testimonials
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        setTestimonialsLoading(true)
-        const response = await fetch('/api/admin/testimonial?status=published')
-        const result = await response.json()
-        
-        if (result.success) {
-          setTestimonials(result.data)
-        }
-      } catch (error) {
-        console.error('Error fetching testimonials:', error)
-      } finally {
-        setTestimonialsLoading(false)
-      }
-    }
-
-    fetchTestimonials()
-  }, [])
+  // Using static data instead of dynamic API calls
+  const banner = staticBanner
+  const isLoading = false
+  const tariffData = staticServices
+  const packagesData = staticServiceCategories
+  const contactInfo = staticContactInfo
+  const testimonials = staticTestimonials
+  const testimonialsLoading = false
 
   const handleBookNow = (serviceTitle?: string) => {
     // For homepage, scroll to the quick book form
@@ -55,46 +170,43 @@ export default function CompleteHome() {
   }
 
   const handleBookPackage = (packageTitle: string) => {
-    const message = `Hi, I'm interested in the ${packageTitle} package. Please provide more details and availability.`;
-    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919003782966';
+    const message = `Hi, I need ${packageTitle} service. Please provide more details and a free quote.`;
+    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919626341555';
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   }
 
   const handleCallNow = () => {
-    const phoneNumber = contactInfo?.primaryPhone || '+919003782966';
+    const phoneNumber = contactInfo?.primaryPhone || '0462-480-2258';
     window.open(`tel:${phoneNumber}`, "_self")
   }
 
-  // Update service cards rendering
+  // Update service cards rendering with static data
   const renderServices = () => {
-    if (!tariffData?.length) {
-      return <div className="text-center">No services available</div>
-    }
-
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
         {tariffData.slice(0, 6).map((service, index) => (
           <motion.div
             key={service._id || `service-${index}`}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30, rotateX: 10 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
             transition={{ duration: 0.8, delay: index * 0.1 }}
             viewport={{ once: true }}
+            whileHover={{ y: -8, rotateY: 2 }}
           >
-            <Card className="group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg hover:scale-105 h-full">
+            <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg hover:scale-105 h-full bg-white rounded-2xl hover:shadow-lg">
               <CardContent className="p-0 h-full flex flex-col">
                 <div className="relative h-48 overflow-hidden rounded-t-lg">
                   <Image
                     src={service.image || "/placeholder.svg"}
-                    alt={service.vehicleName}
+                    alt={service.serviceName}
                     fill
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-black/20" />
                   <div className="absolute top-4 right-4">
                     <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                      ₹{service.oneWayRate ? service.oneWayRate.replace(/[₹$]/g, '').replace(/per\s*km/gi, '').replace(/\/km/gi, '').trim() : 'N/A'}+
+                      {service.price}
                     </Badge>
                   </div>
                   {service.featured && (
@@ -105,19 +217,20 @@ export default function CompleteHome() {
                     </div>
                   )}
                 </div>
-                <div className="p-4 sm:p-6 md:p-8 flex flex-col flex-grow">
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">
-                    {service.vehicleName}
+                <div className="p-3 sm:p-4 md:p-6 flex flex-col flex-grow">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
+                    {service.serviceName}
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 md:mb-6 line-clamp-2 flex-grow">
+                  <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-2 flex-grow">
                     {service.description}
                   </p>
                   <div className="flex items-center justify-between mt-auto">
                     <Button
-                      onClick={() => handleBookNow(service.vehicleName)}
-                      className="bg-admin-gradient text-white hover:opacity-90 text-sm sm:text-base py-2 sm:py-2.5"
+                      onClick={() => handleBookNow(service.serviceName)}
+                      className="bg-admin-gradient text-white hover:opacity-90 text-sm sm:text-base py-2 sm:py-2.5 rounded-lg hover:scale-105 transition-all duration-300"
                     >
-                      Book Now
+                      <Shield className="mr-1.5 h-3 w-3 sm:h-4 sm:w-4" />
+                      Get Quote
                     </Button>
                     <Link
                       href="/tariff"
@@ -136,12 +249,8 @@ export default function CompleteHome() {
     )
   }
 
-  // Update packages rendering
+  // Update service categories rendering with static data
   const renderPackages = () => {
-    if (!packagesData?.length) {
-      return <div className="text-center">No packages available</div>
-    }
-
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
         {packagesData.slice(0, 6).map((pkg, index) => (
@@ -159,13 +268,13 @@ export default function CompleteHome() {
                   <div className="absolute inset-0 bg-black/20" />
                   <div className="absolute top-4 right-4">
                     <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                      {pkg.duration}
+                      Professional
                     </Badge>
                   </div>
                   {pkg.featured && (
                     <div className="absolute top-4 left-4">
                       <Badge className="bg-green-500 text-white">
-                        ⭐ Bestseller
+                        ⭐ Popular
                       </Badge>
                     </div>
                   )}
@@ -179,7 +288,7 @@ export default function CompleteHome() {
                   </p>
                   <div className="flex items-center justify-between mb-3 sm:mb-4">
                     <span className="text-lg sm:text-xl md:text-2xl font-bold text-admin-primary">
-                      {pkg.price}
+                      Contact for Quote
                     </span>
                     <div className="flex items-center text-yellow-500">
                       <Star className="h-4 w-4 fill-current" />
@@ -194,10 +303,10 @@ export default function CompleteHome() {
                       onClick={() => handleBookPackage(pkg.title)}
                       className="bg-admin-gradient text-white hover:opacity-90 text-sm sm:text-base py-2 sm:py-2.5"
                     >
-                      Book Now
+                      Get Quote
                     </Button>
                     <Link
-                      href={pkg.slug ? `/packages/${pkg.slug}` : "/packages"}
+                      href="/packages"
                       className="text-admin-primary hover:text-admin-secondary transition-colors font-medium text-xs sm:text-sm"
                     >
                       View Details
@@ -213,42 +322,8 @@ export default function CompleteHome() {
     )
   }
 
-  // Update testimonials rendering
+  // Update testimonials rendering with static data
   const renderTestimonials = () => {
-    if (testimonialsLoading) {
-      return (
-        <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-gray-50 to-white">
-          <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
-            <motion.div
-              className="text-center mb-12 sm:mb-16 md:mb-20"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <Badge className="mb-4 sm:mb-6 bg-admin-gradient text-white px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm">
-                Client Reviews
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 px-2">
-                What Our Customers
-                <span className="block text-transparent bg-clip-text bg-admin-gradient">Say About Us</span>
-              </h2>
-              <div className="flex justify-center items-center min-h-[200px]">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-12 h-12 border-4 border-admin-primary border-t-transparent rounded-full animate-spin"></div>
-                  <p className="text-gray-500 text-sm sm:text-base animate-pulse">Loading testimonials...</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )
-    }
-
-    if (!testimonials?.length) {
-      return null; // Don't show the section if there are no testimonials
-    }
-
     return <Testimonials testimonials={testimonials} />
   }
 
@@ -270,19 +345,19 @@ export default function CompleteHome() {
             </div>
             
             {/* Dark Overlay Layer */}
-            <div className="absolute inset-0 bg-black/50" />
+            <div className="absolute inset-0 bg-black/60" />
             
             {/* Gradient Overlay Layer */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/40" />
             
-            {/* Admin Gradient Layer */}
-            <div className="absolute inset-0 bg-admin-gradient/20" />
+            {/* Subtle Admin Gradient Layer */}
+            <div className="absolute inset-0 bg-admin-gradient/10" />
             
             {/* Optional: Animated Gradient Layer */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-tr from-yellow-600/20 via-transparent to-orange-600/20"
+              className="absolute inset-0 bg-gradient-to-tr from-green-600/10 via-transparent to-emerald-600/10"
               animate={{
-                opacity: [0.2, 0.4, 0.2],
+                opacity: [0.1, 0.2, 0.1],
               }}
               transition={{
                 duration: 8,
@@ -293,12 +368,12 @@ export default function CompleteHome() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 md:py-16 lg:py-20 xl:px-8 relative z-10 max-w-7xl">
+        <div className="container mx-auto px-3 py-6 sm:px-6 sm:py-12 md:py-16 lg:py-20 xl:px-8 relative z-10 max-w-7xl">
           <div className="max-w-5xl mx-auto text-center text-white">
             <div>
               <Badge className="mb-4 sm:mb-6 md:mb-8 hover:bg-admin-secondary bg-white/20 text-white border-white/30 backdrop-blur-sm px-3 py-1.5 sm:px-6 sm:py-2 md:px-8 md:py-3 text-xs sm:text-sm md:text-base rounded-full shadow-lg">
-                <Car className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-2 sm:mr-3" />
-                Welcome to Vinushree Tours & Travels
+                <Shield className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-2 sm:mr-3" />
+                Welcome to Perfect Pest Control
               </Badge>
             </div>
 
@@ -308,32 +383,32 @@ export default function CompleteHome() {
             )}
 
             <div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold mb-4 sm:mb-6 leading-tight">
-                <span className="block">Travel With Us</span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400">
-                  In Comfort
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+                <span className="block">Protect Your Property</span>
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-green-400 to-emerald-400">
+                  With Confidence
                 </span>
               </h1>
             </div>
 
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mb-4 sm:mb-6 text-white/90 font-light">
-              Since 2020
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 text-white/90 font-light">
+              Professional Pest Control
             </p>
 
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-8 sm:mb-10 md:mb-12 text-white/80 max-w-4xl mx-auto leading-relaxed px-2 sm:px-4">
-              Experience professional travel services with comfort and reliability. From airport transfers to
-              complete tour packages, we ensure safe, comfortable, and memorable journeys to your destinations.
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg mb-6 sm:mb-8 md:mb-10 text-white/90 max-w-4xl mx-auto leading-relaxed px-1 sm:px-2 md:px-4">
+              Experience professional pest control services with safety and reliability. From residential to commercial properties,
+              we provide comprehensive pest management solutions including anti-termite, rodent control, and disinfection services.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center px-2">
               <div className="w-full sm:w-auto">
                 <Button
                   onClick={() => handleBookNow()}
                   size="lg"
-                  className="w-full sm:w-auto bg-admin-gradient text-white border-0 px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 text-base sm:text-lg font-semibold transition-all duration-300 shadow-2xl hover:shadow-blue-500/25"
+                  className="w-full sm:w-auto bg-admin-gradient text-white border-0 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 shadow-2xl hover:shadow-green-500/25 rounded-xl hover:scale-105"
                 >
-                  Book Now
-                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+                  <Shield className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
+                  Get Free Quote
                 </Button>
               </div>
 
@@ -342,9 +417,9 @@ export default function CompleteHome() {
                   onClick={handleCallNow}
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 text-base sm:text-lg font-semibold bg-transparent backdrop-blur-sm shadow-2xl hover:shadow-white/10"
+                  className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold bg-transparent backdrop-blur-sm shadow-2xl hover:shadow-white/10 rounded-xl hover:scale-105"
                 >
-                  <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                  <Phone className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
                   Call Now
                 </Button>
               </div>
@@ -363,10 +438,10 @@ export default function CompleteHome() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white relative">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white relative">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8"
+            className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6"
             variants={{
               animate: {
                 transition: {
@@ -380,23 +455,23 @@ export default function CompleteHome() {
           >
             {[
               {
-                number: "1000+",
-                label: "Happy Customers",
-                icon: <Users className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />,
-              },
-              {
-                number: "50+",
-                label: "Destinations",
-                icon: <MapPin className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />,
+                number: "500+",
+                label: "Properties Protected",
+                icon: <Home className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />,
               },
               {
                 number: "5+",
+                label: "Branch Locations",
+                icon: <MapPin className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />,
+              },
+              {
+                number: "10+",
                 label: "Years Experience",
                 icon: <Clock className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />,
               },
               {
                 number: "99%",
-                label: "Customer Satisfaction",
+                label: "Success Rate",
                 icon: <Star className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />,
               },
             ].map((stat, index) => (
@@ -408,8 +483,8 @@ export default function CompleteHome() {
                 }}
                 transition={{ duration: 0.6 }}
               >
-                <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-gradient-to-br from-white to-gray-50 h-full">
-                  <CardContent className="p-3 sm:p-4 md:p-6 lg:p-8 text-center">
+                <Card className="hover:shadow-xl transition-all duration-500 border-0 shadow-lg bg-white h-full rounded-2xl hover:scale-105">
+                  <CardContent className="p-2 sm:p-3 md:p-4 lg:p-6 text-center">
                     <motion.div
                       className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 md:mb-6 bg-admin-gradient rounded-full flex items-center justify-center shadow-lg"
                       whileHover={{ scale: 1.1, rotate: 5 }}
@@ -437,8 +512,8 @@ export default function CompleteHome() {
       </section>
 
       {/* Quick Book Form Section */}
-      <section id="quick-book-form" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
+      <section id="quick-book-form" className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-4xl mx-auto">
             <QuickBookForm />
           </div>
@@ -446,7 +521,10 @@ export default function CompleteHome() {
       </section>
 
       {/* About Section */}
-      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-admin-gradient relative overflow-hidden">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-admin-gradient relative overflow-hidden">
+        {/* Dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        
         {/* Animated overlay gradients */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
@@ -542,10 +620,10 @@ export default function CompleteHome() {
 
           {/* Larger floating orbs */}
           <motion.div
-            className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-white/10 to-yellow-300/20 rounded-full blur-xl"
+            className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-white/10 to-green-300/15 rounded-full blur-xl"
             animate={{
               scale: [1, 1.05, 1],
-              opacity: [0.4, 0.7, 0.4],
+              opacity: [0.3, 0.5, 0.3],
             }}
             transition={{
               duration: 6,
@@ -554,10 +632,10 @@ export default function CompleteHome() {
             }}
           />
           <motion.div
-            className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-orange-300/20 to-white/10 rounded-full blur-xl"
+            className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-emerald-300/15 to-white/10 rounded-full blur-xl"
             animate={{
               scale: [1, 1.05, 1],
-              opacity: [0.4, 0.7, 0.4],
+              opacity: [0.3, 0.5, 0.3],
             }}
             transition={{
               duration: 7,
@@ -567,9 +645,9 @@ export default function CompleteHome() {
             }}
           />
         </div>
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 relative max-w-7xl z-10">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative max-w-7xl z-10">
           <motion.div
-            className="max-w-4xl mx-auto text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20"
+            className="max-w-4xl mx-auto text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16"
             variants={{
               initial: { opacity: 0, y: 60 },
               animate: { opacity: 1, y: 0 },
@@ -581,16 +659,15 @@ export default function CompleteHome() {
           >
             <Badge className="mb-4 sm:mb-6 bg-admin-gradient text-white px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm">
               <Award className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-              Since 2020
+              Professional Service
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 sm:mb-6 md:mb-8">
-              Travel Excellence
-              <span className="block text-yellow-200">Since 2020</span>
+              Pest Control Excellence
+              <span className="block text-green-200">Protecting Your Property</span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed px-2 sm:px-4">
-              Vinushree Tours & Travels is your trusted travel partner, specializing in comfortable
-              and reliable travel services that make every journey memorable with professional drivers and
-              well-maintained vehicles.
+              Perfect Pest Control is your trusted pest management partner, specializing in comprehensive
+              pest control solutions for residential, commercial, and industrial properties with safe and effective treatments.
             </p>
           </motion.div>
 
@@ -612,22 +689,22 @@ export default function CompleteHome() {
                 icon: <Shield className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" />,
                 title: "Our Mission",
                 description:
-                  "To provide safe, comfortable, and reliable travel services across Tamil Nadu, ensuring every journey is memorable and stress-free for our valued customers.",
-                gradient: "from-blue-600 to-purple-600",
+                  "To provide safe, effective, and reliable pest control services across Tamil Nadu, ensuring every property is protected from pests with professional and eco-friendly solutions.",
+                gradient: "from-green-600 to-emerald-600",
               },
               {
                 icon: <Award className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" />,
                 title: "Our Vision",
                 description:
-                  "To be the most trusted travel partner in Tamil Nadu, recognized for our commitment to excellence, customer satisfaction, and professional service standards.",
-                gradient: "from-purple-600 to-pink-600",
+                  "To be the most trusted pest control partner in South India, recognized for our commitment to excellence, customer satisfaction, and innovative pest management solutions.",
+                gradient: "from-blue-600 to-cyan-600",
               },
               {
                 icon: <Heart className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" />,
                 title: "Our Values",
                 description:
-                  "Safety, reliability, customer satisfaction, and integrity are the core values that guide our services, ensuring exceptional travel experiences for every customer.",
-                gradient: "from-green-600 to-teal-600",
+                  "Safety, effectiveness, customer satisfaction, and environmental responsibility are the core values that guide our pest control services, ensuring healthy environments for every client.",
+                gradient: "from-purple-600 to-pink-600",
               },
             ].map((item, index) => (
               <motion.div
@@ -639,7 +716,7 @@ export default function CompleteHome() {
                 transition={{ duration: 0.6 }}
                 className="md:col-span-2 lg:col-span-1 md:last:col-start-1 md:last:col-end-3 lg:last:col-start-auto lg:last:col-end-auto"
               >
-                <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full border-0 shadow-lg overflow-hidden">
+                <Card className="hover:shadow-xl transition-all duration-500 hover:-translate-y-3 h-full border-0 shadow-lg overflow-hidden rounded-2xl backdrop-blur-sm bg-white/90 hover:bg-white/95">
                   <CardContent className="p-4 sm:p-6 md:p-8 text-center relative">
                     <motion.div
                       className={`w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-gradient-to-br ${item.gradient} rounded-xl sm:rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-6 shadow-lg`}
@@ -661,7 +738,7 @@ export default function CompleteHome() {
       </section>
 
       {/* Services Overview Section */}
-      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-gray-50 to-white">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
@@ -689,9 +766,9 @@ export default function CompleteHome() {
             }}
           />
         </div>
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
           <motion.div
-            className="text-center mb-12 sm:mb-16 md:mb-20"
+            className="text-center mb-8 sm:mb-12 md:mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -701,11 +778,11 @@ export default function CompleteHome() {
               Our Services
             </Badge>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 px-2">
-              Travel Services
-              <span className="block text-transparent bg-clip-text bg-admin-gradient">For Every Destination</span>
+              Pest Control Services
+              <span className="block text-transparent bg-clip-text bg-admin-gradient">For Every Property Type</span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-xs sm:max-w-2xl md:max-w-3xl mx-auto px-2">
-              From airport transfers to complete tour packages, we provide reliable and comfortable travel solutions
+              From residential homes to commercial buildings, we provide comprehensive pest management solutions
             </p>
           </motion.div>
 
@@ -733,14 +810,14 @@ export default function CompleteHome() {
             viewport={{ once: true }}
           >
             <Badge className="mb-4 sm:mb-6 bg-admin-gradient text-white px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm">
-              Tour Packages
+              Service Categories
             </Badge>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 px-2">
-              Popular
-              <span className="block text-transparent bg-clip-text bg-admin-gradient">Travel Packages</span>
+              Specialized
+              <span className="block text-transparent bg-clip-text bg-admin-gradient">Pest Solutions</span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-xs sm:max-w-2xl md:max-w-3xl mx-auto px-2">
-              Discover the beauty of Tamil Nadu with our carefully crafted tour packages
+              Comprehensive pest control solutions tailored for industrial, commercial, and residential needs
             </p>
           </motion.div>
 
@@ -749,7 +826,7 @@ export default function CompleteHome() {
           <div className="text-center mt-12">
             <Link href="/packages">
               <Button className="bg-admin-gradient text-white hover:opacity-90 px-8 py-3 text-lg font-semibold">
-                View All Packages
+                View All Solutions
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -757,20 +834,23 @@ export default function CompleteHome() {
         </div>
       </section>
 
-      {/* Popular Routes Section */}
-      <PopularRoutes showAll={true} />
+      {/* Approved Licenses Section */}
+      <ApprovedLicenses showAll={true} />
 
       {/* Dynamic Testimonials Section */}
       {renderTestimonials()}
 
       {/* CTA Section */}
       <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-admin-gradient relative overflow-hidden">
+        {/* Dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        
         {/* Animated overlay gradients */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
-            className="absolute inset-0 bg-gradient-to-tr from-yellow-600/30 via-transparent to-orange-600/30"
+            className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-green-300/20"
             animate={{
-              opacity: [0.3, 0.7, 0.3],
+              opacity: [0.3, 0.5, 0.3],
             }}
             transition={{
               duration: 8,
@@ -779,9 +859,9 @@ export default function CompleteHome() {
             }}
           />
           <motion.div
-            className="absolute inset-0 bg-gradient-to-bl from-orange-500/20 via-transparent to-yellow-500/20"
+            className="absolute inset-0 bg-gradient-to-bl from-emerald-300/15 via-transparent to-white/10"
             animate={{
-              opacity: [0.7, 0.3, 0.7],
+              opacity: [0.5, 0.3, 0.5],
             }}
             transition={{
               duration: 6,
@@ -830,32 +910,32 @@ export default function CompleteHome() {
             viewport={{ once: true }}
           >
             <Badge className="mb-3 sm:mb-4 md:mb-6 bg-admin-secondary text-white border-white/30 backdrop-blur-sm px-3 py-1 sm:px-4 sm:py-1.5 md:px-6 md:py-2 text-xs sm:text-sm md:text-base">
-              <Plane className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-              Ready to Travel?
+              <Bug className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+              Need Pest Control?
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 md:mb-8 text-white">
-              Start Your Journey
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-300">
+              Protect Your Property
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-300">
                 With Us Today
               </span>
             </h2>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 md:mb-10 text-white/90 max-w-3xl mx-auto leading-relaxed px-2 sm:px-4">
-              Experience the comfort and reliability of our travel services. Book your journey across Tamil Nadu and
-              discover the beauty of the state with our professional team.
+              Experience the safety and reliability of our pest control services. Protect your property across Tamil Nadu with
+              our comprehensive pest management solutions and professional team.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
                 <Button
                   onClick={() => {
-                    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919003782966';
-                    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi, I would like to book a trip. Please provide more details.`;
+                    const whatsappNumber = contactInfo?.whatsappNumber || '919626341555';
+                    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi, I need pest control services. Please provide more details and a free quote.`;
                     window.open(whatsappUrl, '_blank');
                   }}
                   size="lg"
                   className="w-full sm:w-auto bg-white text-admin-secondary hover:bg-gray-100 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105"
                 >
                   <WhatsAppIcon className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  Book via WhatsApp
+                  Get Quote via WhatsApp
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
