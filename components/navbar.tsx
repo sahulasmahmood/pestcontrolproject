@@ -10,6 +10,7 @@ import {
   X,
   Mail,
   MapPin,
+  ChevronDown,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -46,6 +47,7 @@ function NavbarContent() {
   
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,10 +57,24 @@ function NavbarContent() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Static pest control services for dropdown
+  const pestControlServices = [
+    { name: "Disinfection Spray Service", slug: "disinfection-spray-service" },
+    { name: "Sanitizer Cleaning Service", slug: "sanitizer-cleaning-spray" },
+    { name: "Anti Termite Treatment", slug: "anti-termite-treatment" },
+    { name: "Rat Control Service", slug: "rat-control-service" },
+    { name: "Bed Bug Treatment", slug: "bedbug-treatment" },
+    { name: "Ant Control Service", slug: "ant-control-service" },
+    { name: "Mosquito Control Service", slug: "mosquito-control-service" },
+    { name: "Fly Control Service", slug: "fly-control-service" },
+    { name: "Cockroach Control Service", slug: "cockroach-control-service" },
+    { name: "Spider & Lizard Control", slug: "spider-lizard-control" },
+  ];
+
   const navItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Services", href: "/tariff" },
+    { name: "Services", href: "/services" },
     { name: "Gallery", href: "/packages" },
     { name: "Contact", href: "/contact" },
   ];
@@ -187,26 +203,89 @@ function NavbarContent() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`transition-all font-semibold text-base xl:text-lg relative group ${
-                    isActive(item.href)
-                      ? "text-transparent bg-clip-text bg-admin-gradient"
-                      : "text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-admin-gradient"
-                  }`}
-                >
-                  {item.name}
-                  <span
-                    className={`absolute -bottom-1 left-0 h-0.5 bg-admin-gradient transition-all duration-300 ${
+              {navItems.map((item) => {
+                if (item.name === "Services") {
+                  return (
+                    <div
+                      key={item.name}
+                      className="relative group"
+                      onMouseEnter={() => setIsServicesDropdownOpen(true)}
+                      onMouseLeave={() => setIsServicesDropdownOpen(false)}
+                    >
+                      <Link
+                        href={item.href}
+                        className={`transition-all font-semibold text-base xl:text-lg relative group flex items-center gap-1 ${
+                          isActive(item.href)
+                            ? "text-transparent bg-clip-text bg-admin-gradient"
+                            : "text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-admin-gradient"
+                        }`}
+                      >
+                        {item.name}
+                        <ChevronDown
+                          className={`h-4 w-4 text-admin-primary transition-transform duration-200 ${
+                            isServicesDropdownOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                        <span
+                          className={`absolute -bottom-1 left-0 h-0.5 bg-admin-gradient transition-all duration-300 ${
+                            isActive(item.href)
+                              ? "w-full"
+                              : "w-0 group-hover:w-full"
+                          }`}
+                        ></span>
+                      </Link>
+
+                      {/* Services Dropdown */}
+                      <AnimatePresence>
+                        {isServicesDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 max-h-96 overflow-y-auto"
+                          >
+                            {/* Services List */}
+                            <div>
+                              {pestControlServices.map((service) => (
+                                <Link
+                                  key={service.slug}
+                                  href={`/services/${service.slug}`}
+                                  className="block px-4 py-3 text-gray-700 hover:bg-emerald-50 hover:text-admin-primary transition-colors text-sm font-medium border-b border-gray-100 last:border-b-0"
+                                  onClick={() => setIsServicesDropdownOpen(false)}
+                                >
+                                  {service.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`transition-all font-semibold text-base xl:text-lg relative group ${
                       isActive(item.href)
-                        ? "w-full"
-                        : "w-0 group-hover:w-full"
+                        ? "text-transparent bg-clip-text bg-admin-gradient"
+                        : "text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-admin-gradient"
                     }`}
-                  ></span>
-                </Link>
-              ))}
+                  >
+                    {item.name}
+                    <span
+                      className={`absolute -bottom-1 left-0 h-0.5 bg-admin-gradient transition-all duration-300 ${
+                        isActive(item.href)
+                          ? "w-full"
+                          : "w-0 group-hover:w-full"
+                      }`}
+                    ></span>
+                  </Link>
+                );
+              })}
 
               <Button
                 onClick={handleBookNow}

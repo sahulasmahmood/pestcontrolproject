@@ -56,14 +56,14 @@ export default function AboutPage() {
       title: "Licensed & Certified",
       description:
         "Fully licensed pest control professionals with certified technicians and approved treatment methods for your safety.",
-      gradient: "from-emerald-500 to-green-600",
+      gradient: "from-blue-500 to-indigo-600",
     },
     {
       icon: <Leaf className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />,
       title: "Eco-Friendly Solutions",
       description:
         "Safe, environmentally responsible pest control methods that protect your family, pets, and the environment.",
-      gradient: "from-green-500 to-emerald-600",
+      gradient: "from-green-500 to-teal-600",
     },
     {
       icon: <Zap className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />,
@@ -88,7 +88,7 @@ export default function AboutPage() {
       title: "Satisfaction Guarantee",
       description:
         "100% satisfaction guarantee with follow-up services to ensure complete pest elimination and prevention.",
-      gradient: "from-teal-500 to-green-600",
+      gradient: "from-teal-500 to-cyan-600",
     },
   ]
 
@@ -155,7 +155,7 @@ export default function AboutPage() {
             
             {/* Animated Gradient Layers */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-tr from-yellow-600/20 via-transparent to-orange-600/20"
+              className="absolute inset-0 bg-admin-gradient/10"
               animate={{
                 opacity: [0.2, 0.4, 0.2],
               }}
@@ -167,7 +167,7 @@ export default function AboutPage() {
             />
 
             <motion.div
-              className="absolute inset-0 bg-gradient-to-bl from-orange-500/20 via-transparent to-yellow-500/20"
+              className="absolute inset-0 bg-admin-gradient/5"
               animate={{
                 opacity: [0.7, 0.3, 0.7],
               }}
@@ -212,7 +212,7 @@ export default function AboutPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-emerald-50 to-white">
+      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
           <motion.div
             className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 max-w-5xl mx-auto"
@@ -242,7 +242,7 @@ export default function AboutPage() {
 
       {/* Company Story */}
       <section id="story" className="py-16 sm:py-20 md:py-24 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-green-50/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-white/20"></div>
         <div className="container mx-auto px-4 sm:px-6 md:px-8 relative max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 md:gap-16 items-center max-w-7xl mx-auto">
             <motion.div variants={fadeInUp} initial="initial" whileInView="animate" viewport={{ once: true }}>
@@ -269,14 +269,14 @@ export default function AboutPage() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
-                <div className="text-center p-3 sm:p-4 md:p-6 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl sm:rounded-2xl">
+                <div className="text-center p-3 sm:p-4 md:p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl sm:rounded-2xl">
                   <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-admin-gradient mb-1 sm:mb-2">
                     2000+
                   </div>
                   <div className="text-gray-600 font-medium text-xs sm:text-sm">Properties Protected</div>
                 </div>
-                <div className="text-center p-3 sm:p-4 md:p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl sm:rounded-2xl">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600 mb-1 sm:mb-2">
+                <div className="text-center p-3 sm:p-4 md:p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl sm:rounded-2xl">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-admin-gradient mb-1 sm:mb-2">
                     15+
                   </div>
                   <div className="text-gray-600 font-medium text-xs sm:text-sm">Years Experience</div>
@@ -291,7 +291,7 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 shadow-2xl border-2 border-emerald-100">
+              <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 shadow-2xl border-2 border-gray-200">
                 <div className="text-center">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-admin-gradient rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
                     <ShieldCheck className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-white" />
@@ -332,7 +332,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission, Vision, Values */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-white to-emerald-50">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
           <motion.div
             className="text-center mb-12 sm:mb-16 md:mb-20"
@@ -367,7 +367,7 @@ export default function AboutPage() {
                 title: "Our Mission",
                 description:
                   "To provide safe, effective, and environmentally responsible pest control solutions that protect homes and businesses while ensuring the health and safety of our clients and their families.",
-                gradient: "from-emerald-500 to-green-600",
+                gradient: "from-admin-primary to-admin-secondary",
               },
               {
                 icon: <Award className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />,
@@ -433,7 +433,7 @@ export default function AboutPage() {
 
       {/* Why Perfect Pest Section */}
       <section className="py-16 sm:py-20 md:py-24 bg-white relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-emerald-50/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-white/20"></div>
         <div className="container mx-auto px-4 sm:px-6 md:px-8 relative max-w-7xl">
           <motion.div
             className="text-center mb-12 sm:mb-16 md:mb-20"
@@ -484,7 +484,7 @@ export default function AboutPage() {
       </section>
 
       {/* Services Overview Section */}
-      <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-br from-emerald-50 to-green-50">
+      <section className="py-16 sm:py-20 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
           <motion.div
             className="text-center mb-12 sm:mb-16 md:mb-20"
@@ -548,7 +548,7 @@ export default function AboutPage() {
                 icon: <Leaf className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8" />,
                 title: "Eco-Safe",
                 description: "Environmentally friendly pest solutions",
-                color: "from-emerald-500 to-green-600",
+                color: "from-green-500 to-teal-600",
               },
             ].map((service, index) => (
               <motion.div key={index} variants={fadeInUp} className="xl:col-span-1">

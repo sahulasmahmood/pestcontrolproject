@@ -143,7 +143,7 @@ export default function ApprovedLicenses({ showAll = false, limit = 8 }: Approve
             Certified & Licensed
           </Badge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 md:mb-8 px-2">
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-green-400 to-emerald-400">
+            <span className="block text-white">
               Approved Licenses
             </span>
           </h2>

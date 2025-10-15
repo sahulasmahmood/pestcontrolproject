@@ -80,8 +80,8 @@ export const Testimonials = ({ testimonials = [] }: TestimonialsProps) => {
 
   if (activeTestimonials.length === 0) {
     return (
-      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-100/30 to-green-100/30"></div>
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-white/20"></div>
         <div className="container mx-auto px-3 sm:px-4 md:px-6 relative">
           <div className="text-center">
             <p className="text-gray-600 text-sm sm:text-base">
@@ -94,8 +94,8 @@ export const Testimonials = ({ testimonials = [] }: TestimonialsProps) => {
   }
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-100/30 to-green-100/30"></div>
+    <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-gray-50 to-white relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-white/20"></div>
       <div className="container mx-auto px-2 sm:px-4 md:px-6 relative">
         <motion.div
           className="text-center mb-12 sm:mb-16 md:mb-20"

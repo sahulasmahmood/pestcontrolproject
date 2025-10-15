@@ -211,7 +211,7 @@ export default function CompleteHome() {
                   </div>
                   {service.featured && (
                     <div className="absolute top-4 left-4">
-                      <Badge className="bg-green-500 text-white">
+                      <Badge className="bg-admin-gradient text-white">
                         ⭐ Featured
                       </Badge>
                     </div>
@@ -233,7 +233,7 @@ export default function CompleteHome() {
                       Get Quote
                     </Button>
                     <Link
-                      href="/tariff"
+                      href="/services"
                       className="text-admin-primary hover:text-admin-secondary transition-colors font-medium text-xs sm:text-sm"
                     >
                       View Details
@@ -273,7 +273,7 @@ export default function CompleteHome() {
                   </div>
                   {pkg.featured && (
                     <div className="absolute top-4 left-4">
-                      <Badge className="bg-green-500 text-white">
+                      <Badge className="bg-admin-gradient text-white">
                         ⭐ Popular
                       </Badge>
                     </div>
@@ -355,7 +355,7 @@ export default function CompleteHome() {
             
             {/* Optional: Animated Gradient Layer */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-tr from-green-600/10 via-transparent to-emerald-600/10"
+              className="absolute inset-0 bg-admin-gradient/5"
               animate={{
                 opacity: [0.1, 0.2, 0.1],
               }}
@@ -385,7 +385,7 @@ export default function CompleteHome() {
             <div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
                 <span className="block">Protect Your Property</span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-green-400 to-emerald-400">
+                <span className="block text-white">
                   With Confidence
                 </span>
               </h1>
@@ -620,7 +620,7 @@ export default function CompleteHome() {
 
           {/* Larger floating orbs */}
           <motion.div
-            className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-white/10 to-green-300/15 rounded-full blur-xl"
+            className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full blur-xl"
             animate={{
               scale: [1, 1.05, 1],
               opacity: [0.3, 0.5, 0.3],
@@ -632,7 +632,7 @@ export default function CompleteHome() {
             }}
           />
           <motion.div
-            className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-emerald-300/15 to-white/10 rounded-full blur-xl"
+            className="absolute bottom-20 right-20 w-40 h-40 bg-white/10 rounded-full blur-xl"
             animate={{
               scale: [1, 1.05, 1],
               opacity: [0.3, 0.5, 0.3],
@@ -663,7 +663,7 @@ export default function CompleteHome() {
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 sm:mb-6 md:mb-8">
               Pest Control Excellence
-              <span className="block text-green-200">Protecting Your Property</span>
+              <span className="block text-white">Protecting Your Property</span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed px-2 sm:px-4">
               Perfect Pest Control is your trusted pest management partner, specializing in comprehensive
@@ -690,7 +690,7 @@ export default function CompleteHome() {
                 title: "Our Mission",
                 description:
                   "To provide safe, effective, and reliable pest control services across Tamil Nadu, ensuring every property is protected from pests with professional and eco-friendly solutions.",
-                gradient: "from-green-600 to-emerald-600",
+                gradient: "from-admin-primary to-admin-secondary",
               },
               {
                 icon: <Award className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" />,
@@ -789,7 +789,7 @@ export default function CompleteHome() {
           {renderServices()}
 
           <div className="text-center mt-12">
-            <Link href="/tariff">
+            <Link href="/services">
               <Button className="bg-admin-gradient text-white hover:opacity-90 px-8 py-3 text-lg font-semibold">
                 View All Services
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -915,7 +915,7 @@ export default function CompleteHome() {
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 md:mb-8 text-white">
               Protect Your Property
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-300">
+              <span className="block text-white">
                 With Us Today
               </span>
             </h2>

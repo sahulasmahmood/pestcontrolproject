@@ -163,7 +163,7 @@ export default function Services() {
                         Book Now
                       </Button>
                       <Link
-                        href="/tariff"
+                        href="/services"
                         className="text-admin-primary hover:text-admin-secondary transition-colors font-medium text-sm"
                       >
                         View Details
@@ -184,7 +184,7 @@ export default function Services() {
           transition={{ duration: 0.8, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <Link href="/tariff">
+          <Link href="/services">
             <Button className="bg-admin-gradient text-white hover:opacity-90 px-8 py-3 text-lg font-semibold hover:scale-105 transition-all duration-300">
               Explore All Services
               <ArrowRight className="ml-2 h-5 w-5" />

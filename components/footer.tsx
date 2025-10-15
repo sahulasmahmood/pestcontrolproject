@@ -56,18 +56,18 @@ export default function Footer() {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   const pestControlServices = [
-    { name: 'Anti Termite Treatment', href: '/tariff' },
-    { name: 'Rat Control', href: '/tariff' },
-    { name: 'Bed Bug Treatment', href: '/tariff' },
-    { name: 'Mosquito Control', href: '/tariff' },
-    { name: 'Disinfection Service', href: '/tariff' },
+    { name: 'Anti Termite Treatment', href: '/services' },
+    { name: 'Rat Control', href: '/services' },
+    { name: 'Bed Bug Treatment', href: '/services' },
+    { name: 'Mosquito Control', href: '/services' },
+    { name: 'Disinfection Service', href: '/services' },
     { name: 'General Pest Control', href: '/packages' }
   ];
 
   const quickLinks = [
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about' },
-    { name: 'Services', href: '/tariff' },
+    { name: 'Services', href: '/services' },
     { name: 'Gallery', href: '/packages' },
     { name: 'Contact', href: '/contact' }
   ];
