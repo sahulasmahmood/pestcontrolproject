@@ -4,102 +4,85 @@ import Footer from "@/components/footer";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
 import TariffDetailClient from "@/components/TariffDetailClient";
 
+// Static pest control services data (same as main page)
+const pestControlServices = [
+  {
+    id: "disinfection-spray",
+    serviceName: "Disinfection Spray Service (Sodium Hypochloride)",
+    serviceType: "Sanitization",
+    description: "Professional disinfection service using sodium hypochloride for complete sanitization of residential and commercial spaces.",
+    basePrice: "1,500",
+    premiumPrice: "3,500",
+    area: "Up to 2000 sq ft",
+    warranty: "1 month",
+    image: "/disinfection-spray.jpg",
+    featured: true,
+    inclusions: ["Complete Area Disinfection", "Safe Chemical Application", "Post-Service Report", "Health Certificate"],
+    pests: ["Virus", "Bacteria", "Germs", "Pathogens"],
+    slug: "disinfection-spray-service"
+  },
+  {
+    id: "sanitizer-cleaning",
+    serviceName: "Sanitizer Cleaning Spray Service",
+    serviceType: "Sanitization",
+    description: "Comprehensive sanitizer cleaning service for maintaining hygiene standards in homes and commercial establishments.",
+    basePrice: "1,200",
+    premiumPrice: "2,800",
+    area: "Up to 1500 sq ft",
+    warranty: "2 weeks",
+    image: "/sanitizer-cleaning.jpg",
+    featured: true,
+    inclusions: ["Surface Sanitization", "Air Purification", "Equipment Sanitization", "Safety Guidelines"],
+    pests: ["Bacteria", "Virus", "Germs", "Microorganisms"],
+    slug: "sanitizer-cleaning-spray"
+  }
+];
+
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   
-  try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/tariff`, {
-      cache: 'no-store',
-    });
-    
-    if (!response.ok) {
-      return {
-        title: "Tariff Not Found - Vinushree Tours & Travels",
-      };
-    }
-    
-    const data = await response.json();
-    const tariff = data.success ? data.data.find((t: any) => t.slug === slug) : null;
-    
-    if (!tariff) {
-      return {
-        title: "Tariff Not Found - Vinushree Tours & Travels",
-      };
-    }
-    
+  const service = pestControlServices.find(s => s.slug === slug);
+  
+  if (!service) {
     return {
-      title: tariff.seoTitle || `${tariff.vehicleName} - Tariff & Pricing | Vinushree Tours & Travels`,
-      description: tariff.seoDescription || `Book ${tariff.vehicleName} for your travel needs. One-way: ₹${tariff.oneWayRate}/km, Round trip: ₹${tariff.roundTripRate}/km. Professional drivers and clean vehicles.`,
-      keywords: tariff.seoKeywords || `${tariff.vehicleName}, ${tariff.vehicleType}, taxi booking, travel tariff, Tamil Nadu taxi`,
-    };
-  } catch (error) {
-    return {
-      title: "Tariff Not Found - Vinushree Tours & Travels",
+      title: "Service Not Found - Perfect Pest Control",
     };
   }
+  
+  return {
+    title: `${service.serviceName} - Perfect Pest Control`,
+    description: `${service.description} Starting from ₹${service.basePrice}. Professional pest control service with ${service.warranty} warranty.`,
+    keywords: `${service.serviceName}, ${service.serviceType}, pest control, ${service.pests.join(', ')}, Perfect Pest Control`,
+  };
 }
 
-// Fetch tariff data
-async function getTariffData(slug: string) {
-  try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/tariff`, {
-      cache: 'no-store',
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch tariff data');
-    }
-    
-    const data = await response.json();
-    const tariff = data.success ? data.data.find((t: any) => t.slug === slug) : null;
-    
-    return tariff;
-  } catch (error) {
-    console.error('Error fetching tariff data:', error);
-    return null;
-  }
+// Get service data by slug
+function getServiceData(slug: string) {
+  return pestControlServices.find(service => service.slug === slug) || null;
 }
 
-export default async function TariffDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const tariffData = await getTariffData(slug);
+  const serviceData = getServiceData(slug);
 
-  if (!tariffData) {
+  if (!serviceData) {
     notFound();
   }
 
   return (
     <div className="min-h-screen">
       <Navbar />
-      <TariffDetailClient tariffData={tariffData} />
+      <TariffDetailClient tariffData={serviceData} />
       <Footer />
       <FloatingContactButtons />
     </div>
   );
 }
 
-// Generate static params for better performance (optional)
+// Generate static params for the available services
 export async function generateStaticParams() {
-  try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/tariff`, {
-      cache: 'no-store',
-    });
-    
-    if (!response.ok) {
-      return [];
-    }
-    
-    const data = await response.json();
-    const tariffs = data.success ? data.data : [];
-    
-    return tariffs.map((tariff: any) => ({
-      slug: tariff.slug,
-    }));
-  } catch (error) {
-    return [];
-  }
+  return pestControlServices.map((service) => ({
+    slug: service.slug,
+  }));
 }

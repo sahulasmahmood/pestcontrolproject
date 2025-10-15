@@ -22,27 +22,24 @@ import { useState } from "react";
 import { useContact } from "@/hooks/use-contact";
 import BookingModal from "@/components/BookingModal";
 
-interface TariffData {
+interface ServiceData {
   id: string;
-  vehicleType: string;
-  vehicleName: string;
+  serviceName: string;
+  serviceType: string;
   description: string;
-  oneWayRate: string;
-  roundTripRate: string;
-  driverAllowance: string;
-  minimumKmOneWay: string;
-  minimumKmRoundTrip: string;
+  basePrice: string;
+  premiumPrice: string;
+  area: string;
+  warranty: string;
   image: string;
   featured: boolean;
-  additionalCharges: string[];
+  inclusions: string[];
+  pests: string[];
   slug: string;
-  seoTitle?: string;
-  seoDescription?: string;
-  seoKeywords?: string;
 }
 
 interface TariffDetailClientProps {
-  tariffData: TariffData;
+  tariffData: ServiceData;
 }
 
 export default function TariffDetailClient({ tariffData }: TariffDetailClientProps) {
@@ -50,23 +47,7 @@ export default function TariffDetailClient({ tariffData }: TariffDetailClientPro
   const { contactInfo } = useContact();
 
   const handleBookNow = () => {
-    const message = `🚗 *Vehicle Booking Request*
-
-*Vehicle:* ${tariffData.vehicleName}
-*Type:* ${tariffData.vehicleType}
-*One-way Rate:* ₹${tariffData.oneWayRate}/km
-*Round Trip Rate:* ₹${tariffData.roundTripRate}/km
-
-I'm interested in booking this vehicle. Please provide:
-- Available dates
-- Final pricing for my route
-- Booking confirmation
-
-Thank you!`;
-
-    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919003782966';
-    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    setIsModalOpen(true);
   };
 
   const handleCallNow = () => {
@@ -94,17 +75,17 @@ Thank you!`;
               className="inline-flex items-center text-white/80 hover:text-white mb-6 transition-colors"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Tariff
+              Back to Services
             </Link>
             
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <Badge className="mb-4 bg-white/20 text-white border-white/30 px-4 py-2">
-                  <Car className="h-4 w-4 mr-2" />
-                  {tariffData.vehicleType}
+                  <Shield className="h-4 w-4 mr-2" />
+                  {tariffData.serviceType}
                 </Badge>
                 <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                  {tariffData.vehicleName}
+                  {tariffData.serviceName}
                 </h1>
                 <p className="text-xl text-white/90 mb-8 leading-relaxed">
                   {tariffData.description}
@@ -113,11 +94,11 @@ Thank you!`;
                 <div className="flex flex-wrap gap-6 mb-8">
                   <div className="flex items-center">
                     <MapPin className="h-5 w-5 mr-2" />
-                    <span className="font-semibold">₹{tariffData.oneWayRate.replace(/[₹$]/g, '').replace(/per\s*km/gi, '').replace(/\/km/gi, '').trim()}/km One-way</span>
+                    <span className="font-semibold">₹{tariffData.basePrice} - ₹{tariffData.premiumPrice}</span>
                   </div>
                   <div className="flex items-center">
                     <Clock className="h-5 w-5 mr-2" />
-                    <span className="font-semibold">₹{tariffData.roundTripRate.replace(/[₹$]/g, '').replace(/per\s*km/gi, '').replace(/\/km/gi, '').trim()}/km Round Trip</span>
+                    <span className="font-semibold">{tariffData.warranty} Warranty</span>
                   </div>
                   <div className="flex items-center">
                     <Star className="h-5 w-5 mr-2 text-yellow-400" />
@@ -131,8 +112,7 @@ Thank you!`;
                     size="lg"
                     className="bg-white text-admin-primary hover:bg-gray-100 px-8 py-3 text-lg font-semibold"
                   >
-                    <WhatsAppIcon className="h-5 w-5 mr-2" />
-                    Book via WhatsApp
+                    Get Quote & Book Service
                   </Button>
                   <Button
                     onClick={handleCallNow}
@@ -149,8 +129,8 @@ Thank you!`;
               <div className="relative">
                 <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
                   <Image
-                    src={tariffData.image || "/toyota-innova-crysta-luxury-taxi.png"}
-                    alt={tariffData.vehicleName}
+                    src={tariffData.image || "/pest-control-service.jpg"}
+                    alt={tariffData.serviceName}
                     fill
                     className="object-cover"
                   />
@@ -185,27 +165,34 @@ Thank you!`;
                 <Card className="shadow-lg border-0">
                   <CardContent className="p-8">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                      <Car className="h-6 w-6 mr-3 text-admin-primary" />
-                      Pricing Details
+                      <Shield className="h-6 w-6 mr-3 text-admin-primary" />
+                      Service Pricing
                     </h2>
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg">
-                        <h3 className="text-lg font-semibold text-blue-900 mb-2">One-way Trip</h3>
-                        <div className="text-3xl font-bold text-blue-600 mb-2">₹{tariffData.oneWayRate.replace(/[₹$]/g, '').replace(/per\s*km/gi, '').replace(/\/km/gi, '').trim()}/km</div>
-                        <p className="text-blue-700 text-sm">Minimum {tariffData.minimumKmOneWay.replace(/km/gi, '').trim()} km</p>
+                        <h3 className="text-lg font-semibold text-blue-900 mb-2">Basic Service</h3>
+                        <div className="text-3xl font-bold text-blue-600 mb-2">₹{tariffData.basePrice}</div>
+                        <p className="text-blue-700 text-sm">Standard treatment package</p>
                       </div>
                       <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg">
-                        <h3 className="text-lg font-semibold text-green-900 mb-2">Round Trip</h3>
-                        <div className="text-3xl font-bold text-green-600 mb-2">₹{tariffData.roundTripRate.replace(/[₹$]/g, '').replace(/per\s*km/gi, '').replace(/\/km/gi, '').trim()}/km</div>
-                        <p className="text-green-700 text-sm">Minimum {tariffData.minimumKmRoundTrip.replace(/km/gi, '').trim()} km</p>
+                        <h3 className="text-lg font-semibold text-green-900 mb-2">Premium Service</h3>
+                        <div className="text-3xl font-bold text-green-600 mb-2">₹{tariffData.premiumPrice}</div>
+                        <p className="text-green-700 text-sm">Comprehensive treatment package</p>
                       </div>
                     </div>
                     <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
                       <div className="flex items-center mb-2">
-                        <Users className="h-5 w-5 text-yellow-600 mr-2" />
-                        <span className="font-semibold text-yellow-900">Driver Allowance</span>
+                        <Clock className="h-5 w-5 text-yellow-600 mr-2" />
+                        <span className="font-semibold text-yellow-900">Service Warranty</span>
                       </div>
-                      <p className="text-yellow-800">₹{tariffData.driverAllowance.replace(/[₹$]/g, '').trim()} per day</p>
+                      <p className="text-yellow-800">{tariffData.warranty} warranty included</p>
+                    </div>
+                    <div className="mt-4 p-4 bg-emerald-50 rounded-lg">
+                      <div className="flex items-center mb-2">
+                        <MapPin className="h-5 w-5 text-emerald-600 mr-2" />
+                        <span className="font-semibold text-emerald-900">Coverage Area</span>
+                      </div>
+                      <p className="text-emerald-800">{tariffData.area}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -222,48 +209,27 @@ Thank you!`;
                   <CardContent className="p-8">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                       <Shield className="h-6 w-6 mr-3 text-admin-primary" />
-                      What's Included
+                      Service Includes
                     </h2>
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div className="flex items-center">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">Professional & Experienced Driver</span>
-                      </div>
-                      <div className="flex items-center">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">Clean & Well-maintained Vehicle</span>
-                      </div>
-                      <div className="flex items-center">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">24/7 Customer Support</span>
-                      </div>
-                      <div className="flex items-center">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">On-time Pickup & Drop</span>
-                      </div>
-                      <div className="flex items-center">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">GPS Tracking for Safety</span>
-                      </div>
-                      <div className="flex items-center">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">Comfortable Seating</span>
-                      </div>
+                      {tariffData.inclusions.map((inclusion, index) => (
+                        <div key={index} className="flex items-center">
+                          <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                          <span className="text-gray-700">{inclusion}</span>
+                        </div>
+                      ))}
                     </div>
                     
-                    {tariffData.additionalCharges && tariffData.additionalCharges.length > 0 && (
-                      <div className="mt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Additional Services</h3>
-                        <div className="space-y-2">
-                          {tariffData.additionalCharges.map((charge, index) => (
-                            <div key={index} className="flex items-center">
-                              <CheckCircle className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
-                              <span className="text-gray-700">{charge}</span>
-                            </div>
-                          ))}
-                        </div>
+                    <div className="mt-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Target Pests</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {tariffData.pests.map((pest, index) => (
+                          <Badge key={index} variant="outline" className="bg-emerald-50 border-emerald-200 text-emerald-700">
+                            {pest}
+                          </Badge>
+                        ))}
                       </div>
-                    )}
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -284,27 +250,27 @@ Thank you!`;
                   <CardContent className="p-8">
                     <div className="text-center mb-8">
                       <div className="text-2xl font-bold text-admin-primary mb-1">
-                        ₹{tariffData.oneWayRate.replace(/[₹$]/g, '').replace(/per\s*km/gi, '').replace(/\/km/gi, '').trim()}/km
+                        ₹{tariffData.basePrice}
                       </div>
-                      <div className="text-gray-600">One-way rate</div>
+                      <div className="text-gray-600">Basic Service</div>
                       <div className="text-lg font-semibold text-admin-primary mt-2">
-                        ₹{tariffData.roundTripRate.replace(/[₹$]/g, '').replace(/per\s*km/gi, '').replace(/\/km/gi, '').trim()}/km
+                        ₹{tariffData.premiumPrice}
                       </div>
-                      <div className="text-gray-600">Round trip rate</div>
+                      <div className="text-gray-600">Premium Service</div>
                     </div>
 
                     <div className="space-y-4 mb-8">
                       <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                        <span className="text-gray-600">Vehicle Type</span>
-                        <span className="font-semibold">{tariffData.vehicleType}</span>
+                        <span className="text-gray-600">Service Type</span>
+                        <span className="font-semibold">{tariffData.serviceType}</span>
                       </div>
                       <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                        <span className="text-gray-600">Driver Allowance</span>
-                        <span className="font-semibold">₹{tariffData.driverAllowance.replace(/[₹$]/g, '').trim()}/day</span>
+                        <span className="text-gray-600">Warranty</span>
+                        <span className="font-semibold">{tariffData.warranty}</span>
                       </div>
                       <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                        <span className="text-gray-600">Min Distance (One-way)</span>
-                        <span className="font-semibold">{tariffData.minimumKmOneWay.replace(/km/gi, '').trim()} km</span>
+                        <span className="text-gray-600">Coverage Area</span>
+                        <span className="font-semibold">{tariffData.area}</span>
                       </div>
                       <div className="flex justify-between items-center py-3">
                         <span className="text-gray-600">Availability</span>
@@ -317,8 +283,7 @@ Thank you!`;
                         onClick={handleBookNow}
                         className="w-full bg-admin-gradient text-white hover:opacity-90 py-3 text-lg font-semibold"
                       >
-                        <WhatsAppIcon className="h-5 w-5 mr-2" />
-                        Book via WhatsApp
+                        Get Quote & Book Service
                       </Button>
                       <Button
                         onClick={handleModalBooking}
@@ -365,7 +330,13 @@ Thank you!`;
       <BookingModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        prefilledService={tariffData.vehicleName}
+        prefilledService={tariffData.serviceName}
+      />
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        prefilledService={tariffData.serviceName}
       />
     </div>
   );
