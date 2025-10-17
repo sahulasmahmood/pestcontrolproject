@@ -7,9 +7,9 @@ export function HomeSeo() {
   useSEOMeta({
     pageId: 'home',
     fallback: {
-      title: 'Vinushree Tours & Travels - Best Taxi Services in Tamil Nadu',
-      description: 'Book reliable taxi services, tour packages, and travel solutions across Tamil Nadu. One-way trips, round trips, airport taxi, and tour packages available 24/7.',
-      keywords: 'taxi service tamil nadu, tour packages, airport taxi, vinushree tours, chennai taxi, bangalore taxi, travel services, one way trip, round trip'
+      title: 'Perfect Pest Control - Professional Pest Control Services in Tamil Nadu',
+      description: 'Professional pest control services in Tamil Nadu. Anti-termite treatment, rat control, bed bug treatment, mosquito control, and disinfection services. Licensed and guaranteed.',
+      keywords: 'pest control tamil nadu, anti termite treatment, rat control, bed bug treatment, mosquito control, disinfection services, perfect pest control, tirunelveli pest control, professional pest management'
     }
   })
 

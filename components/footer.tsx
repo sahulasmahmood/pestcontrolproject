@@ -33,7 +33,7 @@ const staticContactInfo = {
   secondaryPhone: "9626-341-555",
   whatsappNumber: "9626341555",
   email: "perfectpestcontrol555@gmail.com",
-  address: "24, Rainbow Colony, Peratchi Amman Kovil Street",
+  address: "24, Rainbow Colony, Peratchi Amman Kovil Street, Vannarpettai",
   city: "Tirunelveli",
   state: "Tamil Nadu", 
   pincode: "627003",
@@ -61,14 +61,13 @@ export default function Footer() {
     { name: 'Bed Bug Treatment', href: '/services' },
     { name: 'Mosquito Control', href: '/services' },
     { name: 'Disinfection Service', href: '/services' },
-    { name: 'General Pest Control', href: '/packages' }
+    { name: 'General Pest Control', href: '/services' }
   ];
 
   const quickLinks = [
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about' },
     { name: 'Services', href: '/services' },
-    { name: 'Gallery', href: '/packages' },
     { name: 'Contact', href: '/contact' }
   ];
 

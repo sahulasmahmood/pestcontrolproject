@@ -9,26 +9,12 @@ export const revalidate = 0;
 
 // Dynamic SEO metadata will be handled by the SEO provider
 export const metadata = {
-  title: "Contact Us - Travel Services | Vinushree Tours & Travels",
+  title: "Contact Perfect Pest Control - Professional Pest Management Services",
   description:
-    "Get in touch with Vinushree Tours & Travels for all your travel needs. Book your trip, get quotes, and plan your perfect journey with us.",
+    "Contact Perfect Pest Control for expert pest management solutions. 24/7 emergency services for ants, cockroaches, rats, termites, and more in Tirunelveli.",
   keywords:
-    "contact travel services, travel booking, tour package inquiry, travel support, trip planning",
+    "contact pest control, ant control, cockroach control, rat control, termite treatment, mosquito control, pest management, Tirunelveli pest control, emergency pest control",
 }; 
-
-// Static travel services data
-const travelServices = [
-  "One-way Trip",
-  "Round Trip", 
-  "Airport Taxi",
-  "Day Rental",
-  "Hourly Package",
-  "Local Pickup/Drop",
-  "Tour Package",
-  "Other"
-];
-
-
 
 export default function ContactPage() {
   return (
