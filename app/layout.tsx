@@ -12,9 +12,9 @@ import { SEOProvider } from '@/components/providers/seo-provider'
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Vinushree Tours & Travels - Premium Travel Services in Tamil Nadu",
-  description: "Experience Tamil Nadu with Vinushree Tours & Travels. Premium travel services including tour packages, airport taxi, day rentals, and more.",
-  keywords: "Tamil Nadu travel, tour packages, airport taxi, day rental, travel services, Vinushree Tours",
+  title: "Perfect Pest Control - Professional Pest Control Services in Tamil Nadu",
+  description: "Professional pest control services in Tamil Nadu. Specializing in anti-termite, rat control, bed bug treatment, ant control, mosquito control, and disinfection services.",
+  keywords: "pest control, anti termite, rat control, bed bug treatment, ant control, mosquito control, disinfection, Tirunelveli, Perfect Pest Control, Tamil Nadu",
   generator: 'v0.dev'
 }
 
@@ -34,7 +34,7 @@ export default function RootLayout({
             </GoogleAuthProvider>
           </SEOProvider>
         </ThemeProvider>
-        <Toaster  />
+        <Toaster />
       </body>
     </html>
   )

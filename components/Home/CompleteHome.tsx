@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -12,19 +12,13 @@ import { WhatsAppIcon } from "@/components/ui/whatsapp-icon"
 import QuickBookForm from "@/components/QuickBookForm"
 import ApprovedLicenses from "@/components/ApprovedLicenses"
 // Commented out dynamic hooks for static data
-// import { useBanner } from "@/hooks/use-banner"
+import { useBanner } from "@/hooks/use-banner"
 // import { useTariff } from "@/hooks/use-tariff"
 // import { usePackages } from "@/hooks/use-packages"
 // import { useContact } from "@/hooks/use-contact"
 import { Testimonials } from "./Testimonial"
 
 // Static data for Perfect Pest Control
-const staticBanner = {
-  title: "Professional Pest Control Services",
-  image: "/images/pest-control-banner.jpg",
-  status: "active"
-}
-
 const staticContactInfo = {
   primaryPhone: "0462-480-2258",
   secondaryPhone: "9626-341-555",
@@ -48,7 +42,7 @@ const staticServices = [
     category: "Structural Protection"
   },
   {
-    _id: "2", 
+    _id: "2",
     serviceName: "Rat Control",
     description: "Effective rodent control solutions for residential and commercial properties using safe methods",
     image: "/images/rat-control.jpg",
@@ -58,7 +52,7 @@ const staticServices = [
   },
   {
     _id: "3",
-    serviceName: "Bed Bug Treatment", 
+    serviceName: "Bed Bug Treatment",
     description: "Complete bed bug elimination with safe and effective treatment methods for homes and hotels",
     image: "/images/bed-bug.jpg",
     price: "Contact for Quote",
@@ -69,7 +63,7 @@ const staticServices = [
     _id: "4",
     serviceName: "Mosquito Control",
     description: "Comprehensive mosquito control for homes and commercial spaces to prevent disease transmission",
-    image: "/images/mosquito-control.jpg", 
+    image: "/images/mosquito-control.jpg",
     price: "Contact for Quote",
     featured: true,
     category: "Vector Control"
@@ -79,7 +73,7 @@ const staticServices = [
     serviceName: "Disinfection Spray Service",
     description: "Professional disinfection using sodium hypochloride sanitizer cleaning spray service",
     image: "/images/disinfection.jpg",
-    price: "Contact for Quote", 
+    price: "Contact for Quote",
     featured: true,
     category: "Sanitization"
   },
@@ -98,22 +92,22 @@ const staticServiceCategories = [
   {
     _id: "1",
     title: "Industrial Pest Control",
-    description: "Comprehensive pest control solutions for industrial facilities, warehouses, and manufacturing units",
+    description: "Comprehensive pest control solutions for industrial facilities and manufacturing units",
     image: "/images/industrial-pest-control.jpg",
     services: ["Anti Termite", "Rat Control", "Cockroach Control", "Disinfection"],
     featured: true
   },
   {
-    _id: "2", 
+    _id: "2",
     title: "Commercial Pest Control",
-    description: "Professional pest management for offices, hotels, restaurants and commercial spaces",
+    description: "Professional pest management for offices, hotels, and commercial spaces",
     image: "/images/commercial-pest-control.jpg",
     services: ["Bed Bug Treatment", "Mosquito Control", "Ant Control", "Sanitization"],
     featured: true
   },
   {
     _id: "3",
-    title: "Household Pest Control", 
+    title: "Household Pest Control",
     description: "Safe and effective pest control for residential properties and homes",
     image: "/images/household-pest-control.jpg",
     services: ["All Pest Types", "Disinfection", "Preventive Treatment", "Emergency Service"],
@@ -121,45 +115,35 @@ const staticServiceCategories = [
   }
 ]
 
-const staticTestimonials = [
-  {
-    _id: "1",
-    name: "Rajesh Kumar",
-    location: "Tirunelveli",
-    rating: 5,
-    comment: "Excellent pest control service! They completely eliminated our termite problem. Very professional team and reasonable pricing.",
-    image: "/images/testimonial1.jpg",
-    status: "published"
-  },
-  {
-    _id: "2",
-    name: "Priya Sharma", 
-    location: "Tuticorin",
-    rating: 5,
-    comment: "Perfect Pest Control solved our rat problem effectively. The team was professional and the service was excellent.",
-    image: "/images/testimonial2.jpg",
-    status: "published"
-  },
-  {
-    _id: "3",
-    name: "Arun Krishnan",
-    location: "Madurai", 
-    rating: 5,
-    comment: "Best pest control service in the region. Highly recommend for both residential and commercial properties.",
-    image: "/images/testimonial3.jpg",
-    status: "published"
-  }
-]
-
 export default function CompleteHome() {
   // Using static data instead of dynamic API calls
-  const banner = staticBanner
-  const isLoading = false
+  const { banner, isLoading } = useBanner("home")
   const tariffData = staticServices
   const packagesData = staticServiceCategories
   const contactInfo = staticContactInfo
-  const testimonials = staticTestimonials
-  const testimonialsLoading = false
+  
+  // State for testimonials
+  const [testimonials, setTestimonials] = useState<any[]>([])
+  const [testimonialsLoading, setTestimonialsLoading] = useState(false)
+
+  // Fetch testimonials
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        setTestimonialsLoading(true)
+        const response = await fetch('/api/admin/testimonial?status=published')
+        const result = await response.json()
+        if (result.success) {
+          setTestimonials(result.data)
+        }
+      } catch (error) {
+        console.error('Error fetching testimonials:', error)
+      } finally {
+        setTestimonialsLoading(false)
+      }
+    }
+    fetchTestimonials()
+  }, [])
 
   const handleBookNow = (serviceTitle?: string) => {
     // For homepage, scroll to the quick book form
@@ -298,20 +282,13 @@ export default function CompleteHome() {
                       <Star className="h-4 w-4 fill-current" />
                     </div>
                   </div>
-                  <div className="flex items-center justify-between mt-auto">
+                  <div className="flex items-center justify-center mt-auto">
                     <Button
                       onClick={() => handleBookPackage(pkg.title)}
-                      className="bg-admin-gradient text-white hover:opacity-90 text-sm sm:text-base py-2 sm:py-2.5"
+                      className="bg-admin-gradient text-white hover:opacity-90 text-sm sm:text-base py-2 sm:py-2.5 w-full"
                     >
                       Get Quote
                     </Button>
-                    <Link
-                      href="/packages"
-                      className="text-admin-primary hover:text-admin-secondary transition-colors font-medium text-xs sm:text-sm"
-                    >
-                      View Details
-                      <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 inline" />
-                    </Link>
                   </div>
                 </div>
               </CardContent>
@@ -343,28 +320,15 @@ export default function CompleteHome() {
                 priority
               />
             </div>
-            
+
             {/* Dark Overlay Layer */}
             <div className="absolute inset-0 bg-black/60" />
-            
+
             {/* Gradient Overlay Layer */}
             <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/40" />
-            
+
             {/* Subtle Admin Gradient Layer */}
             <div className="absolute inset-0 bg-admin-gradient/10" />
-            
-            {/* Optional: Animated Gradient Layer */}
-            <motion.div
-              className="absolute inset-0 bg-admin-gradient/5"
-              animate={{
-                opacity: [0.1, 0.2, 0.1],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              }}
-            />
           </div>
         </div>
 
@@ -524,7 +488,7 @@ export default function CompleteHome() {
       <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-admin-gradient relative overflow-hidden">
         {/* Dark overlay for better text contrast */}
         <div className="absolute inset-0 bg-black/40"></div>
-        
+
         {/* Animated overlay gradients */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
@@ -739,33 +703,6 @@ export default function CompleteHome() {
 
       {/* Services Overview Section */}
       <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            className="absolute top-1/4 right-1/4 w-48 h-48 bg-gradient-to-r from-yellow-200/25 to-orange-200/25 rounded-full blur-3xl"
-            animate={{
-              rotate: [0, 360],
-              scale: [1, 1.05, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-          <motion.div
-            className="absolute bottom-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-orange-200/20 to-yellow-200/20 rounded-full blur-2xl"
-            animate={{
-              y: [-10, 10, -10],
-              opacity: [0.3, 0.7, 0.3],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-          />
-        </div>
         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
           <motion.div
             className="text-center mb-8 sm:mb-12 md:mb-16"
@@ -822,15 +759,6 @@ export default function CompleteHome() {
           </motion.div>
 
           {renderPackages()}
-
-          <div className="text-center mt-12">
-            <Link href="/packages">
-              <Button className="bg-admin-gradient text-white hover:opacity-90 px-8 py-3 text-lg font-semibold">
-                View All Solutions
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -844,7 +772,7 @@ export default function CompleteHome() {
       <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-admin-gradient relative overflow-hidden">
         {/* Dark overlay for better text contrast */}
         <div className="absolute inset-0 bg-black/40"></div>
-        
+
         {/* Animated overlay gradients */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
