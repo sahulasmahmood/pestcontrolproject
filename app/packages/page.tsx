@@ -8,9 +8,9 @@ export const dynamic = 'force-dynamic';
 
 // SEO metadata
 export const metadata = {
-  title: "Tour Packages - Vinushree Tours & Travels",
+  title: "Pest Control Services - Perfect Pest Control",
   description:
-    "Discover amazing tour packages to beautiful destinations. Explore temples, hill stations, beaches, and cultural sites with our customized travel packages.",
+    "Discover comprehensive pest control services for your home and business. Expert solutions for termites, rodents, cockroaches, ants, and all pest problems.",
   keywords:
     "tour packages, temple tours, hill station packages, beach tours, cultural tours, travel packages",
 }; 

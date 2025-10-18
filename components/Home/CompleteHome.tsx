@@ -16,7 +16,7 @@ import { useBanner } from "@/hooks/use-banner"
 // import { useTariff } from "@/hooks/use-tariff"
 // import { usePackages } from "@/hooks/use-packages"
 // import { useContact } from "@/hooks/use-contact"
-import { Testimonials } from "./Testimonial"
+import { AnimatedTestimonialWrapper } from "./AnimatedTestimonialWrapper"
 
 // Static data for Perfect Pest Control
 const staticContactInfo = {
@@ -301,7 +301,7 @@ export default function CompleteHome() {
 
   // Update testimonials rendering with static data
   const renderTestimonials = () => {
-    return <Testimonials testimonials={testimonials} />
+    return <AnimatedTestimonialWrapper testimonials={testimonials} />
   }
 
   return (

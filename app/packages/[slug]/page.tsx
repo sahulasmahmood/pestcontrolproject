@@ -66,15 +66,15 @@ export async function generateMetadata({ params }: PageProps) {
   
   if (!packageData) {
     return {
-      title: 'Package Not Found - Vinushree Tours & Travels',
-      description: 'The requested tour package could not be found.',
+      title: 'Service Not Found - Perfect Pest Control',
+      description: 'The requested pest control service could not be found.',
     };
   }
 
   return {
-    title: packageData.seoTitle || `${packageData.title} - Vinushree Tours & Travels`,
+    title: packageData.seoTitle || `${packageData.title} - Perfect Pest Control`,
     description: packageData.seoDescription || packageData.description,
-    keywords: packageData.seoKeywords || `${packageData.title}, Tamil Nadu tour, ${packageData.category}, travel package, Vinushree Tours`,
+    keywords: packageData.seoKeywords || `${packageData.title}, pest control, ${packageData.category}, pest management, Perfect Pest Control`,
   };
 }
 

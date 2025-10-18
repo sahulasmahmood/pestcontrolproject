@@ -539,7 +539,7 @@ export default function AboutPage() {
                 color: "from-blue-500 to-cyan-600",
               },
               {
-                icon: "🏠",
+                icon: "🪲",
                 title: "Termites",
                 description: "Complete termite elimination and wood protection",
                 color: "from-purple-500 to-indigo-600",
