@@ -41,9 +41,9 @@ export async function GET(request: NextRequest) {
         leadId: lead._id,
         customerName: lead.fullName,
         serviceType: lead.serviceType,
-        travelDate: lead.travelDate,
-        pickupLocation: lead.pickupLocation,
-        dropLocation: lead.dropLocation,
+        serviceDate: lead.serviceDate,
+        address: lead.address,
+        propertyType: lead.propertyType || "",
       },
     });
   } catch (error: unknown) {
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     // Create testimonial
     const testimonialData = {
       name: lead.fullName,
-      location: location || lead.pickupLocation,
+      location: location || lead.address,
       content: content.trim(),
       rating: ratingNum,
       servicesType: lead.serviceType,

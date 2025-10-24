@@ -32,7 +32,7 @@ async function seedSMTP() {
       smtpUser: process.env.SMTP_USER || '',
       smtpPassword: process.env.SMTP_PASS || '',
       fromEmail: process.env.SMTP_FROM_EMAIL || '',
-      fromName: 'Vinushree Tours & Travels',
+      fromName: 'Perfect Pest Control',
       isActive: true,
       testStatus: 'never',
       lastUpdated: new Date()

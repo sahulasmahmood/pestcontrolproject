@@ -13,7 +13,10 @@ import {
   Phone,
   Star,
   MapPin,
-  Shield
+  Shield,
+  X,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,22 +24,27 @@ import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { useState } from "react";
 import { useContact } from "@/hooks/use-contact";
 import BookingModal from "@/components/BookingModal";
+import "@/styles/prose.css";
 
 interface ServiceData {
-  id: string;
+  _id?: string;
+  id?: string;
   serviceName: string;
   serviceType: string;
+  shortDescription?: string;
   description: string;
-  basePrice: string;
-  premiumPrice: string;
-  area: string;
-  warranty: string;
+  basePrice?: string;
+  coverageArea?: string;
+  serviceAreaTypes?: string[];
   image: string;
   featured: boolean;
-  inclusions: string[];
-  pests: string[];
+  inclusions?: string[];
+  pests?: string[];
   slug: string;
   gallery?: string[];
+  status?: string;
+  views?: number;
+  bookings?: number;
 }
 
 interface ServiceDetailClientProps {
@@ -45,14 +53,18 @@ interface ServiceDetailClientProps {
 
 export default function ServiceDetailClient({ serviceData }: ServiceDetailClientProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number | null>(null);
   const { contactInfo } = useContact();
 
   const handleBookNow = () => {
-    setIsModalOpen(true);
+    const message = `Hi, I need ${serviceData.serviceName} service. Please provide a detailed quote and schedule an inspection.`;
+    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919626341555';
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   const handleCallNow = () => {
-    const phoneNumber = contactInfo?.primaryPhone || '+919003782966';
+    const phoneNumber = contactInfo?.primaryPhone || '0462-480-2258';
     window.open(`tel:${phoneNumber}`, '_self');
   };
 
@@ -89,18 +101,22 @@ export default function ServiceDetailClient({ serviceData }: ServiceDetailClient
                   {serviceData.serviceName}
                 </h1>
                 <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                  {serviceData.description}
+                  {serviceData.shortDescription || serviceData.description}
                 </p>
                 
                 <div className="flex flex-wrap gap-6 mb-8">
-                  <div className="flex items-center">
-                    <MapPin className="h-5 w-5 mr-2" />
-                    <span className="font-semibold">₹{serviceData.basePrice} - ₹{serviceData.premiumPrice}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-5 w-5 mr-2" />
-                    <span className="font-semibold">{serviceData.warranty} Warranty</span>
-                  </div>
+                  {serviceData.basePrice && (
+                    <div className="flex items-center">
+                      <MapPin className="h-5 w-5 mr-2" />
+                      <span className="font-semibold">From ₹{serviceData.basePrice}</span>
+                    </div>
+                  )}
+                  {serviceData.coverageArea && (
+                    <div className="flex items-center">
+                      <Clock className="h-5 w-5 mr-2" />
+                      <span className="font-semibold">{serviceData.coverageArea}</span>
+                    </div>
+                  )}
                   <div className="flex items-center">
                     <Star className="h-5 w-5 mr-2 text-yellow-400" />
                     <span className="font-semibold">Professional Service</span>
@@ -169,37 +185,27 @@ export default function ServiceDetailClient({ serviceData }: ServiceDetailClient
                       <Shield className="h-6 w-6 mr-3 text-admin-primary" />
                       Service Pricing
                     </h2>
-                    <div className="grid md:grid-cols-2 gap-6">
+                    {serviceData.basePrice && (
                       <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg">
-                        <h3 className="text-lg font-semibold text-blue-900 mb-2">Basic Service</h3>
-                        <div className="text-3xl font-bold text-blue-600 mb-2">₹{serviceData.basePrice}</div>
-                        <p className="text-blue-700 text-sm">Standard treatment package</p>
+                        <h3 className="text-lg font-semibold text-blue-900 mb-2">Service Pricing</h3>
+                        <div className="text-3xl font-bold text-blue-600 mb-2">From ₹{serviceData.basePrice}</div>
+                        <p className="text-blue-700 text-sm">Professional pest control service</p>
                       </div>
-                      <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg">
-                        <h3 className="text-lg font-semibold text-green-900 mb-2">Premium Service</h3>
-                        <div className="text-3xl font-bold text-green-600 mb-2">₹{serviceData.premiumPrice}</div>
-                        <p className="text-green-700 text-sm">Comprehensive treatment package</p>
+                    )}
+                    {serviceData.coverageArea && (
+                      <div className="mt-6 p-4 bg-emerald-50 rounded-lg">
+                        <div className="flex items-center mb-2">
+                          <MapPin className="h-5 w-5 text-emerald-600 mr-2" />
+                          <span className="font-semibold text-emerald-900">Coverage Area</span>
+                        </div>
+                        <p className="text-emerald-800">{serviceData.coverageArea}</p>
                       </div>
-                    </div>
-                    <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center mb-2">
-                        <Clock className="h-5 w-5 text-yellow-600 mr-2" />
-                        <span className="font-semibold text-yellow-900">Service Warranty</span>
-                      </div>
-                      <p className="text-yellow-800">{serviceData.warranty} warranty included</p>
-                    </div>
-                    <div className="mt-4 p-4 bg-emerald-50 rounded-lg">
-                      <div className="flex items-center mb-2">
-                        <MapPin className="h-5 w-5 text-emerald-600 mr-2" />
-                        <span className="font-semibold text-emerald-900">Coverage Area</span>
-                      </div>
-                      <p className="text-emerald-800">{serviceData.area}</p>
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
 
-              {/* Features & Services */}
+              {/* Service Overview - Full Description */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -210,27 +216,116 @@ export default function ServiceDetailClient({ serviceData }: ServiceDetailClient
                   <CardContent className="p-8">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                       <Shield className="h-6 w-6 mr-3 text-admin-primary" />
+                      About This Service
+                    </h2>
+                    <div 
+                      className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: serviceData.description }}
+                    />
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Features & Services */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                <Card className="shadow-lg border-0">
+                  <CardContent className="p-8">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                      <Shield className="h-6 w-6 mr-3 text-admin-primary" />
                       Service Includes
                     </h2>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      {serviceData.inclusions.map((inclusion, index) => (
-                        <div key={index} className="flex items-center">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{inclusion}</span>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="mt-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Target Pests</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {serviceData.pests.map((pest, index) => (
-                          <Badge key={index} variant="outline" className="bg-emerald-50 border-emerald-200 text-emerald-700">
-                            {pest}
-                          </Badge>
+                    {serviceData.inclusions && serviceData.inclusions.length > 0 && (
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {serviceData.inclusions.map((inclusion, index) => (
+                          <div key={index} className="flex items-center">
+                            <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                            <span className="text-gray-700">{inclusion}</span>
+                          </div>
                         ))}
                       </div>
-                    </div>
+                    )}
+                    
+                    {/* Service Area Types & Target Pests - Combined Section */}
+                    {((serviceData.serviceAreaTypes && serviceData.serviceAreaTypes.length > 0) || 
+                      (serviceData.pests && serviceData.pests.length > 0)) && (
+                      <div className="mt-8">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                          <Shield className="h-6 w-6 mr-3 text-admin-primary" />
+                          Service Coverage & Target Pests
+                        </h3>
+                        
+                        <div className="grid lg:grid-cols-2 gap-8">
+                          {/* Service Area Types */}
+                          {serviceData.serviceAreaTypes && serviceData.serviceAreaTypes.length > 0 && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 30 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.6 }}
+                              viewport={{ once: true }}
+                            >
+                              <Card className="card-hover h-full shadow-xl border-0">
+                                <CardContent className="p-6">
+                                  <h4 className="text-lg font-semibold mb-4 text-admin-primary flex items-center">
+                                    <MapPin className="h-5 w-5 mr-2" />
+                                    Service Area Types
+                                  </h4>
+                                  <div className="grid grid-cols-1 gap-3">
+                                    {serviceData.serviceAreaTypes.map((areaType, index) => (
+                                      <div
+                                        key={index}
+                                        className="flex items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 hover:shadow-md transition-all duration-300"
+                                      >
+                                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                          <MapPin className="h-5 w-5 text-white" />
+                                        </div>
+                                        <span className="font-semibold text-blue-800 text-base">{areaType}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </motion.div>
+                          )}
+
+                          {/* Target Pests */}
+                          {serviceData.pests && serviceData.pests.length > 0 && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 30 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.6, delay: 0.2 }}
+                              viewport={{ once: true }}
+                            >
+                              <Card className="card-hover h-full shadow-xl border-0">
+                                <CardContent className="p-6">
+                                  <h4 className="text-lg font-semibold mb-4 text-admin-primary flex items-center">
+                                    <Shield className="h-5 w-5 mr-2" />
+                                    Target Pests
+                                  </h4>
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {serviceData.pests.map((pest, index) => (
+                                      <div
+                                        key={index}
+                                        className="flex items-center p-3 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-100 hover:shadow-md transition-all duration-300"
+                                      >
+                                        <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-orange-600 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                                          <Shield className="h-4 w-4 text-white" />
+                                        </div>
+                                        <span className="font-semibold text-red-800 text-sm">{pest}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </motion.div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
@@ -250,34 +345,38 @@ export default function ServiceDetailClient({ serviceData }: ServiceDetailClient
               >
                 <Card className="shadow-2xl border-0">
                   <CardContent className="p-8">
-                    <div className="text-center mb-8">
-                      <div className="text-2xl font-bold text-admin-primary mb-1">
-                        ₹{serviceData.basePrice}
+                    {serviceData.basePrice && (
+                      <div className="text-center mb-8">
+                        <div className="text-2xl font-bold text-admin-primary mb-1">
+                          From ₹{serviceData.basePrice}
+                        </div>
+                        <div className="text-gray-600">Professional Service</div>
                       </div>
-                      <div className="text-gray-600">Basic Service</div>
-                      <div className="text-lg font-semibold text-admin-primary mt-2">
-                        ₹{serviceData.premiumPrice}
-                      </div>
-                      <div className="text-gray-600">Premium Service</div>
-                    </div>
+                    )}
 
                     <div className="space-y-4 mb-8">
                       <div className="flex justify-between items-center py-3 border-b border-gray-100">
                         <span className="text-gray-600">Service Type</span>
                         <span className="font-semibold">{serviceData.serviceType}</span>
                       </div>
-                      <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                        <span className="text-gray-600">Warranty</span>
-                        <span className="font-semibold">{serviceData.warranty}</span>
-                      </div>
-                      <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                        <span className="text-gray-600">Coverage Area</span>
-                        <span className="font-semibold">{serviceData.area}</span>
-                      </div>
-                      <div className="flex justify-between items-center py-3">
-                        <span className="text-gray-600">Availability</span>
-                        <span className="font-semibold text-green-600">Available</span>
-                      </div>
+                      {serviceData.coverageArea && (
+                        <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                          <span className="text-gray-600">Coverage Area</span>
+                          <span className="font-semibold">{serviceData.coverageArea}</span>
+                        </div>
+                      )}
+                      {serviceData.serviceAreaTypes && serviceData.serviceAreaTypes.length > 0 && (
+                        <div className="py-4">
+                          <span className="text-gray-600 font-medium block mb-3">Service Area Types</span>
+                          <div className="grid grid-cols-1 gap-2">
+                            {serviceData.serviceAreaTypes.map((areaType, index) => (
+                              <div key={index} className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-3 text-center">
+                                <span className="font-semibold text-blue-800 text-sm">{areaType}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-4">
@@ -307,16 +406,16 @@ export default function ServiceDetailClient({ serviceData }: ServiceDetailClient
                     <div className="mt-8 p-4 bg-gray-50 rounded-lg">
                       <h4 className="font-semibold text-gray-900 mb-2">Need Help?</h4>
                       <p className="text-sm text-gray-600 mb-3">
-                        Our travel experts are here to help you plan your perfect trip.
+                         Our pest control experts are here to help you with professional pest management solutions.
                       </p>
                       <div className="text-sm">
                         <div className="flex items-center mb-1">
                           <Phone className="h-4 w-4 mr-2 text-admin-primary" />
-                          <span>{contactInfo?.primaryPhone || '+91 90037 82966'}</span>
+                          <span>{contactInfo?.primaryPhone || '+91 96263 41555'}</span>
                         </div>
                         <div className="flex items-center">
                           <WhatsAppIcon className="h-4 w-4 mr-2 text-green-500" />
-                          <span>WhatsApp Support</span>
+                          <span>WhatsApp Support Available</span>
                         </div>
                       </div>
                     </div>
@@ -368,6 +467,7 @@ export default function ServiceDetailClient({ serviceData }: ServiceDetailClient
                     viewport={{ once: true }}
                     whileHover={{ y: -8 }}
                     className="group cursor-pointer"
+                    onClick={() => setCurrentImageIndex(index)}
                   >
                     <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
                       <Image
@@ -410,6 +510,48 @@ export default function ServiceDetailClient({ serviceData }: ServiceDetailClient
               </div>
             </motion.div>
           </div>
+
+          {/* Image Modal */}
+          {currentImageIndex !== null && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center"
+              onClick={() => setCurrentImageIndex(null)}
+            >
+              <div 
+                className="relative w-full h-full flex items-center justify-center p-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="absolute top-4 right-4 text-white hover:text-gray-300 z-50"
+                  onClick={() => setCurrentImageIndex(null)}
+                >
+                  <X className="w-8 h-8" />
+                </button>
+                
+                <button
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => setCurrentImageIndex(prev => Math.max(0, prev! - 1))}
+                  disabled={currentImageIndex === 0}
+                >
+                  <ChevronLeft className="w-8 h-8" />
+                </button>
+
+                <img
+                  src={serviceData.gallery[currentImageIndex]}
+                  alt={`${serviceData.serviceName} - Gallery image ${currentImageIndex + 1}`}
+                  className="max-h-[90vh] max-w-[90vw] object-contain"
+                />
+
+                <button
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => setCurrentImageIndex(prev => Math.min(serviceData.gallery!.length - 1, prev! + 1))}
+                  disabled={currentImageIndex === serviceData.gallery.length - 1}
+                >
+                  <ChevronRight className="w-8 h-8" />
+                </button>
+              </div>
+            </div>
+          )}
         </section>
       )}
 

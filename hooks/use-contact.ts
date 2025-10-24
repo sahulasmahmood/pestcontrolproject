@@ -13,9 +13,9 @@ interface ContactInfo {
   pincode: string
   country: string
   businessHours?: string
-  bookingHours?: string
+  serviceHours?: string
   servicesOffered?: string
-  coverageAreas?: string
+  branchOffices?: string
   facebook?: string
   twitter?: string
   linkedin?: string
@@ -34,7 +34,7 @@ interface ContactInfo {
 
 export function useContact() {
   const { data, error, isLoading } = useSWR<{ success: boolean; data: ContactInfo }>(
-    '/api/contact',
+    '/api/admin/contact',
     url => fetch(url).then(r => r.json()),
     {
       revalidateOnFocus: false,

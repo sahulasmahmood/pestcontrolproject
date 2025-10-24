@@ -66,19 +66,19 @@ const contactSchema = new mongoose.Schema(
       trim: true,
       maxlength: 100,
     },
-    bookingHours: {
+    serviceHours: {
       type: String,
       trim: true,
       maxlength: 100,
     },
     
-    // Travel Services Information
+    // Pest Control Services Information
     servicesOffered: {
       type: String,
       trim: true,
       maxlength: 500,
     },
-    coverageAreas: {
+    branchOffices: {
       type: String,
       trim: true,
       maxlength: 500,

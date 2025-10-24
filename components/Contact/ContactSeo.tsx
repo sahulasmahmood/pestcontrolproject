@@ -7,9 +7,9 @@ export function ContactPageSeo() {
   useSEOMeta({
     pageId: 'contact',
     fallback: {
-        title: 'Contact Vinushree Tours & Travels - Book Your Taxi Now',
-        description: 'Contact Vinushree Tours & Travels for taxi booking, tour packages, and travel inquiries. Available 24/7 for all your travel needs across Tamil Nadu.',
-        keywords: 'contact vinushree tours, taxi booking, travel inquiry, phone number, whatsapp booking, 24/7 service, customer support'
+        title: 'Contact Perfect Pest Control - Book Your Pest Control Service Now',
+        description: 'Contact Perfect Pest Control for pest control services, termite treatment, and pest management inquiries. Available 24/7 for all your pest control needs.',
+        keywords: 'contact perfect pest control, pest control booking, pest inquiry, phone number, whatsapp booking, 24/7 service, customer support'
       }
   })
 

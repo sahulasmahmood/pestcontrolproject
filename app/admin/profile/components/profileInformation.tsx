@@ -206,7 +206,7 @@ export default function ProfileInformation() {
             <AvatarFallback className="bg-admin-gradient text-white text-xl font-semibold">
               {profileData.firstName && profileData.lastName ? 
                 `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase() 
-                : 'VT'}
+                : 'PP'}
             </AvatarFallback>
           </Avatar>
           <label htmlFor="avatar-upload" className="absolute -bottom-2 -right-2">

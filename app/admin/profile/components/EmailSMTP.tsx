@@ -40,13 +40,13 @@ export default function EmailSMTP() {
     smtpUser: "",
     smtpPassword: "",
     fromEmail: "",
-    fromName: "Vinushree Tours & Travels",
+    fromName: "Perfect Pest Control",
   });
 
   const [testEmailData, setTestEmailData] = useState<TestEmailData>({
     email: "",
     message:
-      "Greetings from Vinushree Tours & Travels! This is a test email to verify our SMTP configuration is working correctly for sending travel booking confirmations and updates.",
+      "Greetings from Perfect Pest Control! This is a test email to verify our SMTP configuration is working correctly for sending service booking confirmations and updates.",
   });
 
   const [isTestingConnection, setIsTestingConnection] = useState(false);
@@ -137,7 +137,7 @@ export default function EmailSMTP() {
       if (data.success) {
         toast({
           title: "Email Settings Updated",
-          description: "Your travel booking email configuration has been successfully updated.",
+          description: "Your pest control service email configuration has been successfully updated.",
         });
         // Refresh settings to get updated data
         await fetchSMTPSettings();
@@ -273,7 +273,7 @@ export default function EmailSMTP() {
         setTestEmailData({
           email: "",
           message:
-            "Greetings from Vinushree Tours & Travels! This is a test email to verify our SMTP configuration is working correctly for sending travel booking confirmations and updates.",
+            "Greetings from Perfect Pest Control! This is a test email to verify our SMTP configuration is working correctly for sending service booking confirmations and updates.",
         });
       } else {
         toast({
@@ -424,7 +424,7 @@ export default function EmailSMTP() {
               onChange={(e) =>
                 setEmailSettings({ ...emailSettings, fromName: e.target.value })
               }
-              placeholder="Vinushree Tours & Travels"
+              placeholder="Perfect Pest Control"
               className="mt-2"
             />
             <p className="text-xs text-gray-500 mt-1">

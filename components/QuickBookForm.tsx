@@ -10,7 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Calendar, Bug } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { useToast } from "@/hooks/use-toast";
-// import { useContact } from "@/hooks/use-contact"; // Commented out for static data
+import { useContact } from "@/hooks/use-contact";
+import { useServices } from "@/hooks/use-services";
 
 // Static contact info for Perfect Pest Control
 const staticContactInfo = {
@@ -22,8 +23,8 @@ const staticContactInfo = {
 
 export default function QuickBookForm() {
   const { toast } = useToast();
-  // const { contactInfo } = useContact(); // Commented out for static data
-  const contactInfo = staticContactInfo; // Using static data
+  const { contactInfo } = useContact();
+  const { serviceNames, loading: servicesLoading } = useServices();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [locations, setLocations] = useState<string[]>([]);
   
@@ -37,18 +38,6 @@ export default function QuickBookForm() {
     preferredTime: "",
     description: ""
   });
-
-  // Static services for Perfect Pest Control
-  const services = [
-    "Anti Termite Treatment",
-    "Rat Control", 
-    "Bed Bug Treatment",
-    "Ant Control",
-    "Mosquito Control",
-    "Cockroach Control",
-    "Disinfection Spray Service",
-    "General Pest Control"
-  ];
 
   // Static locations for Perfect Pest Control service areas
   useEffect(() => {
@@ -87,12 +76,12 @@ export default function QuickBookForm() {
         email: formData.email || "",
         phone: formData.phone,
         serviceType: formData.service,
-        travelDate: formData.preferredDate,
-        travelTime: formData.preferredTime || "",
+        serviceDate: formData.preferredDate,
+        serviceTime: formData.preferredTime || "",
         returnDate: "",
-        pickupLocation: formData.address,
-        dropLocation: "",
-        passengers: 1, // Default value
+        address: formData.address,
+        propertyType: "", // Empty so admin can edit
+        propertySize: null, // Empty so admin can edit
         message: `Pest control enquiry for ${formData.service}. Address: ${formData.address}, Preferred Date: ${formData.preferredDate}${formData.preferredTime ? `, Time: ${formData.preferredTime}` : ''}. Description: ${formData.description}`,
         status: "new",
         priority: "high",
@@ -129,7 +118,7 @@ export default function QuickBookForm() {
 
 Please provide availability and pricing details.`;
 
-      const whatsappNumber = contactInfo.whatsappNumber;
+      const whatsappNumber = contactInfo?.whatsappNumber || staticContactInfo.whatsappNumber;
       const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
 
@@ -241,11 +230,17 @@ Please provide availability and pricing details.`;
                   <SelectValue placeholder="Select pest control service" />
                 </SelectTrigger>
                 <SelectContent>
-                  {services.map((service) => (
-                    <SelectItem key={service} value={service}>
-                      {service}
-                    </SelectItem>
-                  ))}
+                  {servicesLoading ? (
+                    <SelectItem value="loading" disabled>Loading services...</SelectItem>
+                  ) : serviceNames.length === 0 ? (
+                    <SelectItem value="no-services" disabled>No services available</SelectItem>
+                  ) : (
+                    serviceNames.map((service) => (
+                      <SelectItem key={service} value={service}>
+                        {service}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>

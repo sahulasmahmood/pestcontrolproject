@@ -62,10 +62,10 @@ export default function ContactPage() {
     officeTitle: "",
     officeDescription: "",
     
-    // Travel Specific
+    // Pest Control Specific
     servicesOffered: "",
-    coverageAreas: "",
-    bookingHours: "",
+    branchOffices: "",
+    serviceHours: "",
   });
 
   // Fetch contact information from API
@@ -234,7 +234,7 @@ export default function ContactPage() {
                 type="email"
                 value={contactInfo.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                placeholder="info@vinushreetours.com"
+                placeholder="info@perfectpestcontrol.com"
                 className="mt-2"
               />
             </div>
@@ -254,19 +254,19 @@ export default function ContactPage() {
                   id="businessHours"
                   value={contactInfo.businessHours}
                   onChange={(e) => handleInputChange("businessHours", e.target.value)}
-                  placeholder="24/7 Available"
+                  placeholder="Mon-Sat: 8AM-8PM, Emergency 24/7"
                   className="mt-2"
                 />
               </div>
               <div>
-                <Label htmlFor="bookingHours" className="text-base font-semibold">
-                  Booking Hours
+                <Label htmlFor="serviceHours" className="text-base font-semibold">
+                  Service Hours
                 </Label>
                 <Input
-                  id="bookingHours"
-                  value={contactInfo.bookingHours}
-                  onChange={(e) => handleInputChange("bookingHours", e.target.value)}
-                  placeholder="24/7 Online Booking Available"
+                  id="serviceHours"
+                  value={contactInfo.serviceHours}
+                  onChange={(e) => handleInputChange("serviceHours", e.target.value)}
+                  placeholder="24/7 Emergency Service Available"
                   className="mt-2"
                 />
               </div>
@@ -342,10 +342,10 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Travel Services Information */}
+          {/* Pest Control Services Information */}
           <div className="space-y-6">
             <h3 className="text-lg font-semibold bg-admin-gradient bg-clip-text text-transparent">
-              Travel Services Information
+              Pest Control Services Information
             </h3>
             <div className="space-y-4">
               <div>
@@ -356,8 +356,21 @@ export default function ContactPage() {
                   id="servicesOffered"
                   value={contactInfo.servicesOffered}
                   onChange={(e) => handleInputChange("servicesOffered", e.target.value)}
-                  placeholder="One-way trips, Round trips, Airport Taxi, Day rentals, Hourly packages, Local pickup/drop, Tour packages"
+                  placeholder="Residential Pest Control, Commercial Pest Control, Termite Treatment, Rodent Control, Cockroach Control, Ant Control, Bed Bug Treatment, Mosquito Control"
                   rows={3}
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="branchOffices" className="text-base font-semibold">
+                  Branch Offices
+                </Label>
+                <Textarea
+                  id="branchOffices"
+                  value={contactInfo.branchOffices}
+                  onChange={(e) => handleInputChange("branchOffices", e.target.value)}
+                  placeholder="Tuticorin, Tenkasi, Nagercoil, Madurai, Ramanathapuram"
+                  rows={2}
                   className="mt-2"
                 />
               </div>
@@ -389,7 +402,7 @@ export default function ContactPage() {
                   onChange={(e) =>
                     handleInputChange("facebook", e.target.value)
                   }
-                  placeholder="https://facebook.com/vinushreetours"
+                  placeholder="https://facebook.com/perfectpestcontrol"
                   className="mt-2"
                 />
               </div>
@@ -405,7 +418,7 @@ export default function ContactPage() {
                   id="twitter"
                   value={contactInfo.twitter}
                   onChange={(e) => handleInputChange("twitter", e.target.value)}
-                  placeholder="https://twitter.com/vinushreetours"
+                  placeholder="https://twitter.com/perfectpestcontrol"
                   className="mt-2"
                 />
               </div>
@@ -423,7 +436,7 @@ export default function ContactPage() {
                   onChange={(e) =>
                     handleInputChange("linkedin", e.target.value)
                   }
-                  placeholder="https://linkedin.com/company/vinushreetours"
+                  placeholder="https://linkedin.com/company/perfectpestcontrol"
                   className="mt-2"
                 />
               </div>
@@ -441,7 +454,7 @@ export default function ContactPage() {
                   onChange={(e) =>
                     handleInputChange("instagram", e.target.value)
                   }
-                  placeholder="https://instagram.com/vinushreetours"
+                  placeholder="https://instagram.com/perfectpestcontrol"
                   className="mt-2"
                 />
               </div>
@@ -459,7 +472,7 @@ export default function ContactPage() {
                   onChange={(e) =>
                     handleInputChange("youtube", e.target.value)
                   }
-                  placeholder="https://youtube.com/c/vinushreetours"
+                  placeholder="https://youtube.com/c/perfectpestcontrol"
                   className="mt-2"
                 />
               </div>
@@ -495,7 +508,7 @@ export default function ContactPage() {
                   onChange={(e) =>
                     handleInputChange("telegram", e.target.value)
                   }
-                  placeholder="https://t.me/vinushreetours"
+                  placeholder="https://t.me/perfectpestcontrol"
                   className="mt-2"
                 />
               </div>
@@ -577,7 +590,7 @@ export default function ContactPage() {
                 id="pageTitle"
                 value={contactInfo.pageTitle}
                 onChange={(e) => handleInputChange("pageTitle", e.target.value)}
-                placeholder="Get in Touch with Vinushree Tours & Travels"
+                placeholder="Get in Touch with Perfect Pest Control"
                 className="mt-2"
               />
             </div>
@@ -594,7 +607,7 @@ export default function ContactPage() {
                 onChange={(e) =>
                   handleInputChange("pageDescription", e.target.value)
                 }
-                placeholder="Ready to explore Tamil Nadu? Contact us for the best travel packages, taxi services, and tour arrangements. We're here to make your journey memorable!"
+                placeholder="Need professional pest control services? Contact us for effective, safe, and reliable pest management solutions. We're here to protect your home and business!"
                 rows={3}
                 className="mt-2"
               />
@@ -609,7 +622,7 @@ export default function ContactPage() {
                 onChange={(e) =>
                   handleInputChange("officeTitle", e.target.value)
                 }
-                placeholder="Visit Our Office in Chennai, Tamil Nadu"
+                placeholder="Visit Our Office - Perfect Pest Control Headquarters"
                 className="mt-2"
               />
             </div>
@@ -626,7 +639,7 @@ export default function ContactPage() {
                 onChange={(e) =>
                   handleInputChange("officeDescription", e.target.value)
                 }
-                placeholder="Located in the heart of Chennai, our office is easily accessible and our team is ready to assist you with all your travel needs."
+                placeholder="Our office is easily accessible and our certified pest control experts are ready to assist you with all your pest management needs."
                 rows={3}
                 className="mt-2"
               />

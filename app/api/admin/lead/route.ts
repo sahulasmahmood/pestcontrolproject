@@ -240,7 +240,7 @@ async function sendAdminNotification(lead: any) {
       <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; background-color: #f8fafc;">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
           <h1 style="color: white; margin: 0; font-size: 28px;">New ${formType} Received</h1>
-          <p style="color: #e2e8f0; margin: 10px 0 0 0; font-size: 16px;">Filigree Solutions Admin Panel</p>
+          <p style="color: #e2e8f0; margin: 10px 0 0 0; font-size: 16px;">Perfect Pest Control Admin Panel</p>
         </div>
         
         <div style="padding: 30px; background-color: white; margin: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -322,7 +322,7 @@ async function sendAdminNotification(lead: any) {
 
           <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0;">
             <p style="color: #718096; margin: 0; font-size: 14px;">
-              This email was automatically generated from the Filigree Solutions website.<br>
+              This email was automatically generated from the Perfect Pest Control website.<br>
               Lead ID: #${lead._id}<br>
               Received at: ${new Date().toLocaleString("en-IN", {
                 timeZone: "Asia/Kolkata",

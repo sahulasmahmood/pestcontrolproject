@@ -5,6 +5,8 @@ import useSWR from "swr"
 interface Banner {
   image: string
   title?: string
+  heading?: string
+  description?: string
   status: string
 }
 

@@ -195,11 +195,11 @@ export async function POST() {
 
     const defaultTheme = {
       id: "default",
-      siteName: "Vinushree Tours & Travels",
-      logo: "/vinushree-tours-logo.png",
+      siteName: "Perfect Pest Control",
+      logo: "/perfect-pest-control-logo.png",
       favicon: null,
-      primaryColor: "#F59E0B", // Gold color for travel theme
-      secondaryColor: "#1F2937", // Dark navy/black color for travel theme
+      primaryColor: "#22C55E", // Perfect Pest Control brand color
+      secondaryColor: "#1F2937", // Professional dark color for Perfect Pest Control
       gradientDirection: "135deg",
       isActive: true,
       lastUpdated: new Date()

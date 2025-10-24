@@ -13,7 +13,7 @@ const themeSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      default: "Vinushree Tours & Travels"
+      default: "Perfect Pest Control"
     },
     logo: {
       type: String,
@@ -30,14 +30,14 @@ const themeSchema = new mongoose.Schema(
       required: true,
       trim: true,
       match: /^#[0-9A-F]{6}$/i,
-      default: "#F59E0B" // Gold color for travel theme
+      default: "#22C55E" // Perfect Pest Control brand color
     },
     secondaryColor: {
       type: String,
       required: true,
       trim: true,
       match: /^#[0-9A-F]{6}$/i,
-      default: "#1F2937" // Dark navy/black color for travel theme
+      default: "#1F2937" // Professional dark color for Perfect Pest Control
     },
     gradientDirection: {
       type: String,
@@ -63,14 +63,14 @@ themeSchema.index({ isActive: 1 });
 
 const Theme = mongoose.models.Theme || mongoose.model("Theme", themeSchema);
 
-// Default theme data for Vinushree Tours & Travels
+// Default theme data for Perfect Pest Control
 const defaultThemeData = {
   id: "default",
-  siteName: "Vinushree Tours & Travels",
-  logo: "/vinushree-tours-logo.png",
+  siteName: "Perfect Pest Control",
+  logo: "/perfect-pest-control-logo.png",
   favicon: null,
-  primaryColor: "#F59E0B", // Gold color for travel theme
-  secondaryColor: "#1F2937", // Dark navy/black color for travel theme
+  primaryColor: "#22C55E", // Perfect Pest Control brand color
+  secondaryColor: "#1F2937", // Professional dark color for Perfect Pest Control
   gradientDirection: "135deg",
   isActive: true,
   lastUpdated: new Date()

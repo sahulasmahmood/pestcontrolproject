@@ -8,7 +8,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: [new URL(process.env.APP_URL).hostname],
+    domains: [new URL(process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').hostname],
    
   },
   devIndicators: false,

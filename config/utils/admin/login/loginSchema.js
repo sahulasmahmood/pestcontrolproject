@@ -173,23 +173,23 @@ adminSchema.statics.findByCredentials = async function (email, password) {
 // Static method to create initial admin
 adminSchema.statics.createInitialAdmin = async function () {
   try {
-    const existingAdmin = await this.findOne({ email: "vinushree0450@gmail.com" })
+    const existingAdmin = await this.findOne({ email: "perfectpestcontrol555@gmail.com" })
 
     if (!existingAdmin) {
       const initialAdmin = new this({
-        firstName: "Vinushree",
-        lastName: "Tours and Travels",
-        email: "vinushree0450@gmail.com",
-        password: "Vinushree@2025",
-        phone: "+91 90037 82966",
-        location: "2/18, Uthangudi, Tamil Nadu 625107, India",
+        firstName: "Perfect",
+        lastName: "Pest Control",
+        email: "perfectpestcontrol555@gmail.com",
+        password: "Pest@2025",
+        phone: "+91 96263 41555",
+        location: "24, Rainbow Colony, Vannarpettai, Tirunelveli - 3",
         role: "Super Admin",
         emailVerified: true,
         isActive: true,
       })
 
       await initialAdmin.save()
-      console.log("Initial admin created successfully for Vinushree Tours & Travels")
+      console.log("Initial admin created successfully for Perfect Pest Control")
       return initialAdmin
     } else {
       console.log("Initial admin already exists")

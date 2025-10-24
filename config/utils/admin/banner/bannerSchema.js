@@ -18,6 +18,14 @@ const bannerSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    heading: {
+      type: String,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
     mobileImage: {
       type: String,
       trim: true,

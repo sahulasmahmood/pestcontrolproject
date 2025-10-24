@@ -8,10 +8,11 @@ interface Lead {
   email: string;
   phone: string;
   serviceType: string;
-  travelDate: string;
-  pickupLocation: string;
-  dropLocation: string;
-  passengers: number;
+  serviceDate: string;
+  serviceTime?: string;
+  address: string;
+  propertyType: string;
+  propertySize: number;
   message: string;
   status: "new" | "contacted" | "confirmed" | "completed" | "cancelled";
   priority: "low" | "medium" | "high";

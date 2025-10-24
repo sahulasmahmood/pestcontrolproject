@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/config/models/connectDB";
 import Lead from "@/config/utils/admin/lead/leadSchema";
 import Testimonial from "@/config/utils/admin/testimonial/testimonialSchema";
-import Package from "@/config/utils/admin/packages/packageSchema";
-import Tariff from "@/config/utils/admin/tariff/tariffSchema";
-import Location from "@/config/utils/admin/location/locationSchema";
+import Service from "@/config/utils/admin/services/serviceSchema";
+import Contact from "@/config/utils/admin/contact/ContactSchema";
+
 
 // GET - Fetch dashboard statistics
 export async function GET(request: NextRequest) {
@@ -28,10 +28,9 @@ export async function GET(request: NextRequest) {
       pendingLeads,
       totalTestimonials,
       publishedTestimonials,
-      totalPackages,
-      activePackages,
-      totalTariffs,
-      activeTariffs,
+      totalServices,
+      activeServices,
+      featuredServices,
       totalLocations,
       popularRoutes,
       recentLeads,
@@ -52,17 +51,27 @@ export async function GET(request: NextRequest) {
       Testimonial.countDocuments(),
       Testimonial.countDocuments({ status: "published" }),
       
-      // Package statistics
-      Package.countDocuments({ isDeleted: false }),
-      Package.countDocuments({ status: "active", isDeleted: false }),
+      // Service statistics
+      Service.countDocuments({ isDeleted: false }),
+      Service.countDocuments({ status: "active", isDeleted: false }),
+      Service.countDocuments({ featured: true, isDeleted: false }),
       
-      // Tariff statistics
-      Tariff.countDocuments({ isDeleted: false }),
-      Tariff.countDocuments({ status: "active", isDeleted: false }),
-      
-      // Location statistics
-      Location.countDocuments({ isActive: true }),
-      Location.countDocuments({ isActive: true, isPopularRoute: true }),
+      // Branch office statistics (from contact info)
+      Contact.findOne().then(contact => {
+        if (contact && contact.branchOffices) {
+          const branches = contact.branchOffices.split(',').map((b: string) => b.trim()).filter((b: string) => b.length > 0);
+          return branches.length;
+        }
+        return 5; // Default fallback
+      }),
+      Contact.findOne().then(contact => {
+        if (contact && contact.branchOffices) {
+          const branches = contact.branchOffices.split(',').map((b: string) => b.trim()).filter((b: string) => b.length > 0);
+          // Consider first 3 as main branches
+          return Math.min(branches.length, 3);
+        }
+        return 3; // Default fallback
+      }),
       
       // Recent leads (last 5)
       Lead.find()
@@ -116,12 +125,11 @@ export async function GET(request: NextRequest) {
         completionRate: parseFloat(completionRate),
         totalTestimonials,
         publishedTestimonials,
-        totalPackages,
-        activePackages,
-        totalTariffs,
-        activeTariffs,
-        totalLocations,
-        popularRoutes
+        totalServices,
+        activeServices,
+        featuredServices,
+        totalBranches: totalLocations,
+        mainBranches: popularRoutes
       },
       
       // Recent activity

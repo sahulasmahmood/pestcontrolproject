@@ -15,7 +15,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useTheme } from "./providers/theme";
-// import { useContact } from "@/hooks/use-contact"; // Commented out for static data
+import { useContact } from "@/hooks/use-contact";
+import { useServices } from "@/hooks/use-services";
 import Image from "next/image";
 
 
@@ -42,8 +43,8 @@ const staticThemeData = {
 // Separate client component for pathname functionality
 function NavbarContent() {
   const { themeData } = useTheme();
-  // const { contactInfo, isLoading: contactLoading } = useContact(); // Commented out for static data
-  const contactInfo = staticContactInfo; // Using static data
+  const { contactInfo } = useContact();
+  const { services, loading: servicesLoading } = useServices();
   const pathname = usePathname();
   
   const [isOpen, setIsOpen] = useState(false);
@@ -58,19 +59,11 @@ function NavbarContent() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Static pest control services for dropdown
-  const pestControlServices = [
-    { name: "Disinfection Spray Service", slug: "disinfection-spray-service" },
-    { name: "Sanitizer Cleaning Service", slug: "sanitizer-cleaning-spray" },
-    { name: "Anti Termite Treatment", slug: "anti-termite-treatment" },
-    { name: "Rat Control Service", slug: "rat-control-service" },
-    { name: "Bed Bug Treatment", slug: "bedbug-treatment" },
-    { name: "Ant Control Service", slug: "ant-control-service" },
-    { name: "Mosquito Control Service", slug: "mosquito-control-service" },
-    { name: "Fly Control Service", slug: "fly-control-service" },
-    { name: "Cockroach Control Service", slug: "cockroach-control-service" },
-    { name: "Spider & Lizard Control", slug: "spider-lizard-control" },
-  ];
+  // Dynamic pest control services for dropdown
+  const pestControlServices = services.map(service => ({
+    name: service.serviceName,
+    slug: service.slug
+  }));
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -111,10 +104,10 @@ function NavbarContent() {
         <div className="flex items-center gap-1 sm:gap-2">
           <Phone className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
           <a
-            href={`tel:${contactInfo.primaryPhone}`}
+            href={`tel:${contactInfo?.primaryPhone || staticContactInfo.primaryPhone}`}
             className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors"
           >
-            {contactInfo.primaryPhone}
+            {contactInfo?.primaryPhone || staticContactInfo.primaryPhone}
           </a>
         </div>
         
@@ -122,10 +115,10 @@ function NavbarContent() {
         <div className="flex items-center gap-1 sm:gap-2">
           <Phone className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
           <a
-            href={`tel:${contactInfo.secondaryPhone}`}
+            href={`tel:${contactInfo?.secondaryPhone || staticContactInfo.secondaryPhone}`}
             className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors"
           >
-            {contactInfo.secondaryPhone}
+            {contactInfo?.secondaryPhone || staticContactInfo.secondaryPhone}
           </a>
         </div>
 
@@ -133,10 +126,10 @@ function NavbarContent() {
         <div className="flex items-center gap-1 sm:gap-2">
           <Mail className="h-3 w-3 sm:h-3 sm:w-3 lg:h-4 lg:w-4" />
           <a
-            href={`mailto:${contactInfo.email}`}
+            href={`mailto:${contactInfo?.email || staticContactInfo.email}`}
             className="font-medium text-xs sm:text-xs lg:text-sm hover:text-white/80 transition-colors truncate max-w-[200px] sm:max-w-none"
           >
-            {contactInfo.email}
+            {contactInfo?.email || staticContactInfo.email}
           </a>
         </div>
       </div>
@@ -149,7 +142,7 @@ function NavbarContent() {
       <div className="hidden lg:flex xl:flex items-center gap-2">
         <MapPin className="h-4 w-4" />
         <span className="font-medium text-sm">
-          {`${contactInfo.address}, ${contactInfo.city}, ${contactInfo.state}-${contactInfo.pincode}`}
+          {`${contactInfo?.address || staticContactInfo.address}, ${contactInfo?.city || staticContactInfo.city}, ${contactInfo?.state || staticContactInfo.state}-${contactInfo?.pincode || staticContactInfo.pincode}`}
         </span>
       </div>
     );
@@ -247,16 +240,26 @@ function NavbarContent() {
                           >
                             {/* Services List */}
                             <div>
-                              {pestControlServices.map((service) => (
-                                <Link
-                                  key={service.slug}
-                                  href={`/services/${service.slug}`}
-                                  className="block px-4 py-3 text-gray-700 hover:bg-emerald-50 hover:text-admin-primary transition-colors text-sm font-medium border-b border-gray-100 last:border-b-0"
-                                  onClick={() => setIsServicesDropdownOpen(false)}
-                                >
-                                  {service.name}
-                                </Link>
-                              ))}
+                              {servicesLoading ? (
+                                <div className="px-4 py-3 text-gray-500 text-sm">
+                                  Loading services...
+                                </div>
+                              ) : pestControlServices.length === 0 ? (
+                                <div className="px-4 py-3 text-gray-500 text-sm">
+                                  No services available
+                                </div>
+                              ) : (
+                                pestControlServices.map((service) => (
+                                  <Link
+                                    key={service.slug}
+                                    href={`/services/${service.slug}`}
+                                    className="block px-4 py-3 text-gray-700 hover:text-admin-primary transition-colors text-sm font-medium border-b border-gray-100 last:border-b-0"
+                                    onClick={() => setIsServicesDropdownOpen(false)}
+                                  >
+                                    {service.name}
+                                  </Link>
+                                ))
+                              )}
                             </div>
                           </motion.div>
                         )}
@@ -296,7 +299,7 @@ function NavbarContent() {
               {/* WhatsApp Button */}
               <Button
                 onClick={() => {
-                  const number = contactInfo.whatsappNumber.replace(/[^0-9]/g, '');
+                  const number = (contactInfo?.whatsappNumber || staticContactInfo.whatsappNumber).replace(/[^0-9]/g, '');
                   window.open(`https://wa.me/${number}?text=Hi, I need pest control services. Please provide more details.`, '_blank');
                 }}
                 variant="outline"
@@ -376,7 +379,7 @@ function NavbarContent() {
                 >
                   <Button
                     onClick={() => {
-                      const whatsappNumber = contactInfo.whatsappNumber;
+                      const whatsappNumber = contactInfo?.whatsappNumber || staticContactInfo.whatsappNumber;
                       window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi, I need pest control services. Please provide more details.`, '_blank');
                     }}
                     variant="outline"

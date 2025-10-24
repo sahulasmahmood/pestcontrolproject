@@ -15,9 +15,9 @@ interface LeadDetails {
   leadId: string;
   customerName: string;
   serviceType: string;
-  travelDate: string;
-  pickupLocation: string;
-  dropLocation: string;
+  serviceDate: string;
+  address: string;
+  propertyType?: string;
 }
 
 function ReviewPageContent() {
@@ -54,7 +54,7 @@ function ReviewPageContent() {
           setLeadDetails(result.data);
           setFormData(prev => ({
             ...prev,
-            location: result.data.pickupLocation,
+            location: result.data.address,
           }));
         } else {
           setError(result.message);
@@ -173,15 +173,15 @@ function ReviewPageContent() {
         >
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Share Your Experience</h1>
-            <p className="text-gray-600">Help others by sharing your travel experience with us</p>
+            <p className="text-gray-600">Help others by sharing your pest control service experience with us</p>
           </div>
 
           {leadDetails && (
             <Card className="mb-6">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Car className="h-5 w-5 text-orange-600" />
-                  Trip Details
+                  <MapPin className="h-5 w-5 text-orange-600" />
+                  Service Details
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -191,17 +191,11 @@ function ReviewPageContent() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Calendar className="h-4 w-4" />
-                  <span>{new Date(leadDetails.travelDate).toLocaleDateString()}</span>
+                  <span>{new Date(leadDetails.serviceDate).toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <MapPin className="h-4 w-4" />
-                  <span>{leadDetails.pickupLocation}</span>
-                  {leadDetails.dropLocation && (
-                    <>
-                      <span>→</span>
-                      <span>{leadDetails.dropLocation}</span>
-                    </>
-                  )}
+                  <span>{leadDetails.address}</span>
                 </div>
               </CardContent>
             </Card>

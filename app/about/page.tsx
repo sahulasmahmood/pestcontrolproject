@@ -94,27 +94,27 @@ export default function AboutPage() {
 
   const values = [
     {
-      title: "Health & Safety",
+      title: "Expert & Trained Technicians",
       description:
-        "Your family's health and safety are our top priority with safe, non-toxic treatments and protective measures.",
-      icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />,
-    },
-    {
-      title: "Professional Excellence",
-      description:
-        "Certified technicians with extensive training and expertise in identifying and eliminating all types of pests.",
+        "Our team is professionally trained to identify, treat, and prevent all types of pest infestations using the latest tools and safe techniques.",
       icon: <Award className="h-5 w-5 sm:h-6 sm:w-6" />,
     },
     {
-      title: "Environmental Care",
+      title: "Safe & Eco-Friendly Solutions",
       description:
-        "Eco-friendly pest control solutions that protect the environment while effectively eliminating pest problems.",
+        "We use environment-friendly and non-toxic products to ensure the safety of your family, pets, and property.",
       icon: <Leaf className="h-5 w-5 sm:h-6 sm:w-6" />,
     },
     {
-      title: "Customer Trust",
+      title: "Guaranteed with Absoulte Results",
       description:
-        "Transparent pricing, honest communication, and reliable service that builds lasting relationships with our clients.",
+        "We stand by our work with reliable and long-lasting pest control solutions — ensuring your space stays pest-free.",
+      icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />,
+    },
+    {
+      title: "Customer-Centered Service",
+      description:
+        "Your satisfaction is our top priority. We provide quick response, flexible scheduling, and customized treatment plans.",
       icon: <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6" />,
     },
   ]
@@ -189,23 +189,24 @@ export default function AboutPage() {
           >
             <Badge className="mb-3 sm:mb-4 bg-white/20 text-white border-white/30 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm">
               <ShieldCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-              About Perfect Pest Control
+              {banner?.title || "About Perfect Pest Control"}
             </Badge>
 
-            {/* Optional dynamic banner title (keeps existing main heading) */}
             {banner?.title && (
               <p className="text-white/90 text-base sm:text-lg md:text-xl mb-2 sm:mb-3">{banner.title}</p>
             )}
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-              Professional Pest Control
-              <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl mt-1 sm:mt-2 font-normal">
-                Protecting Your Property
-              </span>
+              {banner?.heading || "Your Trusted Pest Control Partner"}
+              {!banner?.heading && (
+                <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl mt-1 sm:mt-2 font-normal">
+                  Protecting Your Property
+                </span>
+              )}
             </h1>
+
             <p className="text-xs sm:text-sm md:text-base lg:text-lg mb-6 sm:mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
-              Learn about our commitment to providing safe, effective, and environmentally responsible pest control 
-              solutions that protect your home, family, and business from unwanted pests.
+              {banner?.description || "Learn about our commitment to providing safe, effective, and environmentally responsible pest control solutions that protect your home, family, and business from unwanted pests."}
             </p>
           </motion.div>
         </div>
@@ -366,21 +367,21 @@ export default function AboutPage() {
                 icon: <Target className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />,
                 title: "Our Mission",
                 description:
-                  "To provide safe, effective, and environmentally responsible pest control solutions that protect homes and businesses while ensuring the health and safety of our clients and their families.",
+                  "To provide safe, effective, and eco-friendly pest control solutions that protect homes, businesses, and the environment. We are committed to delivering reliable service, ensuring customer satisfaction",
                 gradient: "from-admin-primary to-admin-secondary",
               },
               {
                 icon: <Award className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />,
                 title: "Our Vision",
                 description:
-                  "To be the leading pest control service provider, recognized for our professional excellence, innovative solutions, and commitment to customer satisfaction and environmental stewardship.",
+                  "To be the most trusted and innovative pest control company recognized for our commitment to quality, safety, and sustainability while setting new standards in customer care and environmental responsibility",
                 gradient: "from-blue-500 to-cyan-600",
               },
               {
                 icon: <Shield className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />,
                 title: "Our Commitment",
                 description:
-                  "Safety, reliability, professional expertise, and environmental responsibility are the core principles that guide our pest control services and customer relationships.",
+                  "Safety, reliability, professional expertise, and environmental responsibility are the core principles that guide our pest control services and customer relationships",
                 gradient: "from-purple-500 to-indigo-600",
               },
             ].map((item, index) => (
@@ -539,7 +540,7 @@ export default function AboutPage() {
                 color: "from-blue-500 to-cyan-600",
               },
               {
-                icon: "🏠",
+                icon: "🪲",
                 title: "Termites",
                 description: "Complete termite elimination and wood protection",
                 color: "from-purple-500 to-indigo-600",

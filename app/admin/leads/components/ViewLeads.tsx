@@ -30,23 +30,24 @@ import {
   Car,
   Users,
   Navigation,
-  DollarSign
+  DollarSign,
+  Home
 } from "lucide-react"
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon"
 
-interface TravelLead {
+interface ServiceLead {
   _id?: string;
   id: number;
   fullName: string;
   email: string;
   phone: string;
   serviceType: string;
-  travelDate: string;
-  travelTime?: string;
+  serviceDate: string;
+  serviceTime?: string;
   returnDate?: string;
-  pickupLocation: string;
-  dropLocation: string;
-  passengers: number;
+  address: string;
+  propertyType: string;
+  propertySize: number;
   message: string;
   status: "new" | "contacted" | "confirmed" | "completed" | "cancelled";
   priority: "low" | "medium" | "high";
@@ -60,7 +61,7 @@ interface TravelLead {
 }
 
 interface ViewLeadsProps {
-  lead: TravelLead | null
+  lead: ServiceLead | null
   isOpen: boolean
   onClose: () => void
 }
@@ -219,7 +220,7 @@ export default function ViewLeads({ lead, isOpen, onClose }: ViewLeadsProps) {
         <div className="p-8 overflow-y-auto max-h-[calc(95vh-200px)]">
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             
-            {/* Left Column - Contact & Travel Info */}
+            {/* Left Column - Contact & Service Info */}
             <div className="space-y-6">
               {/* Contact Information */}
               <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
@@ -301,14 +302,14 @@ export default function ViewLeads({ lead, isOpen, onClose }: ViewLeadsProps) {
                 </CardContent>
               </Card>
 
-              {/* Travel Details */}
+              {/* Service Details */}
               <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
                       <Car className="h-5 w-5 text-white" />
                     </div>
-                    Travel Details
+                    Service Details
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -322,12 +323,12 @@ export default function ViewLeads({ lead, isOpen, onClose }: ViewLeadsProps) {
 
                   <div className="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl border border-green-100">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-600">Travel Date</span>
+                      <span className="text-sm font-medium text-gray-600">Service Date</span>
                       <Calendar className="h-4 w-4 text-gray-400" />
                     </div>
-                    <p className="font-semibold text-gray-900 text-lg">{new Date(lead.travelDate).toLocaleDateString()}</p>
-                    {lead.travelTime && (
-                      <p className="text-sm text-gray-600 mt-1">Time: {lead.travelTime}</p>
+                    <p className="font-semibold text-gray-900 text-lg">{new Date(lead.serviceDate).toLocaleDateString()}</p>
+                    {lead.serviceTime && (
+                      <p className="text-sm text-gray-600 mt-1">Time: {lead.serviceTime}</p>
                     )}
                   </div>
 
@@ -344,28 +345,28 @@ export default function ViewLeads({ lead, isOpen, onClose }: ViewLeadsProps) {
                   <div className="grid grid-cols-1 gap-3">
                     <div className="p-3 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-100">
                       <div className="flex items-center gap-2 mb-1">
-                        <Navigation className="h-4 w-4 text-green-600" />
-                        <span className="text-sm font-medium text-gray-600">Pickup Location</span>
+                        <MapPin className="h-4 w-4 text-green-600" />
+                        <span className="text-sm font-medium text-gray-600">Address</span>
                       </div>
-                      <p className="font-semibold text-gray-900">{lead.pickupLocation}</p>
+                      <p className="font-semibold text-gray-900">{lead.address}</p>
                     </div>
 
                     <div className="p-3 bg-gradient-to-r from-red-50 to-pink-50 rounded-lg border border-red-100">
                       <div className="flex items-center gap-2 mb-1">
-                        <MapPin className="h-4 w-4 text-red-600" />
-                        <span className="text-sm font-medium text-gray-600">Drop Location</span>
+                        <Building className="h-4 w-4 text-red-600" />
+                        <span className="text-sm font-medium text-gray-600">Property Type</span>
                       </div>
-                      <p className="font-semibold text-gray-900">{lead.dropLocation}</p>
+                      <p className="font-semibold text-gray-900">{lead.propertyType || "Not specified"}</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-100">
                       <div className="flex items-center gap-2 mb-1">
-                        <Users className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm font-medium text-gray-600">Passengers</span>
+                        <Home className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium text-gray-600">Property Size</span>
                       </div>
-                      <p className="font-semibold text-gray-900">{lead.passengers}</p>
+                      <p className="font-semibold text-gray-900">{lead.propertySize} sq ft</p>
                     </div>
 
                     <div className="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-100">
@@ -526,7 +527,7 @@ export default function ViewLeads({ lead, isOpen, onClose }: ViewLeadsProps) {
                           <Button
                             className="h-12 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-medium shadow-lg"
                             onClick={() => {
-                              const reviewMessage = `Hi ${lead.fullName}! Thank you for choosing Vinushree Tours & Travels. We hope you had a great experience with our ${lead.serviceType} service. 
+                              const reviewMessage = `Hi ${lead.fullName}! Thank you for choosing Perfect Pest Control. We hope you had a great experience with our ${lead.serviceType} service. 
 
 Please take a moment to share your feedback by clicking here: ${lead.reviewLink}
 

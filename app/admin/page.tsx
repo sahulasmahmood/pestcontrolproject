@@ -16,7 +16,7 @@ import {
   Globe, 
   Mail, 
   Loader2, 
-  Package,
+  Shield,
   RefreshCw,
   AlertCircle,
   TrendingUp,
@@ -49,12 +49,11 @@ interface DashboardMetrics {
   completionRate: number;
   totalTestimonials: number;
   publishedTestimonials: number;
-  totalPackages: number;
-  activePackages: number;
-  totalTariffs: number;
-  activeTariffs: number;
-  totalLocations: number;
-  popularRoutes: number;
+  totalServices: number;
+  activeServices: number;
+  featuredServices: number;
+  totalBranches: number;
+  mainBranches: number;
 }
 
 interface RecentLead {
@@ -205,14 +204,14 @@ export default function AdminDashboard() {
       subtitle: "Customer reviews"
     },
     {
-      title: "Active Packages",
-      value: metrics.activePackages.toString(),
-      change: `${metrics.totalPackages} total`,
+      title: "Active Services",
+      value: metrics.activeServices.toString(),
+      change: `${metrics.totalServices} total`,
       trend: "up",
-      icon: <Package className="h-6 w-6" />,
+      icon: <Shield className="h-6 w-6" />,
       color: "text-indigo-600",
       bgColor: "bg-indigo-100",
-      subtitle: "Tour packages"
+      subtitle: "Pest control services"
     },
   ];
 
@@ -244,45 +243,45 @@ export default function AdminDashboard() {
 
   const quickActions = [
     {
-      title: "Add New Package",
-      href: "/admin/packages",
-      icon: <Package className="h-4 w-4" />,
-      description: "Create new tour packages",
+      title: "Manage Services",
+      href: "/admin/services",
+      icon: <Shield className="h-4 w-4" />,
+      description: "Pest control services",
       color: "from-blue-500 to-blue-600",
-    },
-    {
-      title: "Manage Tariff",
-      href: "/admin/tariff",
-      icon: <Settings className="h-4 w-4" />,
-      description: "Update service pricing",
-      color: "from-purple-500 to-purple-600",
     },
     {
       title: "View Leads",
       href: "/admin/leads",
       icon: <Users className="h-4 w-4" />,
-      description: "Manage customer inquiries",
+      description: "Customer inquiries",
       color: "from-green-500 to-green-600",
     },
     {
       title: "Banner Manager",
       href: "/admin/banners",
       icon: <Globe className="h-4 w-4" />,
-      description: "Manage homepage banners",
+      description: "Homepage banners",
       color: "from-indigo-500 to-indigo-600",
     },
     {
       title: "Contact Manager",
       href: "/admin/contact",
       icon: <MapPin className="h-4 w-4" />,
-      description: "Update contact details",
+      description: "Contact details",
       color: "from-pink-500 to-pink-600",
+    },
+    {
+      title: "Testimonials",
+      href: "/admin/testimonials",
+      icon: <Star className="h-4 w-4" />,
+      description: "Customer reviews",
+      color: "from-yellow-500 to-yellow-600",
     },
     {
       title: "Profile Settings",
       href: "/admin/profile",
       icon: <Settings className="h-4 w-4" />,
-      description: "Company profile settings",
+      description: "Company settings",
       color: "from-teal-500 to-teal-600",
     },
   ]
@@ -307,11 +306,11 @@ export default function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Welcome to Vinushree Tours & Travels!</h1>
-              <p className="text-blue-100 text-lg">Manage your travel services, packages, and customer inquiries.</p>
+              <h1 className="text-4xl font-bold mb-2">Welcome to Perfect Pest Control!</h1>
+              <p className="text-blue-100 text-lg">Manage your pest control services, bookings, and customer inquiries.</p>
               <div className="flex items-center gap-4 mt-4 text-sm text-blue-100">
                 <span>📊 {metrics.totalLeads} Total Leads</span>
-                <span>📦 {metrics.activePackages} Active Packages</span>
+                <span>🛡️ {metrics.activeServices} Active Services</span>
                 <span>⭐ {metrics.publishedTestimonials} Reviews</span>
               </div>
             </div>
@@ -457,22 +456,22 @@ export default function AdminDashboard() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <p className="text-2xl font-bold text-blue-600">{metrics.totalLocations}</p>
-                      <p className="text-sm text-gray-600">Total Locations</p>
+                      <p className="text-2xl font-bold text-blue-600">{metrics.totalServices}</p>
+                      <p className="text-sm text-gray-600">Total Services</p>
                     </div>
                     <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <p className="text-2xl font-bold text-green-600">{metrics.popularRoutes}</p>
-                      <p className="text-sm text-gray-600">Popular Routes</p>
+                      <p className="text-2xl font-bold text-green-600">{metrics.activeServices}</p>
+                      <p className="text-sm text-gray-600">Active Services</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <p className="text-2xl font-bold text-purple-600">{metrics.totalTariffs}</p>
-                      <p className="text-sm text-gray-600">Total Tariffs</p>
+                      <p className="text-2xl font-bold text-purple-600">{metrics.featuredServices}</p>
+                      <p className="text-sm text-gray-600">Featured</p>
                     </div>
                     <div className="text-center p-4 bg-orange-50 rounded-lg">
-                      <p className="text-2xl font-bold text-orange-600">{metrics.activeTariffs}</p>
-                      <p className="text-sm text-gray-600">Active Tariffs</p>
+                      <p className="text-2xl font-bold text-orange-600">{metrics.totalBranches}</p>
+                      <p className="text-sm text-gray-600">Branch Offices</p>
                     </div>
                   </div>
                   <div className="pt-4 border-t">
