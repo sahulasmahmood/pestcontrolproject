@@ -287,6 +287,25 @@ export default function BannersPage() {
                   </div>
                 )}
               </div>
+
+              {/* Image Resolution Guidelines */}
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mt-4">
+                <div className="flex items-start gap-3">
+                  <ImageIcon className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-semibold text-blue-900 mb-2">Recommended Image Specifications</h4>
+                    <div className="space-y-1 text-xs text-blue-800">
+                      <p><strong>Desktop:</strong> 1920 x 1080px (16:9 ratio) - Full HD</p>
+                      <p><strong>Mobile:</strong> 768 x 1024px (3:4 ratio) - Portrait</p>
+                      <p><strong>File Size:</strong> Maximum 2MB for optimal loading</p>
+                      <p><strong>Format:</strong> JPG, PNG, or WebP recommended</p>
+                    </div>
+                    <p className="text-xs text-blue-700 mt-2 font-medium">
+                      💡 Tip: Use high-quality images with good contrast for text overlay readability
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>

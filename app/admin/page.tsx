@@ -52,8 +52,8 @@ interface DashboardMetrics {
   totalServices: number;
   activeServices: number;
   featuredServices: number;
-  totalLocations: number;
-  popularRoutes: number;
+  totalBranches: number;
+  mainBranches: number;
 }
 
 interface RecentLead {
@@ -470,8 +470,8 @@ export default function AdminDashboard() {
                       <p className="text-sm text-gray-600">Featured</p>
                     </div>
                     <div className="text-center p-4 bg-orange-50 rounded-lg">
-                      <p className="text-2xl font-bold text-orange-600">{metrics.totalLocations}</p>
-                      <p className="text-sm text-gray-600">Service Areas</p>
+                      <p className="text-2xl font-bold text-orange-600">{metrics.totalBranches}</p>
+                      <p className="text-sm text-gray-600">Branch Offices</p>
                     </div>
                   </div>
                   <div className="pt-4 border-t">

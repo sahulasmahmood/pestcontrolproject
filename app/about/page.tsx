@@ -94,27 +94,27 @@ export default function AboutPage() {
 
   const values = [
     {
-      title: "Health & Safety",
+      title: "Expert & Trained Technicians",
       description:
-        "Your family's health and safety are our top priority with safe, non-toxic treatments and protective measures.",
-      icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />,
-    },
-    {
-      title: "Professional Excellence",
-      description:
-        "Certified technicians with extensive training and expertise in identifying and eliminating all types of pests.",
+        "Our team is professionally trained to identify, treat, and prevent all types of pest infestations using the latest tools and safe techniques.",
       icon: <Award className="h-5 w-5 sm:h-6 sm:w-6" />,
     },
     {
-      title: "Environmental Care",
+      title: "Safe & Eco-Friendly Solutions",
       description:
-        "Eco-friendly pest control solutions that protect the environment while effectively eliminating pest problems.",
+        "We use environment-friendly and non-toxic products to ensure the safety of your family, pets, and property.",
       icon: <Leaf className="h-5 w-5 sm:h-6 sm:w-6" />,
     },
     {
-      title: "Customer Trust",
+      title: "Guaranteed with Absoulte Results",
       description:
-        "Transparent pricing, honest communication, and reliable service that builds lasting relationships with our clients.",
+        "We stand by our work with reliable and long-lasting pest control solutions — ensuring your space stays pest-free.",
+      icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />,
+    },
+    {
+      title: "Customer-Centered Service",
+      description:
+        "Your satisfaction is our top priority. We provide quick response, flexible scheduling, and customized treatment plans.",
       icon: <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6" />,
     },
   ]
@@ -367,21 +367,21 @@ export default function AboutPage() {
                 icon: <Target className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />,
                 title: "Our Mission",
                 description:
-                  "To provide safe, effective, and environmentally responsible pest control solutions that protect homes and businesses while ensuring the health and safety of our clients and their families.",
+                  "To provide safe, effective, and eco-friendly pest control solutions that protect homes, businesses, and the environment. We are committed to delivering reliable service, ensuring customer satisfaction",
                 gradient: "from-admin-primary to-admin-secondary",
               },
               {
                 icon: <Award className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />,
                 title: "Our Vision",
                 description:
-                  "To be the leading pest control service provider, recognized for our professional excellence, innovative solutions, and commitment to customer satisfaction and environmental stewardship.",
+                  "To be the most trusted and innovative pest control company recognized for our commitment to quality, safety, and sustainability while setting new standards in customer care and environmental responsibility",
                 gradient: "from-blue-500 to-cyan-600",
               },
               {
                 icon: <Shield className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />,
                 title: "Our Commitment",
                 description:
-                  "Safety, reliability, professional expertise, and environmental responsibility are the core principles that guide our pest control services and customer relationships.",
+                  "Safety, reliability, professional expertise, and environmental responsibility are the core principles that guide our pest control services and customer relationships",
                 gradient: "from-purple-500 to-indigo-600",
               },
             ].map((item, index) => (

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Lead from "@/config/utils/admin/lead/leadSchema";
 import connectDB from "@/config/models/connectDB";
+import { sendReviewInvitation } from "@/config/utils/email/reviewEmailService";
+import crypto from "crypto";
 
 // GET - Fetch all leads
 export async function GET() {
@@ -67,11 +69,11 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Generate review link if status is changing to completed
+    // Generate review link and send email if status is changing to completed
     if (updateData.status === "completed" && currentLead.status !== "completed") {
       // Generate a unique review token
-      const reviewToken = `review_${_id}_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-      const reviewLink = `${process.env.APP_URL || 'http://localhost:3000'}/review?token=${reviewToken}`;
+      const reviewToken = crypto.randomBytes(32).toString('hex');
+      const reviewLink = `${process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/review?token=${reviewToken}`;
       
       console.log('Generating review link:', { reviewToken, reviewLink });
       
@@ -87,9 +89,21 @@ export async function PUT(request: NextRequest) {
 
     let responseMessage = "Lead updated successfully";
     
-    // If review link was generated, include it in the response
-    if (updateData.reviewLink) {
-      responseMessage += ". Review link generated - you can share this with the customer via WhatsApp.";
+    // If status changed to completed, send review invitation email automatically
+    if (updateData.status === "completed" && currentLead.status !== "completed") {
+      try {
+        if (updatedLead.email && updatedLead.reviewToken) {
+          await sendReviewInvitation(updatedLead);
+          responseMessage += ". Review invitation email sent automatically to customer.";
+          console.log(`Review invitation sent to ${updatedLead.email}`);
+        } else {
+          responseMessage += ". Review link generated but no email sent (missing email or token).";
+          console.warn(`Cannot send review invitation: email=${updatedLead.email}, token=${updatedLead.reviewToken}`);
+        }
+      } catch (emailError) {
+        console.error("Failed to send review invitation email:", emailError);
+        responseMessage += ". Review link generated but email sending failed.";
+      }
     }
 
     return NextResponse.json({

@@ -680,21 +680,21 @@ export default function CompleteHome() {
                 icon: <Shield className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" />,
                 title: "Our Mission",
                 description:
-                  "To provide safe, effective, and reliable pest control services across Tamil Nadu, ensuring every property is protected from pests with professional and eco-friendly solutions.",
+                  "To provide safe, effective, and eco-friendly pest control solutions that protect homes, businesses, and the environment while ensuring customer satisfaction",
                 gradient: "from-admin-primary to-admin-secondary",
               },
               {
                 icon: <Award className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" />,
                 title: "Our Vision",
                 description:
-                  "To be the most trusted pest control partner in South India, recognized for our commitment to excellence, customer satisfaction, and innovative pest management solutions.",
+                  "To be the most trusted and innovative pest control company recognized for our commitment to quality, safety, and sustainability while setting new standards in customer care and environmental responsibility",
                 gradient: "from-blue-600 to-cyan-600",
               },
               {
                 icon: <Heart className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" />,
                 title: "Our Values",
                 description:
-                  "Safety, effectiveness, customer satisfaction, and environmental responsibility are the core values that guide our pest control services, ensuring healthy environments for every client.",
+                  "Safety, effectiveness, customer satisfaction, and environmental responsibility are the core values that guide our pest control services, ensuring healthy environments for every client",
                 gradient: "from-purple-600 to-pink-600",
               },
             ].map((item, index) => (

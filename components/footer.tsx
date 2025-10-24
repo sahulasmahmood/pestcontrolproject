@@ -7,6 +7,8 @@ import {
   Facebook,
   Twitter,
   Instagram,
+  Linkedin,
+  Youtube,
   ArrowRight,
   Clock,
   Award,
@@ -39,9 +41,7 @@ const staticContactInfo = {
   state: "Tamil Nadu", 
   pincode: "627003",
   country: "India",
-  facebook: "https://facebook.com/perfectpestcontrol",
-  instagram: "https://instagram.com/perfectpestcontrol",
-  whatsapp: "https://wa.me/919626341555"
+
 }
 
 const staticThemeData = {
@@ -176,24 +176,72 @@ export default function Footer() {
             <div className="space-y-3">
               <h4 className="text-white font-semibold text-sm">Follow Us</h4>
               <div className="flex flex-wrap gap-3">
-                <a
-                  href={contactInfo?.facebook || staticContactInfo.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group p-2 bg-white/10 hover:bg-blue-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-blue-500/50"
-                  title="Follow us on Facebook"
-                >
-                  <Facebook className="h-4 w-4 text-gray-400 group-hover:text-blue-500 transition-colors" />
-                </a>
-                <a
-                  href={contactInfo?.instagram || staticContactInfo.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group p-2 bg-white/10 hover:bg-pink-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-pink-500/50"
-                  title="Follow us on Instagram"
-                >
-                  <Instagram className="h-4 w-4 text-gray-400 group-hover:text-pink-500 transition-colors" />
-                </a>
+                {/* Facebook - Only show if URL is provided in contact info */}
+                {contactInfo?.facebook && (
+                  <a
+                    href={contactInfo.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-2 bg-white/10 hover:bg-blue-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-blue-500/50"
+                    title="Follow us on Facebook"
+                  >
+                    <Facebook className="h-4 w-4 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                  </a>
+                )}
+                
+                {/* Instagram - Only show if URL is provided in contact info */}
+                {contactInfo?.instagram && (
+                  <a
+                    href={contactInfo.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-2 bg-white/10 hover:bg-pink-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-pink-500/50"
+                    title="Follow us on Instagram"
+                  >
+                    <Instagram className="h-4 w-4 text-gray-400 group-hover:text-pink-500 transition-colors" />
+                  </a>
+                )}
+
+                {/* Twitter - Only show if URL is provided in contact info */}
+                {contactInfo?.twitter && (
+                  <a
+                    href={contactInfo.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-2 bg-white/10 hover:bg-blue-400/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-blue-400/50"
+                    title="Follow us on Twitter"
+                  >
+                    <Twitter className="h-4 w-4 text-gray-400 group-hover:text-blue-400 transition-colors" />
+                  </a>
+                )}
+
+                {/* LinkedIn - Only show if URL is provided in contact info */}
+                {contactInfo?.linkedin && (
+                  <a
+                    href={contactInfo.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-2 bg-white/10 hover:bg-blue-700/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-blue-700/50"
+                    title="Follow us on LinkedIn"
+                  >
+                    <Linkedin className="h-4 w-4 text-gray-400 group-hover:text-blue-700 transition-colors" />
+                  </a>
+                )}
+
+                {/* YouTube - Only show if URL is provided in contact info */}
+                {contactInfo?.youtube && (
+                  <a
+                    href={contactInfo.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-2 bg-white/10 hover:bg-red-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-red-500/50"
+                    title="Follow us on YouTube"
+                  >
+                    <Youtube className="h-4 w-4 text-gray-400 group-hover:text-red-500 transition-colors" />
+                  </a>
+                )}
+                
+                {/* WhatsApp - Always show since it's essential for pest control business */}
                 <button
                   onClick={handleWhatsAppClick}
                   className="group p-2 bg-white/10 hover:bg-green-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-green-500/50"

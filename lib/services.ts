@@ -35,7 +35,7 @@ export async function fetchServices(options: {
 } = {}) {
   try {
     const { limit = 50, page = 1, serviceType, featured } = options;
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     
     const params = new URLSearchParams({
       limit: limit.toString(),
@@ -77,7 +77,7 @@ export async function fetchServices(options: {
 // Fetch single service by slug
 export async function fetchServiceBySlug(slug: string): Promise<ServiceData | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     
     const response = await fetch(`${baseUrl}/api/services/${slug}`, {
       cache: 'no-store',

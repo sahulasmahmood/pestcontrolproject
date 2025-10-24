@@ -34,7 +34,7 @@ interface ContactInfo {
 
 export function useContact() {
   const { data, error, isLoading } = useSWR<{ success: boolean; data: ContactInfo }>(
-    '/api/contact',
+    '/api/admin/contact',
     url => fetch(url).then(r => r.json()),
     {
       revalidateOnFocus: false,

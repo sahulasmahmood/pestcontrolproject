@@ -1181,7 +1181,7 @@ export default function ServicesPage() {
                             ? "ring-1 ring-red-500 focus:ring-2 focus:ring-red-500"
                             : ""
                         }`}>
-                          <SelectValue placeholder="Select service type" />
+                          <SelectValue placeholder="Select service type (Termite Control, Rodent Control, etc.)" />
                         </SelectTrigger>
                         <SelectContent className="z-50">
                           {serviceTypes.length === 0 && (
@@ -1452,7 +1452,7 @@ export default function ServicesPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, basePrice: e.target.value })
                       }
-                      placeholder="e.g., ₹1,500"
+                      placeholder="e.g., 1,500"
                       className="mt-2"
                     />
                   </div>

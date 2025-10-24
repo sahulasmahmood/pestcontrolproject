@@ -112,7 +112,7 @@ export default function BookingModal({ isOpen, onClose, prefilledService, prefil
         priority: "high",
         source: "website",
         estimatedCost: "To be determined",
-        notes: "Modal pest control enquiry"
+        notes: "Booking Modal form pest control enquiry"
       };
 
       const response = await fetch('/api/leads', {

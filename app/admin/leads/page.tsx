@@ -609,7 +609,7 @@ export default function LeadManager() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `vinushree-leads-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `perfect-pest-control-leads-${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1292,7 +1292,7 @@ Your feedback helps us serve you better! 🙏`;
                   <p className="text-gray-600">
                     {searchTerm || statusFilter !== "all" || priorityFilter !== "all" || serviceFilter !== "all"
                       ? "Try adjusting your search criteria."
-                      : "Add your first travel lead to get started."}
+                      : "Add your first pest control lead to get started."}
                   </p>
                 </div>
               )}

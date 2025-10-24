@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     });
 
     // Reset link (replace with your actual frontend URL)
-    const resetLink = `${process.env.APP_URL}/admin/login/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/admin/login/reset-password?token=${resetToken}`;
 
     console.log('Attempting to send email with the following details:');
     console.log('SMTP Settings:', {

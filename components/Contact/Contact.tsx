@@ -82,25 +82,17 @@ export const Contact = ({ services: propServices }: ContactProps) => {
         throw new Error("Please fill in all required fields");
       }
 
-      // Prepare data for API
+      // Prepare data for contact API
       const submissionData = {
-        fullName: formData.fullName.trim(),
+        name: formData.fullName.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim(),
-        serviceType: formData.service.trim(),
-        serviceDate: new Date().toISOString().split('T')[0],
-        address: "To be specified", // Required field
-        propertyType: "", // Empty so admin can edit
-        propertySize: null, // Empty so admin can edit
-        message: formData.message.trim(),
-        status: "new", // Required field
-        priority: "medium", // Required field
-        source: "website", // Changed from "contact_form" to "website"
-        estimatedCost: "To be determined",
-        notes: `Pest Control Service Inquiry\nEmail: ${formData.email}\nMessage: ${formData.message}`
+        subject: `${formData.service} - Service Inquiry`,
+        message: formData.message.trim() || `I'm interested in ${formData.service} service. Please contact me for more information.`,
       };
 
-      const response = await fetch("/api/leads", {
+      // Send contact form email
+      const contactResponse = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,12 +100,41 @@ export const Contact = ({ services: propServices }: ContactProps) => {
         body: JSON.stringify(submissionData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to send message");
+      if (!contactResponse.ok) {
+        const errorData = await contactResponse.json();
+        throw new Error(errorData.message || "Failed to send message");
       }
 
-      await response.json();
+      // Also create a lead record for admin tracking
+      const leadData = {
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        serviceType: formData.service.trim(),
+        serviceDate: new Date().toISOString().split('T')[0],
+        address: "To be specified",
+        propertyType: "",
+        propertySize: null,
+        message: formData.message.trim() || `I'm interested in ${formData.service} service. Please contact me for more information.`,
+        status: "new",
+        priority: "medium",
+        source: "website",
+        estimatedCost: "To be determined",
+        notes: `Contact form submission for ${formData.service} service`
+      };
+
+      const leadResponse = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(leadData),
+      });
+
+      // Don't fail if lead creation fails, but log it
+      if (!leadResponse.ok) {
+        console.warn("Failed to create lead record for contact form submission");
+      }
 
       toast({
         title: "Message Sent Successfully!",
