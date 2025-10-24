@@ -74,6 +74,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const pageKey = ((formData.get("pageKey") as string) || "").trim().toLowerCase()
     const title = ((formData.get("title") as string) || "").trim()
+    const heading = ((formData.get("heading") as string) || "").trim()
+    const description = ((formData.get("description") as string) || "").trim()
     const status = (formData.get("status") as string) || "active"
 
     if (!pageKey) {
@@ -113,6 +115,8 @@ export async function POST(request: NextRequest) {
     const payload: any = {
       pageKey,
       title: title || undefined,
+      heading: heading || undefined,
+      description: description || undefined,
       image: finalImageUrl,
       status,
     }

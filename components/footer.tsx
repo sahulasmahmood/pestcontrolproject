@@ -20,7 +20,8 @@ import {
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { useTheme } from "./providers/theme";
-// import { useContact } from "@/hooks/use-contact"; // Commented out for static data
+import { useContact } from "@/hooks/use-contact";
+import { useServices } from "@/hooks/use-services";
 import Image from "next/image";
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
@@ -50,19 +51,16 @@ const staticThemeData = {
 
 export default function Footer() {
   const { themeData } = useTheme();
-  // const { contactInfo } = useContact(); // Commented out for static data
-  const contactInfo = staticContactInfo; // Using static data
+  const { contactInfo } = useContact();
+  const { services, loading: servicesLoading } = useServices();
   const { toast } = useToast();
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
-  const pestControlServices = [
-    { name: 'Anti Termite Treatment', href: '/services' },
-    { name: 'Rat Control', href: '/services' },
-    { name: 'Bed Bug Treatment', href: '/services' },
-    { name: 'Mosquito Control', href: '/services' },
-    { name: 'Disinfection Service', href: '/services' },
-    { name: 'General Pest Control', href: '/services' }
-  ];
+  // Dynamic pest control services for footer
+  const pestControlServices = services.slice(0, 6).map(service => ({
+    name: service.serviceName,
+    href: `/services/${service.slug}`
+  }));
 
   const quickLinks = [
     { name: 'Home', href: '/' },
@@ -77,13 +75,14 @@ export default function Footer() {
 
   const handleWhatsAppClick = () => {
     const message = "Hi! I need pest control services. Please provide more details and a free quote.";
-    const whatsappNumber = contactInfo.whatsappNumber;
+    const whatsappNumber = contactInfo?.whatsappNumber || staticContactInfo.whatsappNumber;
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleCallClick = () => {
-    window.open(`tel:${contactInfo.primaryPhone}`, '_self');
+    const phoneNumber = contactInfo?.primaryPhone || staticContactInfo.primaryPhone;
+    window.open(`tel:${phoneNumber}`, '_self');
   };
 
   return (
@@ -138,10 +137,10 @@ export default function Footer() {
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-admin-primary flex-shrink-0" />
                 <a
-                  href={`tel:${contactInfo.primaryPhone}`}
+                  href={`tel:${contactInfo?.primaryPhone || staticContactInfo.primaryPhone}`}
                   className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
                 >
-                  {contactInfo.primaryPhone}
+                  {contactInfo?.primaryPhone || staticContactInfo.primaryPhone}
                 </a>
               </div>
               
@@ -149,26 +148,26 @@ export default function Footer() {
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-admin-primary flex-shrink-0" />
                 <a
-                  href={`tel:${contactInfo.secondaryPhone}`}
+                  href={`tel:${contactInfo?.secondaryPhone || staticContactInfo.secondaryPhone}`}
                   className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
                 >
-                  {contactInfo.secondaryPhone}
+                  {contactInfo?.secondaryPhone || staticContactInfo.secondaryPhone}
                 </a>
               </div>
 
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-admin-primary flex-shrink-0" />
                 <a
-                  href={`mailto:${contactInfo.email}`}
+                  href={`mailto:${contactInfo?.email || staticContactInfo.email}`}
                   className="text-gray-300 hover:text-white transition-colors text-sm font-medium break-all"
                 >
-                  {contactInfo.email}
+                  {contactInfo?.email || staticContactInfo.email}
                 </a>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-admin-primary mt-0.5 flex-shrink-0" />
                 <span className="text-gray-300 text-sm leading-relaxed">
-                  {`${contactInfo.address}, ${contactInfo.city}, ${contactInfo.state}-${contactInfo.pincode}, ${contactInfo.country}`}
+                  {`${contactInfo?.address || staticContactInfo.address}, ${contactInfo?.city || staticContactInfo.city}, ${contactInfo?.state || staticContactInfo.state}-${contactInfo?.pincode || staticContactInfo.pincode}, ${contactInfo?.country || staticContactInfo.country}`}
                 </span>
               </div>
             </div>
@@ -178,7 +177,7 @@ export default function Footer() {
               <h4 className="text-white font-semibold text-sm">Follow Us</h4>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href={contactInfo.facebook}
+                  href={contactInfo?.facebook || staticContactInfo.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group p-2 bg-white/10 hover:bg-blue-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-blue-500/50"
@@ -187,7 +186,7 @@ export default function Footer() {
                   <Facebook className="h-4 w-4 text-gray-400 group-hover:text-blue-500 transition-colors" />
                 </a>
                 <a
-                  href={contactInfo.instagram}
+                  href={contactInfo?.instagram || staticContactInfo.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group p-2 bg-white/10 hover:bg-pink-600/20 rounded-lg transition-all duration-300 border border-white/20 hover:border-pink-500/50"
@@ -210,17 +209,23 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-6 text-white">Our Services</h3>
             <ul className="space-y-3">
-              {pestControlServices.map((service, index) => (
-                <li key={index}>
-                  <Link
-                    href={service.href}
-                    className="text-gray-300 hover:text-white transition-colors flex items-center group"
-                  >
-                    <ArrowRight className="h-3 w-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    {service.name}
-                  </Link>
-                </li>
-              ))}
+              {servicesLoading ? (
+                <li className="text-gray-400 text-sm">Loading services...</li>
+              ) : pestControlServices.length === 0 ? (
+                <li className="text-gray-400 text-sm">No services available</li>
+              ) : (
+                pestControlServices.map((service, index) => (
+                  <li key={index}>
+                    <Link
+                      href={service.href}
+                      className="text-gray-300 hover:text-white transition-colors flex items-center group"
+                    >
+                      <ArrowRight className="h-3 w-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {service.name}
+                    </Link>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
 

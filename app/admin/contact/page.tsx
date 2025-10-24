@@ -64,7 +64,7 @@ export default function ContactPage() {
     
     // Pest Control Specific
     servicesOffered: "",
-    coverageAreas: "",
+    branchOffices: "",
     serviceHours: "",
   });
 
@@ -254,7 +254,7 @@ export default function ContactPage() {
                   id="businessHours"
                   value={contactInfo.businessHours}
                   onChange={(e) => handleInputChange("businessHours", e.target.value)}
-                  placeholder="Emergency 24/7"
+                  placeholder="Mon-Sat: 8AM-8PM, Emergency 24/7"
                   className="mt-2"
                 />
               </div>
@@ -358,6 +358,19 @@ export default function ContactPage() {
                   onChange={(e) => handleInputChange("servicesOffered", e.target.value)}
                   placeholder="Residential Pest Control, Commercial Pest Control, Termite Treatment, Rodent Control, Cockroach Control, Ant Control, Bed Bug Treatment, Mosquito Control"
                   rows={3}
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="branchOffices" className="text-base font-semibold">
+                  Branch Offices
+                </Label>
+                <Textarea
+                  id="branchOffices"
+                  value={contactInfo.branchOffices}
+                  onChange={(e) => handleInputChange("branchOffices", e.target.value)}
+                  placeholder="Tuticorin, Tenkasi, Nagercoil, Madurai, Ramanathapuram"
+                  rows={2}
                   className="mt-2"
                 />
               </div>

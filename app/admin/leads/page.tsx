@@ -63,24 +63,25 @@ import {
   Car,
   Package,
   Settings,
-  User
+  User,
+  Building
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import ViewLeads from "./components/ViewLeads";
 
-interface TravelLead {
+interface ServiceLead {
   _id?: string;
   id: number;
   fullName: string;
   email: string;
   phone: string;
   serviceType: string;
-  travelDate: string;
-  travelTime?: string;
+  serviceDate: string;
+  serviceTime?: string;
   returnDate?: string;
-  pickupLocation: string;
-  dropLocation: string;
-  passengers: number;
+  address: string;
+  propertyType: string;
+  propertySize: number;
   message: string;
   status: "new" | "contacted" | "confirmed" | "completed" | "cancelled";
   priority: "low" | "medium" | "high";
@@ -105,12 +106,12 @@ export default function LeadManager() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [serviceFilter, setServiceFilter] = useState("all");
-  const [selectedLead, setSelectedLead] = useState<TravelLead | null>(null);
+  const [selectedLead, setSelectedLead] = useState<ServiceLead | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [leadToDelete, setLeadToDelete] = useState<TravelLead | null>(null);
+  const [leadToDelete, setLeadToDelete] = useState<ServiceLead | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -121,7 +122,7 @@ export default function LeadManager() {
   const [servicesLoading, setServicesLoading] = useState(true);
 
   const { leads: leadsData, isLoading: leadsLoading, mutate } = useLeads();
-  const [leads, setLeads] = useState<TravelLead[]>([]);
+  const [leads, setLeads] = useState<ServiceLead[]>([]);
 
   // Fetch service types from contact API
   useEffect(() => {
@@ -131,43 +132,62 @@ export default function LeadManager() {
   const fetchServiceTypes = async () => {
     try {
       setServicesLoading(true);
-      const response = await fetch('/api/admin/contact');
-      const result = await response.json();
       
-      if (result.success && result.data?.servicesOffered) {
-        const services = result.data.servicesOffered
-          .split(',')
-          .map((s: string) => s.trim())
-          .filter((s: string) => s.length > 0);
-        setServiceTypes(services);
+      // Fetch services from the services API
+      const servicesResponse = await fetch('/api/services');
+      const servicesResult = await servicesResponse.json();
+      
+      if (servicesResult.success && servicesResult.data && servicesResult.data.length > 0) {
+        // Extract unique service names from the services
+        const serviceNames = servicesResult.data
+          .map((service: any) => service.serviceName)
+          .filter((name: string) => name && name.trim().length > 0)
+          .sort();
+        
+        setServiceTypes(serviceNames);
       } else {
-        // Fallback services
-        setServiceTypes([
-          "One-way Trip",
-          "Round Trip", 
-          "Airport Taxi",
-          "Day Rental",
-          "Hourly Package",
-          "Local Pickup/Drop",
-          "Tour Package",
-          "Corporate Travel",
-          "Wedding Transportation"
-        ]);
+        // If no services found, try to get from existing leads
+        const leadsResponse = await fetch('/api/admin/leads');
+        const leadsResult = await leadsResponse.json();
+        
+        if (leadsResult.success && leadsResult.data && leadsResult.data.length > 0) {
+          const servicesFromLeads = leadsResult.data
+            .map((lead: any) => lead.serviceType)
+            .filter((s: string) => s && s.trim().length > 0)
+            .map((s: string) => s.trim());
+          
+          const uniqueServices = [...new Set(servicesFromLeads)].sort();
+          
+          if (uniqueServices.length > 0) {
+            setServiceTypes(uniqueServices);
+          } else {
+            // Last resort: empty array to show "No services available"
+            setServiceTypes([]);
+          }
+        } else {
+          setServiceTypes([]);
+        }
       }
     } catch (error) {
       console.error('Error fetching service types:', error);
-      // Fallback services
-      setServiceTypes([
-        "One-way Trip",
-        "Round Trip", 
-        "Airport Taxi",
-        "Day Rental",
-        "Hourly Package",
-        "Local Pickup/Drop",
-        "Tour Package",
-        "Corporate Travel",
-        "Wedding Transportation"
-      ]);
+      // On error, try to get from leads as fallback
+      try {
+        const leadsResponse = await fetch('/api/admin/leads');
+        const leadsResult = await leadsResponse.json();
+        
+        if (leadsResult.success && leadsResult.data) {
+          const servicesFromLeads = leadsResult.data
+            .map((lead: any) => lead.serviceType)
+            .filter((s: string) => s && s.trim().length > 0);
+          
+          const uniqueServices = [...new Set(servicesFromLeads)].sort();
+          setServiceTypes(uniqueServices);
+        } else {
+          setServiceTypes([]);
+        }
+      } catch {
+        setServiceTypes([]);
+      }
     } finally {
       setServicesLoading(false);
     }
@@ -183,12 +203,12 @@ export default function LeadManager() {
         email: lead.email || "",
         phone: lead.phone,
         serviceType: lead.serviceType,
-        travelDate: lead.travelDate,
-        travelTime: lead.travelTime || "",
+        serviceDate: lead.serviceDate,
+        serviceTime: lead.serviceTime || "",
         returnDate: lead.returnDate || "",
-        pickupLocation: lead.pickupLocation,
-        dropLocation: lead.dropLocation || "",
-        passengers: lead.passengers || 1,
+        address: lead.address,
+        propertyType: lead.propertyType || "",
+        propertySize: lead.propertySize || 1000,
         message: lead.message,
         status: lead.status,
         priority: lead.priority,
@@ -214,12 +234,12 @@ export default function LeadManager() {
     email: string;
     phone: string;
     serviceType: string;
-    travelDate: string;
-    travelTime: string;
+    serviceDate: string;
+    serviceTime: string;
     returnDate: string;
-    pickupLocation: string;
-    dropLocation: string;
-    passengers: number;
+    address: string;
+    propertyType: string;
+    propertySize: number;
     message: string;
     status: "new" | "contacted" | "confirmed" | "completed" | "cancelled";
     priority: "low" | "medium" | "high";
@@ -231,12 +251,12 @@ export default function LeadManager() {
     email: "",
     phone: "",
     serviceType: "",
-    travelDate: "",
-    travelTime: "",
+    serviceDate: "",
+    serviceTime: "",
     returnDate: "",
-    pickupLocation: "",
-    dropLocation: "",
-    passengers: 1,
+    address: "",
+    propertyType: "",
+    propertySize: 1000,
     message: "",
     status: "new",
     priority: "medium",
@@ -312,8 +332,8 @@ export default function LeadManager() {
       lead.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.phone.includes(searchTerm) ||
-      lead.pickupLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.dropLocation.toLowerCase().includes(searchTerm.toLowerCase());
+      lead.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.propertyType.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === "all" || lead.status === statusFilter;
     const matchesPriority =
@@ -324,13 +344,13 @@ export default function LeadManager() {
     return matchesSearch && matchesStatus && matchesPriority && matchesService;
   });
 
-  const handleEditLead = (lead: TravelLead) => {
+  const handleEditLead = (lead: ServiceLead) => {
     scrollPositionRef.current = window.scrollY;
     setSelectedLead(lead);
     setIsEditModalOpen(true);
   };
 
-  const handleViewLead = (lead: TravelLead) => {
+  const handleViewLead = (lead: ServiceLead) => {
     scrollPositionRef.current = window.scrollY;
     // Find the most up-to-date lead data from the leads array
     const currentLead = leads.find(l => l._id === lead._id) || lead;
@@ -338,7 +358,7 @@ export default function LeadManager() {
     setIsViewModalOpen(true);
   };
 
-  const handleDeleteLead = (lead: TravelLead) => {
+  const handleDeleteLead = (lead: ServiceLead) => {
     setLeadToDelete(lead);
     setIsDeleteModalOpen(true);
   };
@@ -385,7 +405,7 @@ export default function LeadManager() {
     }
   };
 
-  const handleUpdateLead = async (updatedLead: TravelLead) => {
+  const handleUpdateLead = async (updatedLead: ServiceLead) => {
     try {
       setIsSaving(true);
 
@@ -400,10 +420,10 @@ export default function LeadManager() {
           email: updatedLead.email,
           phone: updatedLead.phone,
           serviceType: updatedLead.serviceType,
-          travelDate: updatedLead.travelDate,
-          pickupLocation: updatedLead.pickupLocation,
-          dropLocation: updatedLead.dropLocation,
-          passengers: updatedLead.passengers,
+          serviceDate: updatedLead.serviceDate,
+          address: updatedLead.address,
+          propertyType: updatedLead.propertyType,
+          propertySize: updatedLead.propertySize,
           message: updatedLead.message,
           status: updatedLead.status,
           priority: updatedLead.priority,
@@ -473,8 +493,8 @@ export default function LeadManager() {
       !newLead.email ||
       !newLead.phone ||
       !newLead.serviceType ||
-      !newLead.travelDate ||
-      !newLead.pickupLocation ||
+      !newLead.serviceDate ||
+      !newLead.address ||
       !newLead.message
     ) {
       toast({
@@ -518,12 +538,12 @@ export default function LeadManager() {
           email: "",
           phone: "",
           serviceType: "",
-          travelDate: "",
-          travelTime: "",
+          serviceDate: "",
+          serviceTime: "",
           returnDate: "",
-          pickupLocation: "",
-          dropLocation: "",
-          passengers: 1,
+          address: "",
+          propertyType: "",
+          propertySize: 1000,
           message: "",
           status: "new",
           priority: "medium",
@@ -560,8 +580,8 @@ export default function LeadManager() {
   const handleExportLeads = () => {
     // Create CSV content
     const headers = [
-      "Name", "Email", "Phone", "Service", "Travel Date", 
-      "Pickup", "Drop", "Passengers", "Status", "Priority", 
+      "Name", "Email", "Phone", "Service", "Service Date", 
+      "Address", "Property Type", "Property Size", "Status", "Priority", 
       "Source", "Estimated Cost", "Submitted At"
     ];
     
@@ -572,10 +592,10 @@ export default function LeadManager() {
         lead.email,
         lead.phone,
         lead.serviceType,
-        lead.travelDate,
-        lead.pickupLocation,
-        lead.dropLocation,
-        lead.passengers,
+        lead.serviceDate,
+        lead.address,
+        lead.propertyType,
+        lead.propertySize,
         lead.status,
         lead.priority,
         lead.source,
@@ -690,7 +710,7 @@ export default function LeadManager() {
                 <DialogHeader>
                   <DialogTitle className="text-2xl bg-admin-gradient bg-clip-text text-transparent font-bold flex items-center gap-2">
                     <UserPlus className="h-6 w-6" />
-                    Add New Travel Lead
+                    Add New Service Lead
                   </DialogTitle>
                 </DialogHeader>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
@@ -803,78 +823,77 @@ export default function LeadManager() {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="travelDate" className="text-sm font-medium">
-                      Travel Date <span className="text-red-500">*</span>
+                    <Label htmlFor="serviceDate" className="text-sm font-medium">
+                      Service Date <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      id="travelDate"
+                      id="serviceDate"
                       type="date"
-                      value={newLead.travelDate}
+                      value={newLead.serviceDate}
                       onChange={(e) =>
-                        setNewLead({ ...newLead, travelDate: e.target.value })
+                        setNewLead({ ...newLead, serviceDate: e.target.value })
                       }
                       className={
-                        isFormSubmitted && !newLead.travelDate
+                        isFormSubmitted && !newLead.serviceDate
                           ? "ring-1 ring-red-500 focus:ring-2 focus:ring-red-500"
                           : ""
                       }
                     />
-                    {isFormSubmitted && !newLead.travelDate && (
+                    {isFormSubmitted && !newLead.serviceDate && (
                       <p className="text-xs text-red-500 mt-1">
-                        Travel date is required
+                        Service date is required
                       </p>
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="passengers" className="text-sm font-medium">
-                      Number of Passengers
+                    <Label htmlFor="propertySize" className="text-sm font-medium">
+                      Property Size (sq ft)
                     </Label>
                     <Input
-                      id="passengers"
+                      id="propertySize"
                       type="number"
-                      min="1"
-                      max="20"
-                      value={newLead.passengers}
+                      min="100"
+                      value={newLead.propertySize}
                       onChange={(e) =>
-                        setNewLead({ ...newLead, passengers: Number(e.target.value) })
+                        setNewLead({ ...newLead, propertySize: Number(e.target.value) })
                       }
-                      placeholder="1"
+                      placeholder="1000"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="pickupLocation" className="text-sm font-medium">
-                      Pickup Location <span className="text-red-500">*</span>
+                    <Label htmlFor="address" className="text-sm font-medium">
+                      Address <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      id="pickupLocation"
-                      value={newLead.pickupLocation}
+                      id="address"
+                      value={newLead.address}
                       onChange={(e) =>
-                        setNewLead({ ...newLead, pickupLocation: e.target.value })
+                        setNewLead({ ...newLead, address: e.target.value })
                       }
-                      placeholder="Enter pickup location"
+                      placeholder="Enter service address"
                       className={
-                        isFormSubmitted && !newLead.pickupLocation
+                        isFormSubmitted && !newLead.address
                           ? "ring-1 ring-red-500 focus:ring-2 focus:ring-red-500"
                           : ""
                       }
                     />
-                    {isFormSubmitted && !newLead.pickupLocation && (
+                    {isFormSubmitted && !newLead.address && (
                       <p className="text-xs text-red-500 mt-1">
-                        Pickup location is required
+                        Address is required
                       </p>
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="dropLocation" className="text-sm font-medium">
-                      Drop Location
+                    <Label htmlFor="propertyType" className="text-sm font-medium">
+                      Property Type
                     </Label>
                     <Input
-                      id="dropLocation"
-                      value={newLead.dropLocation}
+                      id="propertyType"
+                      value={newLead.propertyType}
                       onChange={(e) =>
-                        setNewLead({ ...newLead, dropLocation: e.target.value })
+                        setNewLead({ ...newLead, propertyType: e.target.value })
                       }
-                      placeholder="Enter drop location"
+                      placeholder="e.g., Residential, Commercial, Villa, Apartment, Factory, etc."
                     />
                   </div>
                   <div className="space-y-2">
@@ -1114,7 +1133,7 @@ export default function LeadManager() {
             <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50">
               <CardTitle className="flex items-center gap-2 bg-admin-gradient bg-clip-text text-transparent">
                 <Users className="h-5 w-5 text-admin-primary" />
-                Travel Leads ({filteredLeads.length})
+                Service Leads ({filteredLeads.length})
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -1124,7 +1143,7 @@ export default function LeadManager() {
                     <TableRow>
                       <TableHead>Customer</TableHead>
                       <TableHead>Service</TableHead>
-                      <TableHead>Travel Details</TableHead>
+                      <TableHead>Service Details</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Priority</TableHead>
                       <TableHead>Source</TableHead>
@@ -1152,7 +1171,7 @@ export default function LeadManager() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            {lead.serviceType.includes("Tour") ? (
+                            {lead.serviceType.includes("Commercial") ? (
                               <Package className="h-4 w-4 text-purple-600" />
                             ) : (
                               <Car className="h-4 w-4 text-blue-600" />
@@ -1164,20 +1183,20 @@ export default function LeadManager() {
                           <div className="text-sm">
                             <div className="flex items-center gap-1 mb-1">
                               <Calendar className="h-3 w-3 text-gray-500" />
-                              {new Date(lead.travelDate).toLocaleDateString()}
+                              {new Date(lead.serviceDate).toLocaleDateString()}
                             </div>
                             <div className="flex items-center gap-1 mb-1">
                               <MapPin className="h-3 w-3 text-green-600" />
-                              {lead.pickupLocation}
+                              {lead.address}
                             </div>
-                            {lead.dropLocation && (
+                            {lead.propertyType && (
                               <div className="flex items-center gap-1">
-                                <MapPin className="h-3 w-3 text-red-600" />
-                                {lead.dropLocation}
+                                <Building className="h-3 w-3 text-blue-600" />
+                                {lead.propertyType}
                               </div>
                             )}
                             <div className="text-xs text-gray-500 mt-1">
-                              {lead.passengers} passenger{lead.passengers > 1 ? 's' : ''}
+                              {lead.propertySize} sq ft
                             </div>
                           </div>
                         </TableCell>
@@ -1234,7 +1253,7 @@ export default function LeadManager() {
                                 size="sm"
                                 variant="outline"
                                 onClick={() => {
-                                  const reviewMessage = `Hi ${lead.fullName}! Thank you for choosing Vinushree Tours & Travels. We hope you had a great experience with our ${lead.serviceType} service. 
+                                  const reviewMessage = `Hi ${lead.fullName}! Thank you for choosing Perfect Pest Control. We hope you had a great experience with our ${lead.serviceType} service. 
 
 Please take a moment to share your feedback by clicking here: ${lead.reviewLink}
 
@@ -1321,20 +1340,12 @@ Your feedback helps us serve you better! 🙏`;
                       <p className="text-gray-900">{selectedLead.serviceType}</p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-600">Travel Date</Label>
-                      <p className="text-gray-900">{new Date(selectedLead.travelDate).toLocaleDateString()}</p>
+                      <Label className="text-sm font-medium text-gray-600">Service Date</Label>
+                      <p className="text-gray-900">{new Date(selectedLead.serviceDate).toLocaleDateString()}</p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-600">Passengers</Label>
-                      <p className="text-gray-900">{selectedLead.passengers}</p>
-                    </div>
-                    <div>
-                      <Label className="text-sm font-medium text-gray-600">Pickup Location</Label>
-                      <p className="text-gray-900">{selectedLead.pickupLocation}</p>
-                    </div>
-                    <div>
-                      <Label className="text-sm font-medium text-gray-600">Drop Location</Label>
-                      <p className="text-gray-900">{selectedLead.dropLocation || "Not specified"}</p>
+                      <Label className="text-sm font-medium text-gray-600">Address</Label>
+                      <p className="text-gray-900">{selectedLead.address}</p>
                     </div>
                   </div>
                   <div className="mt-4">
@@ -1434,6 +1445,34 @@ Your feedback helps us serve you better! 🙏`;
                           <SelectItem value="referral">Referral</SelectItem>
                         </SelectContent>
                       </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="editPropertyType" className="text-sm font-medium">
+                        Property Type
+                      </Label>
+                      <Input
+                        id="editPropertyType"
+                        value={selectedLead.propertyType || ""}
+                        onChange={(e) =>
+                          setSelectedLead({ ...selectedLead, propertyType: e.target.value })
+                        }
+                        placeholder="e.g., Residential, Commercial, Villa, Apartment, Factory, etc."
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="editPropertySize" className="text-sm font-medium">
+                        Property Size (sq ft)
+                      </Label>
+                      <Input
+                        id="editPropertySize"
+                        type="number"
+                        min="100"
+                        value={selectedLead.propertySize || ""}
+                        onChange={(e) =>
+                          setSelectedLead({ ...selectedLead, propertySize: Number(e.target.value) })
+                        }
+                        placeholder="1000"
+                      />
                     </div>
                   </div>
                   <div className="mt-6 space-y-2">

@@ -28,19 +28,24 @@ import { useBanner } from "@/hooks/use-banner";
 import { useContact } from "@/hooks/use-contact";
 
 interface ServiceItem {
-  id: string;
+  _id?: string;
+  id?: string;
   serviceName: string;
   serviceType: string;
+  shortDescription?: string;
   description: string;
-  basePrice: string;
-  premiumPrice: string;
-  area: string;
-  warranty: string;
+  basePrice?: string;
+  coverageArea?: string;
+  serviceAreaTypes?: string[];
   image: string;
   featured: boolean;
-  inclusions: string[];
-  pests: string[];
+  inclusions?: string[];
+  pests?: string[];
   slug: string;
+  gallery?: string[];
+  status?: string;
+  views?: number;
+  bookings?: number;
 }
 
 interface ServicesPageClientProps {
@@ -67,12 +72,7 @@ export default function ServicesPageClient({ servicesData }: ServicesPageClientP
   const { banner } = useBanner("services");
   const { contactInfo } = useContact();
 
-  const handleBookService = (serviceName: string) => {
-    const message = `Hi, I need ${serviceName} service. Please provide a detailed quote and schedule an inspection.`;
-    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919003782966';
-    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-  };
+
 
   const getServiceTypeIcon = (type: string) => {
     switch (type) {
@@ -156,23 +156,24 @@ export default function ServicesPageClient({ servicesData }: ServicesPageClientP
           >
             <Badge className="mb-3 sm:mb-4 bg-white/20 text-white border-white/30 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm">
               <ShieldCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-              Perfect Pest Control Services
+              {banner?.title || "Perfect Pest Control Services"}
             </Badge>
 
-            {/* Optional dynamic banner title (keeps existing main heading) */}
             {banner?.title && (
               <p className="text-white/90 text-base sm:text-lg md:text-xl mb-2 sm:mb-3">{banner.title}</p>
             )}
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-              Professional Pest Control
-              <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl mt-1 sm:mt-2 font-normal">
-                Services & Pricing
-              </span>
+              {banner?.heading || "Professional Pest Control"}
+              {!banner?.heading && (
+                <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl mt-1 sm:mt-2 font-normal">
+                  Services & Pricing
+                </span>
+              )}
             </h1>
+
             <p className="text-xs sm:text-sm md:text-base lg:text-lg mb-6 sm:mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
-              Comprehensive pest control solutions for residential, commercial, and industrial clients. 
-              Transparent pricing with no hidden charges for all our professional services.
+              {banner?.description || "Comprehensive pest control solutions for residential, commercial, and industrial clients. Transparent pricing with no hidden charges for all our professional services."}
             </p>
           </motion.div>
         </div>
@@ -286,140 +287,45 @@ export default function ServicesPageClient({ servicesData }: ServicesPageClientP
           </motion.div>
 
           {servicesData.length === 0 ? (
-            <div className="col-span-full text-center py-12">
-              <p className="text-gray-500 text-lg">No pest control services available at the moment.</p>
-            </div>
+            <motion.div 
+              className="col-span-full text-center py-20"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="max-w-md mx-auto">
+                <div className="w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Bug className="h-10 w-10 text-gray-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">No Services Available</h3>
+                <p className="text-gray-600 mb-6">
+                  We're currently updating our service offerings. Please check back soon or contact us directly for assistance.
+                </p>
+                <Button
+                  onClick={() => {
+                    const phoneNumber = '0462-480-2258';
+                    window.open(`tel:${phoneNumber}`, '_self');
+                  }}
+                  className="bg-admin-gradient text-white hover:opacity-90"
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Contact Us
+                </Button>
+              </div>
+            </motion.div>
           ) : (
-            <div className="space-y-16 sm:space-y-20">
-              {/* Featured Services */}
-              <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
-                {servicesData.filter(service => service.featured).map((service, index) => (
+            /* All Services - Compact Layout Like Tours Reference */
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
+                {servicesData.map((service, index) => (
                   <motion.div
-                    key={service.id}
+                    key={service._id || service.id}
                     initial={{ opacity: 0, y: 60 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
-                    <Card className="h-full hover:shadow-2xl transition-all duration-300 border-0 shadow-xl overflow-hidden group bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200">
-                      <div className="grid md:grid-cols-2 gap-0 h-full">
-                        {/* Image Section */}
-                        <div className="aspect-[4/3] md:aspect-auto overflow-hidden relative">
-                          <img
-                            src={service.image || '/pest-control-service.jpg'}
-                            alt={service.serviceName}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                          
-                          {/* Service Type Badge */}
-                          <div className="absolute top-4 left-4">
-                            <Badge className={`bg-gradient-to-r ${getServiceTypeColor(service.serviceType)} text-white backdrop-blur-sm`}>
-                              {getServiceTypeIcon(service.serviceType)}
-                              <span className="ml-2">{service.serviceType}</span>
-                            </Badge>
-                          </div>
-
-                          {/* Featured Badge */}
-                          <div className="absolute top-4 right-4">
-                            <Badge className="bg-yellow-500 text-white">
-                              <Star className="h-3 w-3 mr-1" />
-                              Most Popular
-                            </Badge>
-                          </div>
-
-                          {/* Warranty Info */}
-                          <div className="absolute bottom-4 left-4 right-4 text-white">
-                            <div className="flex items-center justify-between text-sm gap-3">
-                              <div className="flex items-center space-x-1 flex-shrink-0">
-                                <Shield className="h-4 w-4" />
-                                <span className="whitespace-nowrap">{service.warranty} warranty</span>
-                              </div>
-                              <div className="flex items-center space-x-1 flex-shrink-0">
-                                <Clock className="h-4 w-4" />
-                                <span className="whitespace-nowrap">{service.area}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Content Section - Fixed Height Layout */}
-                        <CardContent className="p-6 flex flex-col h-full">
-                          <div className="flex flex-col h-full">
-                            <h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-admin-gradient transition-all duration-300">
-                              {service.serviceName}
-                            </h3>
-                            
-                            <p className="text-gray-600 mb-4 leading-relaxed text-sm line-clamp-3">
-                              {service.description}
-                            </p>
-
-                            {/* Target Pests */}
-                            <div className="mb-4">
-                              <h4 className="font-semibold text-gray-900 mb-2 text-sm">Target Pests:</h4>
-                              <div className="flex flex-wrap gap-1">
-                                {service.pests.slice(0, 2).map((pest, idx) => (
-                                  <Badge key={idx} variant="outline" className="text-xs">
-                                    {pest}
-                                  </Badge>
-                                ))}
-                                {service.pests.length > 2 && (
-                                  <Badge variant="outline" className="text-xs">
-                                    +{service.pests.length - 2} more
-                                  </Badge>
-                                )}
-                              </div>
-                            </div>
-
-                            {/* Key Inclusions - Fixed minimum height */}
-                            <div className="mb-6 flex-grow min-h-[120px]">
-                              <div className="space-y-2">
-                                {service.inclusions.slice(0, 3).map((inclusion, idx) => (
-                                  <div key={idx} className="flex items-center text-sm text-gray-600">
-                                    <CheckCircle className="h-3 w-3 text-emerald-500 mr-2 flex-shrink-0" />
-                                    {inclusion}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Action Buttons - Always at bottom */}
-                            <div className="mt-auto space-y-3">
-                              <Button
-                                onClick={() => {
-                                  setSelectedService(service.serviceName);
-                                  setIsModalOpen(true);
-                                }}
-                                className="w-full bg-admin-gradient text-white hover:shadow-lg text-sm"
-                              >
-                                Get Quote
-                              </Button>
-                              <Link
-                                href={`/services/${service.slug}`}
-                                className="block text-center text-admin-primary hover:text-admin-secondary transition-colors font-medium text-sm py-2"
-                              >
-                                Learn More →
-                              </Link>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </div>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Regular Services */}
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
-                {servicesData.filter(service => !service.featured).map((service, index) => (
-                  <motion.div
-                    key={service.id}
-                    initial={{ opacity: 0, y: 60 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: (index + 2) * 0.1 }}
-                  >
-                    <Card className="h-full min-h-[700px] hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-visible group bg-white flex flex-col">
+                    <Card className="h-full hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden group bg-white flex flex-col rounded-2xl">
                       {/* Image Section */}
-                      <div className="aspect-[3/2] overflow-hidden relative flex-shrink-0">
+                      <div className="aspect-[3/2] overflow-hidden relative flex-shrink-0 rounded-t-2xl">
                         <img
                           src={service.image || '/pest-control-service.jpg'}
                           alt={service.serviceName}
@@ -435,100 +341,110 @@ export default function ServicesPageClient({ servicesData }: ServicesPageClientP
                           </Badge>
                         </div>
 
-                        {/* Price Badge */}
+                        {/* Featured Badge or Price Badge */}
                         <div className="absolute top-4 right-4">
-                          <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                            From ₹{service.basePrice}
-                          </Badge>
+                          {service.featured ? (
+                            <Badge className="bg-yellow-500 text-white">
+                              <Star className="h-3 w-3 mr-1" />
+                              Most Popular
+                            </Badge>
+                          ) : service.basePrice ? (
+                            <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                              From ₹{service.basePrice}
+                            </Badge>
+                          ) : null}
                         </div>
 
                         {/* Service Info */}
-                        <div className="absolute bottom-4 left-4 right-4 text-white">
-                          <div className="flex items-center justify-between text-sm">
-                            <div className="flex items-center space-x-1">
-                              <Shield className="h-4 w-4" />
-                              <span>{service.warranty}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <Clock className="h-4 w-4" />
-                              <span>{service.area}</span>
+                        {service.coverageArea && (
+                          <div className="absolute bottom-4 left-4 right-4 text-white">
+                            <div className="flex items-center justify-center text-sm">
+                              <div className="flex items-center space-x-1">
+                                <Clock className="h-4 w-4" />
+                                <span>{service.coverageArea}</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        )}
                       </div>
 
                       {/* Content Section */}
-                      <CardContent className="p-6 pb-12 flex flex-col flex-grow">
+                      <CardContent className="p-4 sm:p-6 flex flex-col flex-grow">
                         <div className="flex flex-col h-full">
-                          <h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-admin-gradient transition-all duration-300">
+                          <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-admin-gradient transition-all duration-300 line-clamp-2">
                             {service.serviceName}
                           </h3>
                           
-                          <p className="text-gray-600 mb-4 leading-relaxed text-sm sm:text-base line-clamp-3">
-                            {service.description}
+                          <p className="text-gray-600 mb-3 sm:mb-4 leading-relaxed text-sm line-clamp-2 flex-grow">
+                            {service.shortDescription || service.description?.replace(/<[^>]*>/g, '').substring(0, 120) + '...'}
                           </p>
 
                           {/* Pricing */}
-                          <div className="grid grid-cols-2 gap-3 mb-4">
-                            <div className="text-center p-3 bg-gray-50 rounded-lg">
-                              <div className="text-lg font-bold text-transparent bg-clip-text bg-admin-gradient">
-                                ₹{service.basePrice}
+                          {service.basePrice && (
+                            <div className="text-center p-2 sm:p-3 bg-gray-50 rounded-lg mb-3 sm:mb-4">
+                              <div className="text-base sm:text-lg font-bold text-transparent bg-clip-text bg-admin-gradient">
+                                From ₹{service.basePrice}
                               </div>
-                              <div className="text-xs text-gray-500">Basic</div>
+                              <div className="text-xs text-gray-500">Professional Service</div>
                             </div>
-                            <div className="text-center p-3 bg-gray-50 rounded-lg">
-                              <div className="text-lg font-bold text-transparent bg-clip-text bg-admin-gradient">
-                                ₹{service.premiumPrice}
-                              </div>
-                              <div className="text-xs text-gray-500">Premium</div>
-                            </div>
-                          </div>
+                          )}
 
                           {/* Target Pests */}
-                          <div className="mb-4">
-                            <h4 className="font-semibold text-gray-900 mb-2 text-sm">Target Pests:</h4>
-                            <div className="flex flex-wrap gap-1">
-                              {service.pests.slice(0, 2).map((pest, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs">
-                                  {pest}
-                                </Badge>
-                              ))}
-                              {service.pests.length > 2 && (
-                                <Badge variant="outline" className="text-xs">
-                                  +{service.pests.length - 2} more
-                                </Badge>
-                              )}
+                          {service.pests && service.pests.length > 0 && (
+                            <div className="mb-3 sm:mb-4">
+                              <h4 className="font-semibold text-gray-900 mb-2 text-xs sm:text-sm">Target Pests:</h4>
+                              <div className="flex flex-wrap gap-1">
+                                {service.pests.slice(0, 2).map((pest, idx) => (
+                                  <Badge key={idx} variant="outline" className="text-xs">
+                                    {pest}
+                                  </Badge>
+                                ))}
+                                {service.pests.length > 2 && (
+                                  <Badge variant="outline" className="text-xs">
+                                    +{service.pests.length - 2} more
+                                  </Badge>
+                                )}
+                              </div>
                             </div>
-                          </div>
+                          )}
 
-                          {/* Key Inclusions - Fixed minimum height */}
-                          <div className="mb-6 flex-grow min-h-[120px]">
-                            <div className="space-y-2">
-                              {service.inclusions.slice(0, 3).map((inclusion, idx) => (
-                                <div key={idx} className="flex items-center text-sm text-gray-600">
-                                  <CheckCircle className="h-3 w-3 text-emerald-500 mr-2 flex-shrink-0" />
-                                  {inclusion}
-                                </div>
-                              ))}
-                            </div>
+                          {/* Key Inclusions - Compact */}
+                          <div className="mb-4 sm:mb-6">
+                            {service.inclusions && service.inclusions.length > 0 && (
+                              <div className="space-y-1 sm:space-y-2">
+                                {service.inclusions.slice(0, 2).map((inclusion, idx) => (
+                                  <div key={idx} className="flex items-center text-xs sm:text-sm text-gray-600">
+                                    <CheckCircle className="h-3 w-3 text-emerald-500 mr-2 flex-shrink-0" />
+                                    <span className="line-clamp-1">{inclusion}</span>
+                                  </div>
+                                ))}
+                                {service.inclusions.length > 2 && (
+                                  <div className="text-xs text-gray-500">
+                                    +{service.inclusions.length - 2} more inclusions
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
 
                           {/* Action Buttons - Always at bottom */}
-                          <div className="mt-auto pt-6 space-y-3 flex-shrink-0">
+                          <div className="mt-auto space-y-2 sm:space-y-3">
                             <Button
                               onClick={() => {
                                 setSelectedService(service.serviceName);
                                 setIsModalOpen(true);
                               }}
-                              className="w-full bg-admin-gradient text-white hover:shadow-lg text-sm py-3"
+                              className="w-full bg-admin-gradient text-white hover:shadow-lg text-xs sm:text-sm py-2 sm:py-3"
                             >
-                              Get Quote & Book Service
+                              <span className="hidden sm:inline">Get Quote & Book Service</span>
+                              <span className="sm:hidden">Book Now</span>
                             </Button>
                             <Link
                               href={`/services/${service.slug}`}
-                              className="block text-center text-admin-primary hover:text-admin-secondary transition-colors font-medium text-sm py-2"
+                              className="block text-center text-admin-primary hover:text-admin-secondary transition-colors font-medium text-xs sm:text-sm py-1 sm:py-2"
                             >
-                              View Detailed Information →
+                              <span className="hidden sm:inline">View Detailed Information →</span>
+                              <span className="sm:hidden">Details →</span>
                             </Link>
                           </div>
                         </div>
@@ -536,7 +452,6 @@ export default function ServicesPageClient({ servicesData }: ServicesPageClientP
                     </Card>
                   </motion.div>
                 ))}
-              </div>
             </div>
           )}
         </div>
@@ -636,7 +551,7 @@ export default function ServicesPageClient({ servicesData }: ServicesPageClientP
               
               <Button
                 onClick={() => {
-                  const phoneNumber = contactInfo?.primaryPhone || '+919003782966';
+                  const phoneNumber = contactInfo?.primaryPhone || '0462-480-2258';
                   window.open(`tel:${phoneNumber}`, '_blank');
                 }}
                 className="bg-gradient-to-r from-red-500 to-orange-600 text-white hover:shadow-lg"
@@ -668,7 +583,7 @@ export default function ServicesPageClient({ servicesData }: ServicesPageClientP
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button
                   onClick={() => {
-                    const phoneNumber = contactInfo?.primaryPhone || '+919003782966';
+                    const phoneNumber = contactInfo?.primaryPhone || '0462-480-2258';
                     window.open(`tel:${phoneNumber}`, '_blank');
                   }}
                   className="bg-admin-gradient text-white hover:opacity-90"
@@ -678,7 +593,7 @@ export default function ServicesPageClient({ servicesData }: ServicesPageClientP
                 </Button>
                 <Button
                   onClick={() => {
-                    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919003782966';
+                    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919626341555';
                     const message = "Hi, I need a custom pest control quote for my property. Please help me with personalized pricing.";
                     window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
                   }}

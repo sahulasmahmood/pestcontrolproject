@@ -12,8 +12,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Phone, Mail, MapPin, Send, Bug, Shield, Zap, Leaf, ShieldCheck, Microscope, Clock, Target } from "lucide-react"
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon"
 import { useBanner } from "@/hooks/use-banner"
-// import { useContact } from "@/hooks/use-contact" // Commented out for static data
+import { useContact } from "@/hooks/use-contact"
+import { useServices } from "@/hooks/use-services"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -43,29 +45,13 @@ export const Contact = ({ services: propServices }: ContactProps) => {
     message: "",
   })
 
-  // Static contact info for Perfect Pest Control
-  const contactInfo = {
-    primaryPhone: "0462-480-2258",
-    secondaryPhone: "9626-341-555",
-    whatsappNumber: "9626341555",
-    email: "perfectpestcontrol555@gmail.com",
-    address: "24, Rainbow Colony, Peratchi Amman Kovil Street, Vannarpettai",
-    city: "Tirunelveli",
-    state: "Tamil Nadu",
-    pincode: "627003",
-    country: "India",
-    businessHours: "Available 24/7 for Emergency Services",
-    pageTitle: "Get Professional Pest Control Services",
-    pageDescription: "Need reliable pest control services? Contact Perfect Pest Control today for professional, safe, and effective pest management solutions in Tirunelveli and surrounding areas.",
-    officeTitle: "Visit Our Office in Tirunelveli, Tamil Nadu",
-    officeDescription: "Located in Vannarpettai, Tirunelveli, our office is easily accessible and welcoming to all our clients. We also serve Tuticorin, Tenkasi, Nagercoil, Madurai, and Ramanathapuram.",
-    servicesOffered: "Anti Termite Treatment, Rat Control Service, Bed Bug Treatment, Ant Control Service, Mosquito Control Service, Fly Control Service, Cockroach Control Service, Virus & Bacteria Control, Spider & Lizard Control, Rodent Control Service",
-    mapEmbedCode: null
-  }
+  // Use dynamic contact info from API
+  const { contactInfo } = useContact()
+  const { serviceNames, loading: servicesLoading } = useServices()
 
-  // Get services from contact info or use prop services or fallback
-  const services = contactInfo.servicesOffered 
-    ? contactInfo.servicesOffered.split(',').map(s => s.trim()).filter(s => s.length > 0)
+  // Get dynamic services from API, fallback to prop services or static
+  const services = serviceNames.length > 0 
+    ? serviceNames
     : propServices || [
         "Anti Termite Treatment",
         "Rat Control Service",
@@ -102,10 +88,10 @@ export const Contact = ({ services: propServices }: ContactProps) => {
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         serviceType: formData.service.trim(),
-        travelDate: new Date().toISOString().split('T')[0],
-        pickupLocation: "To be specified", // Required field
-        dropLocation: "To be specified",
-        passengers: 1,
+        serviceDate: new Date().toISOString().split('T')[0],
+        address: "To be specified", // Required field
+        propertyType: "", // Empty so admin can edit
+        propertySize: null, // Empty so admin can edit
         message: formData.message.trim(),
         status: "new", // Required field
         priority: "medium", // Required field
@@ -155,7 +141,7 @@ export const Contact = ({ services: propServices }: ContactProps) => {
     }
   }
 
-  // Contact details using static Perfect Pest Control data
+  // Contact details using dynamic Perfect Pest Control data
   const contactDetails = [
     {
       icon: <Phone className="h-5 w-5 text-white" />,
@@ -163,26 +149,28 @@ export const Contact = ({ services: propServices }: ContactProps) => {
       details: (
         <div className="space-y-1">
           <p className="text-gray-900 font-medium text-sm sm:text-base break-words">
-            {contactInfo.primaryPhone}
+            {contactInfo?.primaryPhone || "0462-480-2258"}
           </p>
-          <p className="text-gray-900 font-medium text-sm sm:text-base break-words">
-            {contactInfo.secondaryPhone}
-          </p>
+          {contactInfo?.secondaryPhone && (
+            <p className="text-gray-900 font-medium text-sm sm:text-base break-words">
+              {contactInfo.secondaryPhone}
+            </p>
+          )}
         </div>
       ),
-      description: contactInfo.businessHours,
+      description: contactInfo?.businessHours || "Mon-Sat: 8AM-8PM, Emergency 24/7",
     },
     {
       icon: <Mail className="h-5 w-5 text-white" />,
       title: "Email Address",
-      details: contactInfo.email,
+      details: contactInfo?.email || "perfectpestcontrol555@gmail.com",
       description: "We'll respond within 24 hours",
     },
     {
       icon: <MapPin className="h-5 w-5 text-white" />,
       title: "Address",
-      details: contactInfo.address,
-      description: `${contactInfo.city}, ${contactInfo.state}-${contactInfo.pincode}`,
+      details: contactInfo?.address || "24, Rainbow Colony, Peratchi Amman Kovil Street, Vannarpettai",
+      description: `${contactInfo?.city || "Tirunelveli"}, ${contactInfo?.state || "Tamil Nadu"}-${contactInfo?.pincode || "627003"}`,
     },
   ]
 
@@ -248,7 +236,7 @@ export const Contact = ({ services: propServices }: ContactProps) => {
           >
             <Badge className="mb-3 sm:mb-4 bg-white/20 text-white border-white/30 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm">
               <ShieldCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-              Professional Pest Control
+              {banner?.title || "Get In Touch"}
             </Badge>
 
             {banner?.title && (
@@ -256,13 +244,16 @@ export const Contact = ({ services: propServices }: ContactProps) => {
             )}
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-              Professional Pest Control
-              <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl mt-1 sm:mt-2 font-normal">
-                Contact & Support
-              </span>
+              {banner?.heading || "Professional Pest Control"}
+              {!banner?.heading && (
+                <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl mt-1 sm:mt-2 font-normal">
+                  Contact & Support
+                </span>
+              )}
             </h1>
+
             <p className="text-xs sm:text-sm md:text-base lg:text-lg mb-6 sm:mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
-              {contactInfo.pageDescription}
+              {banner?.description || "Need reliable pest control services? Contact Perfect Pest Control today for professional, safe, and effective pest management solutions in Tirunelveli and surrounding areas."}
             </p>
           </motion.div>
         </div>
@@ -403,11 +394,17 @@ export const Contact = ({ services: propServices }: ContactProps) => {
                             <SelectValue placeholder="Select a service" />
                           </SelectTrigger>
                           <SelectContent className="z-50 max-h-60 overflow-y-auto">
-                            {services.map((service) => (
-                              <SelectItem key={service} value={service} className="text-sm sm:text-base">
-                                {service}
-                              </SelectItem>
-                            ))}
+                            {servicesLoading ? (
+                              <SelectItem value="loading" disabled className="text-sm sm:text-base">Loading services...</SelectItem>
+                            ) : services.length === 0 ? (
+                              <SelectItem value="no-services" disabled className="text-sm sm:text-base">No services available</SelectItem>
+                            ) : (
+                              services.map((service) => (
+                                <SelectItem key={service} value={service} className="text-sm sm:text-base">
+                                  {service}
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -618,10 +615,10 @@ export const Contact = ({ services: propServices }: ContactProps) => {
               Perfect Pest Control Office
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 lg:mb-8 leading-tight px-2">
-              {contactInfo.officeTitle}
+              {contactInfo?.officeTitle || "Visit Our Office in Tirunelveli, Tamil Nadu"}
             </h2>
             <p className="text-sm sm:text-base  text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed">
-              {contactInfo.officeDescription}
+              {contactInfo?.officeDescription || "Located in Vannarpettai, Tirunelveli, our office is easily accessible and welcoming to all our clients. We also serve Tuticorin, Tenkasi, Nagercoil, Madurai, and Ramanathapuram."}
             </p>
           </motion.div>
 
@@ -633,7 +630,7 @@ export const Contact = ({ services: propServices }: ContactProps) => {
             className="max-w-6xl mx-auto"
           >
             <div className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl sm:shadow-2xl">
-              {contactInfo.mapEmbedCode ? (
+              {contactInfo?.mapEmbedCode ? (
                 <div className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] relative">
                   <div
                     className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
@@ -647,7 +644,7 @@ export const Contact = ({ services: propServices }: ContactProps) => {
                       <ShieldCheck className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                     </div>
                     <p className="text-gray-700 text-lg font-medium mb-2">Perfect Pest Control Office Location</p>
-                    <p className="text-gray-600 text-sm mb-4">24, Rainbow Colony, Peratchi Amman Kovil Street, Vannarpettai, Tirunelveli - 627003</p>
+                    <p className="text-gray-600 text-sm mb-4">{contactInfo?.address || "24, Rainbow Colony, Peratchi Amman Kovil Street, Vannarpettai"}, {contactInfo?.city || "Tirunelveli"} - {contactInfo?.pincode || "627003"}</p>
                     <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
                       <div className="flex items-center">
                         <Bug className="h-3 w-3 text-green-600 mr-1" />
@@ -670,36 +667,247 @@ export const Contact = ({ services: propServices }: ContactProps) => {
         </div>
       </section>
 
-      {/* Emergency Contact Section */}
-      <section className="py-8 sm:py-12 bg-gradient-to-r from-red-50 to-orange-50 border-t border-red-100">
-        <div className="container mx-auto px-3 sm:px-4 md:px-6">
-          <motion.div
-            className="text-center max-w-4xl mx-auto"
-            variants={fadeInUp}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-600 rounded-xl flex items-center justify-center mr-3">
-                <Clock className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">24/7 Emergency Pest Control</h3>
+      {/* Branch Offices Section */}
+      {(contactInfo?.branchOffices || "Tuticorin, Tenkasi, Nagercoil, Madurai, Ramanathapuram") && (
+        <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-br from-green-50 to-blue-50">
+          <div className="container mx-auto px-3 sm:px-4 md:px-6">
+            <motion.div
+              className="text-center mb-8 sm:mb-12"
+              variants={fadeInUp}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              <Badge className="mb-4 sm:mb-6 bg-admin-gradient text-white px-4 py-1.5 sm:px-6 sm:py-2 text-xs sm:text-sm">
+                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
+                Our Branch Offices
+              </Badge>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
+                We Serve Across Tamil Nadu
+              </h2>
+              <p className="text-sm sm:text-base text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed">
+                Perfect Pest Control has expanded our services across multiple cities to serve you better with professional pest management solutions.
+              </p>
+            </motion.div>
+
+            {/* Modern Branch Offices Design */}
+            <div className="max-w-6xl mx-auto">
+              {/* Main Office - Featured */}
+              <motion.div
+                variants={fadeInUp}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true }}
+                className="mb-8 sm:mb-12"
+              >
+                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-admin-primary via-gray-800 to-[#1F2937] p-8 sm:p-12 text-white shadow-2xl">
+                  <div className="absolute inset-0 bg-black/10"></div>
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+                  <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-24 -translate-x-24"></div>
+                  
+                  <div className="relative z-10 text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl mb-6">
+                      <MapPin className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-2">Tirunelveli</h3>
+                    <p className="text-white/80 text-lg mb-4">Main Office & Headquarters</p>
+                    <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                      Active 24/7
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Branch Offices - Modern Grid */}
+              <motion.div
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                variants={staggerContainer}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true }}
+              >
+                {(contactInfo?.branchOffices || "Tuticorin, Tenkasi, Nagercoil, Madurai, Ramanathapuram")
+                  .split(',')
+                  .map((office, index) => (
+                    <motion.div key={index} variants={fadeInUp}>
+                      <div className="group relative overflow-hidden rounded-2xl bg-white border border-gray-100 hover:border-admin-primary/30 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-purple-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <div className="relative p-6 text-center">
+                          <div className="relative mx-auto mb-4 w-12 h-12">
+                            <div className="absolute inset-0 bg-admin-gradient rounded-xl group-hover:scale-110 transition-transform duration-300"></div>
+                            <div className="absolute inset-0 bg-admin-gradient rounded-xl animate-pulse opacity-75"></div>
+                            <div className="relative flex items-center justify-center w-full h-full">
+                              <MapPin className="h-6 w-6 text-white" />
+                            </div>
+                          </div>
+                          
+                          <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-2 group-hover:text-admin-primary transition-colors duration-300">
+                            {office.trim()}
+                          </h3>
+                          
+                          <div className="flex items-center justify-center space-x-2 text-xs text-gray-500">
+                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                            <span>Branch Office</span>
+                          </div>
+                          
+                          <div className="absolute bottom-0 left-0 w-full h-1 bg-admin-gradient transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+              </motion.div>
+
+              {/* Service Coverage Map Visualization */}
+              <motion.div
+                variants={fadeInUp}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true }}
+                className="mt-12 p-8 bg-gradient-to-r from-gray-50 to-blue-50 rounded-3xl border border-gray-100"
+              >
+                <div className="text-center mb-6">
+                  <h4 className="text-lg font-bold text-gray-900 mb-2">Complete Tamil Nadu Coverage</h4>
+                  <p className="text-gray-600 text-sm">Professional pest control services across all major cities</p>
+                </div>
+                
+                <div className="flex flex-wrap justify-center gap-3">
+                  {(contactInfo?.branchOffices || "Tuticorin, Tenkasi, Nagercoil, Madurai, Ramanathapuram")
+                    .split(',')
+                    .map((office, index) => (
+                      <div key={index} className="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:border-admin-primary/30 hover:shadow-md transition-all duration-300 group">
+                        <div className="w-2 h-2 bg-admin-primary rounded-full mr-2 group-hover:animate-pulse"></div>
+                        <span className="text-sm font-medium text-gray-700 group-hover:text-admin-primary transition-colors duration-300">
+                          {office.trim()}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </motion.div>
             </div>
-            <p className="text-sm sm:text-base text-gray-600 mb-6">
-              Urgent pest infestation? Don't wait! Call us now for immediate assistance with severe pest problems.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-6">
-              <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg shadow-md">
-                <Phone className="h-4 w-4 text-red-600" />
-                <span className="font-semibold text-gray-900">{contactInfo.primaryPhone}</span>
+
+            <motion.div
+              className="text-center mt-8 sm:mt-12"
+              variants={fadeInUp}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              <p className="text-sm text-gray-600 mb-4">
+                Need service in your area? Contact us to check availability.
+              </p>
+              <Button
+                onClick={() => {
+                  const message = "Hi! I need pest control services in my area. Please check availability and provide details.";
+                  const whatsappNumber = (contactInfo?.whatsappNumber || "9626341555").replace(/[^0-9]/g, '');
+                  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+                  window.open(whatsappUrl, '_blank');
+                }}
+                className="bg-admin-gradient text-white hover:opacity-90 transition-all duration-300"
+              >
+                <WhatsAppIcon className="h-4 w-4 mr-2" />
+                Check Service Availability
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Emergency & Custom Service Section - Modern Design */}
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Emergency Service */}
+            <motion.div
+              className="text-center lg:text-left"
+              variants={fadeInUp}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto lg:mx-0 mb-6 shadow-lg">
+                <Clock className="h-10 w-10 text-white" />
               </div>
-              <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg shadow-md">
-                <span className="text-green-600 font-semibold">WhatsApp:</span>
-                <span className="font-semibold text-gray-900">{contactInfo.whatsappNumber}</span>
+              
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                24/7 Emergency Pest Control
+              </h3>
+              <p className="text-lg text-gray-600 mb-6">
+                Urgent pest infestation? Don't wait! We provide 24/7 emergency services for critical pest problems and severe infestations.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button
+                  onClick={() => {
+                    const phoneNumber = contactInfo?.primaryPhone || '0462-480-2258';
+                    window.open(`tel:${phoneNumber}`, '_blank');
+                  }}
+                  className="bg-gradient-to-r from-red-500 to-orange-600 text-white hover:shadow-lg"
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Emergency Hotline
+                </Button>
+                <Button
+                  onClick={() => {
+                    const whatsappNumber = contactInfo?.whatsappNumber || '9626341555';
+                    const message = "🚨 EMERGENCY: I have an urgent pest problem that needs immediate attention. Please help!";
+                    window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+                  }}
+                  variant="outline"
+                  className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white"
+                >
+                  <WhatsAppIcon className="h-4 w-4 mr-2" />
+                  WhatsApp Emergency
+                </Button>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Custom Quote */}
+            <motion.div
+              className="text-center lg:text-left"
+              variants={fadeInUp}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto lg:mx-0 mb-6 shadow-lg">
+                <Microscope className="h-10 w-10 text-white" />
+              </div>
+              
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                Custom Pest Solutions
+              </h3>
+              <p className="text-lg text-gray-600 mb-6">
+                Need specialized treatment? Get a custom quote based on your specific pest problem, property size, and requirements.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button
+                  onClick={() => {
+                    const phoneNumber = contactInfo?.primaryPhone || '0462-480-2258';
+                    window.open(`tel:${phoneNumber}`, '_blank');
+                  }}
+                  className="bg-admin-gradient text-white hover:opacity-90"
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call for Custom Quote
+                </Button>
+                <Button
+                  onClick={() => {
+                    const whatsappNumber = contactInfo?.whatsappNumber || '9626341555';
+                    const message = "Hi, I need a custom pest control quote for my property. Please help me with personalized pricing and solutions.";
+                    window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+                  }}
+                  variant="outline"
+                  className="border-admin-primary text-admin-primary hover:bg-admin-gradient hover:text-white"
+                >
+                  <WhatsAppIcon className="h-4 w-4 mr-2" />
+                  WhatsApp Us
+                </Button>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
     </>

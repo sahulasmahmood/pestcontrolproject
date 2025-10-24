@@ -20,7 +20,7 @@ export default function ProfilePage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-4xl font-bold bg-admin-gradient bg-clip-text text-transparent">Profile Settings</h1>
-          <p className="text-gray-600 mt-2">Manage your account information and email configuration</p>
+          <p className="text-gray-600 mt-2">Manage your account information and email configuration for Perfect Pest Control services</p>
         </div>
       </div>
 

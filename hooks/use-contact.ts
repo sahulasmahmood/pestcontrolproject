@@ -13,9 +13,9 @@ interface ContactInfo {
   pincode: string
   country: string
   businessHours?: string
-  bookingHours?: string
+  serviceHours?: string
   servicesOffered?: string
-  coverageAreas?: string
+  branchOffices?: string
   facebook?: string
   twitter?: string
   linkedin?: string

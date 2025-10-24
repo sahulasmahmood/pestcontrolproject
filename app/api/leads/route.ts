@@ -8,18 +8,25 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const body = await request.json();
     
-    // Validate required fields
-    const requiredFields = ['fullName', 'phone', 'serviceType', 'pickupLocation', 'dropLocation', 'travelDate'];
-    const missingFields = requiredFields.filter(field => !body[field]);
-    
-    if (missingFields.length > 0) {
+    // Basic validation - only check essential fields that we know exist
+    if (!body.fullName || !body.phone || !body.serviceType) {
       return NextResponse.json(
         { 
           success: false, 
-          error: `Missing required fields: ${missingFields.join(', ')}` 
+          error: "Missing required fields: fullName, phone, and serviceType are required" 
         },
         { status: 400 }
       );
+    }
+    
+    // Ensure we have either address or a default
+    if (!body.address) {
+      body.address = "To be specified";
+    }
+    
+    // Ensure we have either serviceDate or a default
+    if (!body.serviceDate) {
+      body.serviceDate = new Date().toISOString().split('T')[0];
     }
     
     const newLead = new Lead(body);

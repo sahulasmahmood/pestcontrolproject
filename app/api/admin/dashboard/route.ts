@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/config/models/connectDB";
 import Lead from "@/config/utils/admin/lead/leadSchema";
 import Testimonial from "@/config/utils/admin/testimonial/testimonialSchema";
-import Package from "@/config/utils/admin/packages/packageSchema";
-import Tariff from "@/config/utils/admin/tariff/tariffSchema";
+import Service from "@/config/utils/admin/services/serviceSchema";
 import Location from "@/config/utils/admin/location/locationSchema";
 
 // GET - Fetch dashboard statistics
@@ -28,10 +27,9 @@ export async function GET(request: NextRequest) {
       pendingLeads,
       totalTestimonials,
       publishedTestimonials,
-      totalPackages,
-      activePackages,
-      totalTariffs,
-      activeTariffs,
+      totalServices,
+      activeServices,
+      featuredServices,
       totalLocations,
       popularRoutes,
       recentLeads,
@@ -52,13 +50,10 @@ export async function GET(request: NextRequest) {
       Testimonial.countDocuments(),
       Testimonial.countDocuments({ status: "published" }),
       
-      // Package statistics
-      Package.countDocuments({ isDeleted: false }),
-      Package.countDocuments({ status: "active", isDeleted: false }),
-      
-      // Tariff statistics
-      Tariff.countDocuments({ isDeleted: false }),
-      Tariff.countDocuments({ status: "active", isDeleted: false }),
+      // Service statistics
+      Service.countDocuments({ isDeleted: false }),
+      Service.countDocuments({ status: "active", isDeleted: false }),
+      Service.countDocuments({ featured: true, isDeleted: false }),
       
       // Location statistics
       Location.countDocuments({ isActive: true }),
@@ -116,10 +111,9 @@ export async function GET(request: NextRequest) {
         completionRate: parseFloat(completionRate),
         totalTestimonials,
         publishedTestimonials,
-        totalPackages,
-        activePackages,
-        totalTariffs,
-        activeTariffs,
+        totalServices,
+        activeServices,
+        featuredServices,
         totalLocations,
         popularRoutes
       },

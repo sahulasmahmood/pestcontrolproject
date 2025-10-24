@@ -64,7 +64,6 @@ interface Testimonial {
   servicesType?: string;
   date: string;
   status: string;
-  tripDetails?: string;
 }
 
 export default function TestimonialsPage() {
@@ -119,67 +118,61 @@ export default function TestimonialsPage() {
     try {
       setServicesLoading(true);
       
-      // First try to get unique service types from existing testimonials
-      const testimonialsResponse = await fetch('/api/admin/testimonial');
-      const testimonialsResult = await testimonialsResponse.json();
+      // Fetch services from the services API
+      const servicesResponse = await fetch('/api/services');
+      const servicesResult = await servicesResponse.json();
       
-      let uniqueServices: string[] = [];
-      
-      if (testimonialsResult.success && testimonialsResult.data) {
-        // Extract unique service types from testimonials
-        const servicesFromTestimonials = testimonialsResult.data
-          .map((t: any) => t.servicesType || t.serviceType)
-          .filter((s: string) => s && s.trim().length > 0)
-          .map((s: string) => s.trim());
+      if (servicesResult.success && servicesResult.data && servicesResult.data.length > 0) {
+        // Extract unique service names from the services
+        const serviceNames = servicesResult.data
+          .map((service: any) => service.serviceName)
+          .filter((name: string) => name && name.trim().length > 0)
+          .sort();
         
-        uniqueServices = [...new Set(servicesFromTestimonials)];
-      }
-      
-      // Then try to get services from contact info
-      const contactResponse = await fetch('/api/admin/contact');
-      const contactResult = await contactResponse.json();
-      
-      if (contactResult.success && contactResult.data?.servicesOffered) {
-        const servicesFromContact = contactResult.data.servicesOffered
-          .split(',')
-          .map((s: string) => s.trim())
-          .filter((s: string) => s.length > 0);
-        
-        // Combine both sources and remove duplicates
-        uniqueServices = [...new Set([...uniqueServices, ...servicesFromContact])];
-      }
-      
-      // If we have services from either source, use them
-      if (uniqueServices.length > 0) {
-        setServiceTypes(uniqueServices.sort());
+        setServiceTypes(serviceNames);
       } else {
-        // Fallback services
-        setServiceTypes([
-          "One-way Trip",
-          "Round Trip", 
-          "Airport Taxi",
-          "Day Rental",
-          "Hourly Package",
-          "Local Pickup/Drop",
-          "Tour Package",
-          "Corporate Travel",
-          "Wedding Transportation"
-        ]);
+        // If no services found, try to get from existing testimonials
+        const testimonialsResponse = await fetch('/api/admin/testimonial');
+        const testimonialsResult = await testimonialsResponse.json();
+        
+        if (testimonialsResult.success && testimonialsResult.data && testimonialsResult.data.length > 0) {
+          const servicesFromTestimonials = testimonialsResult.data
+            .map((t: any) => t.servicesType || t.serviceType)
+            .filter((s: string) => s && s.trim().length > 0)
+            .map((s: string) => s.trim());
+          
+          const uniqueServices = [...new Set(servicesFromTestimonials)].sort();
+          
+          if (uniqueServices.length > 0) {
+            setServiceTypes(uniqueServices);
+          } else {
+            // Last resort: empty array to show "No services available"
+            setServiceTypes([]);
+          }
+        } else {
+          setServiceTypes([]);
+        }
       }
     } catch (error) {
       console.error('Error fetching service types:', error);
-      // Fallback services
-      setServiceTypes([
-        "One-way Trip",
-        "Round Trip", 
-        "Airport Taxi",
-        "Day Rental",
-        "Hourly Package",
-        "Local Pickup/Drop",
-        "Tour Package",
-        "Corporate Travel",
-        "Wedding Transportation"
-      ]);
+      // On error, try to get from testimonials as fallback
+      try {
+        const testimonialsResponse = await fetch('/api/admin/testimonial');
+        const testimonialsResult = await testimonialsResponse.json();
+        
+        if (testimonialsResult.success && testimonialsResult.data) {
+          const servicesFromTestimonials = testimonialsResult.data
+            .map((t: any) => t.servicesType || t.serviceType)
+            .filter((s: string) => s && s.trim().length > 0);
+          
+          const uniqueServices = [...new Set(servicesFromTestimonials)].sort();
+          setServiceTypes(uniqueServices);
+        } else {
+          setServiceTypes([]);
+        }
+      } catch {
+        setServiceTypes([]);
+      }
     } finally {
       setServicesLoading(false);
     }
@@ -194,7 +187,6 @@ export default function TestimonialsPage() {
     status: "published",
     date: "",
     serviceType: "",
-    tripDetails: "",
   });
 
   const handleEdit = (testimonial: Testimonial) => {
@@ -215,7 +207,6 @@ export default function TestimonialsPage() {
         ? new Date(testimonial.date).toISOString().split("T")[0]
         : new Date().toISOString().split("T")[0],
       serviceType: testimonial.serviceType || testimonial.servicesType || "",
-      tripDetails: testimonial.tripDetails || "",
     });
 
     if (testimonial.avatar) {
@@ -361,7 +352,6 @@ export default function TestimonialsPage() {
       status: "published",
       date: new Date().toISOString().split("T")[0],
       serviceType: "",
-      tripDetails: "",
     });
     
     requestAnimationFrame(() => {
@@ -450,7 +440,7 @@ export default function TestimonialsPage() {
             Testimonials Management
           </h1>
           <p className="text-gray-600 mt-2">
-            Manage customer testimonials and reviews for Vinushree Tours & Travels
+            Manage customer testimonials and reviews for Perfect Pest Control
           </p>
         </div>
         <Dialog
@@ -487,7 +477,6 @@ export default function TestimonialsPage() {
                   status: "published",
                   date: new Date().toISOString().split("T")[0],
                   serviceType: "",
-                  tripDetails: "",
                 });
                 setSelectedFile(null);
                 setPreviewUrl("");
@@ -624,7 +613,7 @@ export default function TestimonialsPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, content: e.target.value })
                     }
-                    placeholder="Enter the customer's review about our travel services..."
+                    placeholder="Enter the customer's review about our pest control services..."
                     rows={6}
                     className={`mt-2 ${
                       isFormSubmitted && !formData.content
@@ -707,35 +696,19 @@ export default function TestimonialsPage() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="tripDetails" className="text-base font-semibold">
-                      Trip Details
-                    </Label>
-                    <Input
-                      id="tripDetails"
-                      value={formData.tripDetails}
-                      onChange={(e) =>
-                        setFormData({ ...formData, tripDetails: e.target.value })
-                      }
-                      placeholder="e.g., Chennai to Bangalore"
-                      className="mt-2"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="date" className="text-base font-semibold">
-                      Review Date
-                    </Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) =>
-                        setFormData({ ...formData, date: e.target.value })
-                      }
-                      className="mt-2"
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="date" className="text-base font-semibold">
+                    Review Date
+                  </Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
+                    className="mt-2"
+                  />
                 </div>
               </div>
 
@@ -938,11 +911,7 @@ export default function TestimonialsPage() {
                         <Badge className="bg-blue-100 text-blue-800 border-blue-200">
                           {testimonial.serviceType || testimonial.servicesType}
                         </Badge>
-                        {testimonial.tripDetails && (
-                          <Badge variant="outline" className="text-gray-600">
-                            {testimonial.tripDetails}
-                          </Badge>
-                        )}
+
                         <Badge
                           variant={testimonial.status === "published" ? "default" : "secondary"}
                           className={
@@ -1000,7 +969,7 @@ export default function TestimonialsPage() {
             </div>
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">No testimonials found</h3>
             <p className="text-gray-600 mb-6">
-              Add your first customer testimonial to showcase your travel services.
+              Add your first customer testimonial to showcase your pest control services.
             </p>
             <Button
               onClick={() => setIsEditing(true)}

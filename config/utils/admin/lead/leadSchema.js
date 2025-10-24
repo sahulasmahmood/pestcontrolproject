@@ -21,17 +21,17 @@ const leadSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // Travel Service Information
+    // Pest Control Service Information
     serviceType: {
       type: String,
       required: true,
       trim: true,
     },
-    travelDate: {
+    serviceDate: {
       type: String,
       required: true,
     },
-    travelTime: {
+    serviceTime: {
       type: String,
       trim: true,
       default: "",
@@ -41,21 +41,20 @@ const leadSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
-    pickupLocation: {
+    address: {
       type: String,
       required: true,
       trim: true,
     },
-    dropLocation: {
+    propertyType: {
       type: String,
       trim: true,
       default: "",
     },
-    passengers: {
+    propertySize: {
       type: Number,
-      default: 1,
-      min: 1,
-      max: 20,
+      default: 1000,
+      min: 100,
     },
 
     // Customer Message

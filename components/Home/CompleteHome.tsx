@@ -7,15 +7,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, MapPin, Clock, Users, Star, Phone, Shield, Award, Heart, Bug, Zap, Home } from "lucide-react"
+import { ArrowRight, MapPin, Clock, Users, Star, Phone, Shield, Award, Heart, Bug, Zap, Home, CheckCircle } from "lucide-react"
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon"
 import QuickBookForm from "@/components/QuickBookForm"
 import ApprovedLicenses from "@/components/ApprovedLicenses"
-// Commented out dynamic hooks for static data
 import { useBanner } from "@/hooks/use-banner"
-// import { useTariff } from "@/hooks/use-tariff"
-// import { usePackages } from "@/hooks/use-packages"
-// import { useContact } from "@/hooks/use-contact"
+import { useContact } from "@/hooks/use-contact"
+import { useServices } from "@/hooks/use-services"
 import { AnimatedTestimonialWrapper } from "./AnimatedTestimonialWrapper"
 
 // Static data for Perfect Pest Control
@@ -31,69 +29,15 @@ const staticContactInfo = {
   country: "India"
 }
 
-const staticServices = [
-  {
-    _id: "1",
-    serviceName: "Anti Termite Treatment",
-    description: "Complete termite protection for your property with advanced pre and post-construction treatment methods",
-    image: "/images/anti-termite.jpg",
-    price: "Contact for Quote",
-    featured: true,
-    category: "Structural Protection"
-  },
-  {
-    _id: "2",
-    serviceName: "Rat Control",
-    description: "Effective rodent control solutions for residential and commercial properties using safe methods",
-    image: "/images/rat-control.jpg",
-    price: "Contact for Quote",
-    featured: true,
-    category: "Rodent Control"
-  },
-  {
-    _id: "3",
-    serviceName: "Bed Bug Treatment",
-    description: "Complete bed bug elimination with safe and effective treatment methods for homes and hotels",
-    image: "/images/bed-bug.jpg",
-    price: "Contact for Quote",
-    featured: true,
-    category: "Insect Control"
-  },
-  {
-    _id: "4",
-    serviceName: "Mosquito Control",
-    description: "Comprehensive mosquito control for homes and commercial spaces to prevent disease transmission",
-    image: "/images/mosquito-control.jpg",
-    price: "Contact for Quote",
-    featured: true,
-    category: "Vector Control"
-  },
-  {
-    _id: "5",
-    serviceName: "Disinfection Spray Service",
-    description: "Professional disinfection using sodium hypochloride sanitizer cleaning spray service",
-    image: "/images/disinfection.jpg",
-    price: "Contact for Quote",
-    featured: true,
-    category: "Sanitization"
-  },
-  {
-    _id: "6",
-    serviceName: "Cockroach Control",
-    description: "Effective cockroach elimination for kitchens, restaurants and commercial food areas",
-    image: "/images/cockroach-control.jpg",
-    price: "Contact for Quote",
-    featured: false,
-    category: "Insect Control"
-  }
-]
+// Dynamic services will be fetched from API
 
+// Static service categories with updated images from pest control images folder
 const staticServiceCategories = [
   {
     _id: "1",
     title: "Industrial Pest Control",
     description: "Comprehensive pest control solutions for industrial facilities and manufacturing units",
-    image: "/images/industrial-pest-control.jpg",
+    image: "/pest control images/industrial-pest-control-services.jpg",
     services: ["Anti Termite", "Rat Control", "Cockroach Control", "Disinfection"],
     featured: true
   },
@@ -101,7 +45,7 @@ const staticServiceCategories = [
     _id: "2",
     title: "Commercial Pest Control",
     description: "Professional pest management for offices, hotels, and commercial spaces",
-    image: "/images/commercial-pest-control.jpg",
+    image: "/pest control images/Commercial Pest Control Services1.jpg",
     services: ["Bed Bug Treatment", "Mosquito Control", "Ant Control", "Sanitization"],
     featured: true
   },
@@ -109,18 +53,17 @@ const staticServiceCategories = [
     _id: "3",
     title: "Household Pest Control",
     description: "Safe and effective pest control for residential properties and homes",
-    image: "/images/household-pest-control.jpg",
+    image: "/pest control images/Household.jpeg",
     services: ["All Pest Types", "Disinfection", "Preventive Treatment", "Emergency Service"],
     featured: true
   }
 ]
 
 export default function CompleteHome() {
-  // Using static data instead of dynamic API calls
   const { banner, isLoading } = useBanner("home")
-  const tariffData = staticServices
+  const { services, loading: servicesLoading } = useServices()
   const packagesData = staticServiceCategories
-  const contactInfo = staticContactInfo
+  const { contactInfo } = useContact()
   
   // State for testimonials
   const [testimonials, setTestimonials] = useState<any[]>([])
@@ -155,75 +98,129 @@ export default function CompleteHome() {
 
   const handleBookPackage = (packageTitle: string) => {
     const message = `Hi, I need ${packageTitle} service. Please provide more details and a free quote.`;
-    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919626341555';
+    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || staticContactInfo.whatsappNumber;
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   }
 
   const handleCallNow = () => {
-    const phoneNumber = contactInfo?.primaryPhone || '0462-480-2258';
+    const phoneNumber = contactInfo?.primaryPhone || staticContactInfo.primaryPhone;
     window.open(`tel:${phoneNumber}`, "_self")
   }
 
-  // Update service cards rendering with static data
+  // Update service cards rendering with dynamic data - Filigree style
   const renderServices = () => {
+    if (servicesLoading) {
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="animate-pulse">
+              <Card className="h-full border-0 shadow-lg">
+                <CardContent className="p-0 h-full flex flex-col">
+                  <div className="aspect-video bg-gray-200 rounded-t-2xl"></div>
+                  <div className="p-4 sm:p-6 md:p-8 flex flex-col flex-grow">
+                    <div className="h-6 bg-gray-200 rounded mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div className="space-y-2 mb-6">
+                      <div className="h-3 bg-gray-200 rounded"></div>
+                      <div className="h-3 bg-gray-200 rounded"></div>
+                      <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                    </div>
+                    <div className="h-10 bg-gray-200 rounded mt-auto"></div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // Show only 3 featured services like Filigree
+    const displayServices = services.filter(service => service.featured).slice(0, 3);
+    
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
-        {tariffData.slice(0, 6).map((service, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+        {displayServices.map((service, index) => (
           <motion.div
             key={service._id || `service-${index}`}
-            initial={{ opacity: 0, y: 30, rotateX: 10 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            transition={{ duration: 0.8, delay: index * 0.1 }}
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
             viewport={{ once: true }}
-            whileHover={{ y: -8, rotateY: 2 }}
+            className="h-full"
           >
-            <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg hover:scale-105 h-full bg-white rounded-2xl hover:shadow-lg">
-              <CardContent className="p-0 h-full flex flex-col">
-                <div className="relative h-48 overflow-hidden rounded-t-lg">
-                  <Image
-                    src={service.image || "/placeholder.svg"}
-                    alt={service.serviceName}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/20" />
-                  <div className="absolute top-4 right-4">
-                    <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                      {service.price}
+            <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 h-full border-0 shadow-lg sm:shadow-xl overflow-hidden group flex flex-col">
+              {/* Service Image - Filigree style */}
+              <div className="aspect-video overflow-hidden relative flex-shrink-0 rounded-t-2xl">
+                <Image
+                  src={service.image || "/placeholder.svg"}
+                  alt={service.serviceName}
+                  fill
+                  className="object-cover group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                
+                {/* Service Type Badge */}
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-admin-gradient text-white backdrop-blur-sm">
+                    <Shield className="h-3 w-3 mr-1" />
+                    {service.serviceType || "Pest Control"}
+                  </Badge>
+                </div>
+
+                {/* Price Badge */}
+                <div className="absolute top-4 right-4">
+                  <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                    {service.basePrice ? `From ₹${service.basePrice}` : "Contact for Quote"}
+                  </Badge>
+                </div>
+
+                {/* Featured Badge */}
+                {service.featured && (
+                  <div className="absolute bottom-4 left-4">
+                    <Badge className="bg-yellow-500 text-white">
+                      <Star className="h-3 w-3 mr-1" />
+                      Most Popular
                     </Badge>
                   </div>
-                  {service.featured && (
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-admin-gradient text-white">
-                        ⭐ Featured
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-                <div className="p-3 sm:p-4 md:p-6 flex flex-col flex-grow">
-                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
+                )}
+              </div>
+
+              <CardContent className="p-4 sm:p-6 md:p-8 flex flex-col flex-grow">
+                {/* Content that grows */}
+                <div className="flex-grow">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4 text-gray-900 group-hover:text-admin-primary transition-all duration-300 line-clamp-2">
                     {service.serviceName}
                   </h3>
-                  <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-2 flex-grow">
-                    {service.description}
+                  <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 md:mb-6 leading-relaxed line-clamp-3">
+                    {service.shortDescription || service.description}
                   </p>
-                  <div className="flex items-center justify-between mt-auto">
-                    <Button
-                      onClick={() => handleBookNow(service.serviceName)}
-                      className="bg-admin-gradient text-white hover:opacity-90 text-sm sm:text-base py-2 sm:py-2.5 rounded-lg hover:scale-105 transition-all duration-300"
-                    >
-                      <Shield className="mr-1.5 h-3 w-3 sm:h-4 sm:w-4" />
-                      Get Quote
-                    </Button>
-                    <Link
-                      href="/services"
-                      className="text-admin-primary hover:text-admin-secondary transition-colors font-medium text-xs sm:text-sm"
-                    >
-                      View Details
-                      <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 inline" />
-                    </Link>
+
+                  {/* Key Features */}
+                  <div className="grid grid-cols-1 gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+                    {service.inclusions && service.inclusions.slice(0, 3).map((inclusion, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start text-xs sm:text-sm text-gray-600"
+                      >
+                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" />
+                        <span className="line-clamp-1">{inclusion}</span>
+                      </div>
+                    ))}
                   </div>
+                </div>
+
+                {/* Button always at bottom */}
+                <div className="mt-auto">
+                  <Button
+                    onClick={() => handleBookNow(service.serviceName)}
+                    className="w-full bg-admin-gradient transition-all duration-300 text-sm sm:text-base py-2 sm:py-2.5 hover:shadow-lg"
+                  >
+                    Get Quote & Book Service
+                    <ArrowRight className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -233,23 +230,31 @@ export default function CompleteHome() {
     )
   }
 
-  // Update service categories rendering with static data
+  // Update service categories rendering with static data - Enhanced height
   const renderPackages = () => {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
         {packagesData.slice(0, 6).map((pkg, index) => (
           <motion.div
             key={pkg._id || `package-${index}`}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: index * 0.1 }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
             viewport={{ once: true }}
+            className="h-full"
           >
-            <Card className="group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg hover:scale-105 h-full">
+            <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 h-full border-0 shadow-lg sm:shadow-xl overflow-hidden group flex flex-col">
               <CardContent className="p-0 h-full flex flex-col">
-                <div className="relative h-48 overflow-hidden rounded-t-lg">
-                  <Image src={pkg.image || "/placeholder.svg"} alt={pkg.title} fill className="object-cover" />
-                  <div className="absolute inset-0 bg-black/20" />
+                {/* Enhanced image section with aspect-video */}
+                <div className="aspect-video overflow-hidden relative flex-shrink-0 rounded-t-2xl">
+                  <Image 
+                    src={pkg.image || "/placeholder.svg"} 
+                    alt={pkg.title} 
+                    fill 
+                    className="object-cover group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-500" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  
                   <div className="absolute top-4 right-4">
                     <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
                       Professional
@@ -258,36 +263,46 @@ export default function CompleteHome() {
                   {pkg.featured && (
                     <div className="absolute top-4 left-4">
                       <Badge className="bg-admin-gradient text-white">
-                        ⭐ Popular
+                        <Star className="h-3 w-3 mr-1" />
+                        Popular
                       </Badge>
                     </div>
                   )}
                 </div>
+                
+                {/* Enhanced content section */}
                 <div className="p-4 sm:p-6 md:p-8 flex flex-col flex-grow">
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">
-                    {pkg.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 md:mb-6 line-clamp-2 flex-grow">
-                    {pkg.description}
-                  </p>
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <span className="text-lg sm:text-xl md:text-2xl font-bold text-admin-primary">
-                      Contact for Quote
-                    </span>
-                    <div className="flex items-center text-yellow-500">
-                      <Star className="h-4 w-4 fill-current" />
-                      <Star className="h-4 w-4 fill-current" />
-                      <Star className="h-4 w-4 fill-current" />
-                      <Star className="h-4 w-4 fill-current" />
-                      <Star className="h-4 w-4 fill-current" />
+                  <div className="flex-grow">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4 text-gray-900 group-hover:text-admin-primary transition-all duration-300 line-clamp-2">
+                      {pkg.title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 md:mb-6 leading-relaxed line-clamp-3">
+                      {pkg.description}
+                    </p>
+                    
+                    {/* Rating section */}
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                      <span className="text-lg sm:text-xl md:text-2xl font-bold text-admin-primary">
+                        Contact for Quote
+                      </span>
+                      <div className="flex items-center text-yellow-500">
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center mt-auto">
+                  
+                  {/* Button always at bottom */}
+                  <div className="mt-auto">
                     <Button
                       onClick={() => handleBookPackage(pkg.title)}
-                      className="bg-admin-gradient text-white hover:opacity-90 text-sm sm:text-base py-2 sm:py-2.5 w-full"
+                      className="w-full bg-admin-gradient transition-all duration-300 text-sm sm:text-base py-2 sm:py-2.5 hover:shadow-lg"
                     >
-                      Get Quote
+                      Get Quote & Book Service
+                      <ArrowRight className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                     </Button>
                   </div>
                 </div>
@@ -332,62 +347,74 @@ export default function CompleteHome() {
           </div>
         </div>
 
-        <div className="container mx-auto px-3 py-6 sm:px-6 sm:py-12 md:py-16 lg:py-20 xl:px-8 relative z-10 max-w-7xl">
+        <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 md:py-16 lg:py-20 xl:px-8 relative z-10 max-w-7xl">
           <div className="max-w-5xl mx-auto text-center text-white">
-            <div>
-              <Badge className="mb-4 sm:mb-6 md:mb-8 hover:bg-admin-secondary bg-white/20 text-white border-white/30 backdrop-blur-sm px-3 py-1.5 sm:px-6 sm:py-2 md:px-8 md:py-3 text-xs sm:text-sm md:text-base rounded-full shadow-lg">
-                <Shield className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-2 sm:mr-3" />
-                Welcome to Perfect Pest Control
-              </Badge>
-            </div>
+            {isLoading ? (
+              <div className="animate-pulse space-y-6">
+                <div className="h-8 bg-white/20 rounded-full w-64 mx-auto"></div>
+                <div className="h-16 bg-white/20 rounded-lg w-full max-w-3xl mx-auto"></div>
+                <div className="h-24 bg-white/20 rounded-lg w-full max-w-4xl mx-auto"></div>
+                <div className="flex gap-4 justify-center">
+                  <div className="h-12 bg-white/20 rounded-xl w-40"></div>
+                  <div className="h-12 bg-white/20 rounded-xl w-40"></div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <Badge className="mb-4 sm:mb-6 md:mb-8 hover:bg-admin-secondary bg-white/20 text-white border-white/30 backdrop-blur-sm px-3 py-1.5 sm:px-6 sm:py-2 md:px-8 md:py-3 text-xs sm:text-sm md:text-base rounded-full shadow-lg">
+                    <Shield className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-2 sm:mr-3" />
+                    {banner?.status === "active" && banner?.title ? banner.title : "Welcome to Perfect Pest Control"}
+                  </Badge>
+                </div>
 
-            {/* Optional dynamic banner title (keeps existing headline below) */}
-            {banner?.title && (
-              <p className="text-white/90 text-base sm:text-lg md:text-xl mb-2 sm:mb-3">{banner.title}</p>
+                {banner?.status === "active" && banner?.title && (
+                  <p className="text-white/90 text-base sm:text-lg md:text-xl mb-2 sm:mb-3">{banner.title}</p>
+                )}
+
+                <div>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+                    {banner?.status === "active" && banner?.heading ? (
+                      <span className="block text-white">{banner.heading}</span>
+                    ) : (
+                      <>
+                        <span className="block">Protect Your Property</span>
+                        <span className="block text-white">With Confidence</span>
+                      </>
+                    )}
+                  </h1>
+                </div>
+
+                <p className="text-xs sm:text-sm md:text-base lg:text-lg mb-6 sm:mb-8 md:mb-10 text-white/90 max-w-4xl mx-auto leading-relaxed px-1 sm:px-2 md:px-4">
+                  {banner?.status === "active" && banner?.description ? banner.description : "Experience professional pest control services with safety and reliability. From residential to commercial properties, we provide comprehensive pest management solutions including anti-termite, rodent control, and disinfection services."}
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center px-2">
+                  <div className="w-full sm:w-auto">
+                    <Button
+                      onClick={() => handleBookNow()}
+                      size="lg"
+                      className="w-full sm:w-auto bg-admin-gradient text-white border-0 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 shadow-2xl hover:shadow-green-500/25 rounded-xl hover:scale-105"
+                    >
+                      <Shield className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
+                      Get Free Quote
+                    </Button>
+                  </div>
+
+                  <div className="w-full sm:w-auto">
+                    <Button
+                      onClick={handleCallNow}
+                      size="lg"
+                      variant="outline"
+                      className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold bg-transparent backdrop-blur-sm shadow-2xl hover:shadow-white/10 rounded-xl hover:scale-105"
+                    >
+                      <Phone className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
+                      Call Now
+                    </Button>
+                  </div>
+                </div>
+              </>
             )}
-
-            <div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                <span className="block">Protect Your Property</span>
-                <span className="block text-white">
-                  With Confidence
-                </span>
-              </h1>
-            </div>
-
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 text-white/90 font-light">
-              Professional Pest Control
-            </p>
-
-            <p className="text-xs sm:text-sm md:text-base lg:text-lg mb-6 sm:mb-8 md:mb-10 text-white/90 max-w-4xl mx-auto leading-relaxed px-1 sm:px-2 md:px-4">
-              Experience professional pest control services with safety and reliability. From residential to commercial properties,
-              we provide comprehensive pest management solutions including anti-termite, rodent control, and disinfection services.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center px-2">
-              <div className="w-full sm:w-auto">
-                <Button
-                  onClick={() => handleBookNow()}
-                  size="lg"
-                  className="w-full sm:w-auto bg-admin-gradient text-white border-0 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 shadow-2xl hover:shadow-green-500/25 rounded-xl hover:scale-105"
-                >
-                  <Shield className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
-                  Get Free Quote
-                </Button>
-              </div>
-
-              <div className="w-full sm:w-auto">
-                <Button
-                  onClick={handleCallNow}
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold bg-transparent backdrop-blur-sm shadow-2xl hover:shadow-white/10 rounded-xl hover:scale-105"
-                >
-                  <Phone className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
-                  Call Now
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -855,7 +882,7 @@ export default function CompleteHome() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
                 <Button
                   onClick={() => {
-                    const whatsappNumber = contactInfo?.whatsappNumber || '919626341555';
+                    const whatsappNumber = contactInfo?.whatsappNumber || staticContactInfo.whatsappNumber;
                     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi, I need pest control services. Please provide more details and a free quote.`;
                     window.open(whatsappUrl, '_blank');
                   }}

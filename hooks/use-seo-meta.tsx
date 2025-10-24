@@ -36,9 +36,9 @@ export function useSEOMeta({ pageId, fallback }: SEOMetaOptions) {
   
   useEffect(() => {
     // Set initial values with fallback
-    const initialTitle = fallback?.title || 'Vinushree Tours & Travels'
-    const initialDesc = fallback?.description || 'Premium travel services in Tamil Nadu'
-    const initialKeys = fallback?.keywords || 'travel services, tour packages, taxi booking'
+    const initialTitle = fallback?.title || 'Perfect Pest Control'
+    const initialDesc = fallback?.description || 'Professional pest control services in Tamil Nadu'
+    const initialKeys = fallback?.keywords || 'pest control, anti termite, rodent control, bed bug treatment'
     
     // Always set fallback values first
     updateMetaTags(initialTitle, initialDesc, initialKeys)

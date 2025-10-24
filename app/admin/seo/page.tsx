@@ -178,7 +178,7 @@ export default function SEOManagerPage() {
           <h1 className="text-4xl font-bold bg-admin-gradient bg-clip-text text-transparent">
             SEO Manager
           </h1>
-          <p className="text-gray-600 mt-2">Optimize SEO for Vinushree Tours & Travels website pages - manage meta titles, descriptions, and keywords</p>
+          <p className="text-gray-600 mt-2">Optimize SEO for Perfect Pest Control website pages - manage meta titles, descriptions, and keywords</p>
         </div>
         <Dialog open={isEditing} onOpenChange={setIsEditing}>
           <DialogContent className="max-w-2xl">

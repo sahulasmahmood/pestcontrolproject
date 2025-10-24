@@ -174,8 +174,7 @@ export default function AdminLayout({
   useEffect(() => {
     // Auto-expand Page Manager if we're on any of its sub-pages
     if (
-      pathname.includes("/admin/packages") ||
-      pathname.includes("/admin/tariff") ||
+      pathname.includes("/admin/services") ||
       pathname.includes("/admin/banners") ||
       pathname.includes("/admin/contact")
     ) {
@@ -208,8 +207,7 @@ export default function AdminLayout({
       color: "text-green-600",
       isCollapsible: true,
       subItems: [
-        { name: "Packages", href: "/admin/packages", icon: <Settings className="h-4 w-4" /> },
-        { name: "Tariff", href: "/admin/tariff", icon: <Briefcase className="h-4 w-4" /> },
+        { name: "Services", href: "/admin/services", icon: <Settings className="h-4 w-4" /> },
         { name: "Banner Manager", href: "/admin/banners", icon: <FileText className="h-4 w-4" /> },
         { name: "Contact", href: "/admin/contact", icon: <Phone className="h-4 w-4" /> },
       ],
@@ -232,12 +230,7 @@ export default function AdminLayout({
       icon: <MessageSquare className="h-5 w-5" />,
       color: "text-red-600",
     },
-    {
-      name: "Location Manager",
-      href: "/admin/locations",
-      icon: <MapPin className="h-5 w-5" />,
-      color: "text-emerald-600",
-    },
+
     {
       name: "Theme Settings",
       href: "/admin/theme",
@@ -340,7 +333,7 @@ export default function AdminLayout({
               )}
               <div>
                 <span className="font-bold text-lg text-gray-900">Admin Panel</span>
-                <div className="text-xs text-gray-500">{themeData?.siteName || "Vinushree Tours"}</div>
+                <div className="text-xs text-gray-500">{themeData?.siteName || "Perfect Pest Control"}</div>
               </div>
             </div>
           </div>
@@ -475,27 +468,23 @@ export default function AdminLayout({
                 <h1 className="text-xl font-semibold text-gray-900">
                   {pathname === "/admin"
                     ? "Dashboard"
-                    : pathname === "/admin/packages"
-                      ? "Packages"
-                      : pathname === "/admin/tariff"
-                        ? "Tariff"
-                        : pathname === "/admin/banners"
-                          ? "Banner Manager"
-                          : pathname === "/admin/contact"
-                            ? "Contact"
-                            : pathname === "/admin/seo"
-                              ? "SEO Manager"
-                              : pathname === "/admin/testimonials"
-                                ? "Testimonial Manager"
-                                : pathname === "/admin/leads"
-                                  ? "Lead Manager"
-                                  : pathname === "/admin/locations"
-                                    ? "Location Manager"
-                                    : pathname === "/admin/theme"
-                                      ? "Theme Settings"
-                                      : pathname === "/admin/profile"
-                                        ? "Profile Settings"
-                                        : "Admin Panel"}
+                    : pathname === "/admin/services"
+                      ? "Services"
+                      : pathname === "/admin/banners"
+                        ? "Banner Manager"
+                        : pathname === "/admin/contact"
+                          ? "Contact"
+                          : pathname === "/admin/seo"
+                            ? "SEO Manager"
+                            : pathname === "/admin/testimonials"
+                              ? "Testimonial Manager"
+                              : pathname === "/admin/leads"
+                                ? "Lead Manager"
+                                : pathname === "/admin/theme"
+                                    ? "Theme Settings"
+                                    : pathname === "/admin/profile"
+                                      ? "Profile Settings"
+                                      : "Admin Panel"}
                 </h1>
                 <p className="text-sm text-gray-500">Manage your website content</p>
               </div>

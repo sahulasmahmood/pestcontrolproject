@@ -189,23 +189,24 @@ export default function AboutPage() {
           >
             <Badge className="mb-3 sm:mb-4 bg-white/20 text-white border-white/30 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm">
               <ShieldCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-              About Perfect Pest Control
+              {banner?.title || "About Perfect Pest Control"}
             </Badge>
 
-            {/* Optional dynamic banner title (keeps existing main heading) */}
             {banner?.title && (
               <p className="text-white/90 text-base sm:text-lg md:text-xl mb-2 sm:mb-3">{banner.title}</p>
             )}
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-              Professional Pest Control
-              <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl mt-1 sm:mt-2 font-normal">
-                Protecting Your Property
-              </span>
+              {banner?.heading || "Your Trusted Pest Control Partner"}
+              {!banner?.heading && (
+                <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl mt-1 sm:mt-2 font-normal">
+                  Protecting Your Property
+                </span>
+              )}
             </h1>
+
             <p className="text-xs sm:text-sm md:text-base lg:text-lg mb-6 sm:mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
-              Learn about our commitment to providing safe, effective, and environmentally responsible pest control 
-              solutions that protect your home, family, and business from unwanted pests.
+              {banner?.description || "Learn about our commitment to providing safe, effective, and environmentally responsible pest control solutions that protect your home, family, and business from unwanted pests."}
             </p>
           </motion.div>
         </div>

@@ -37,8 +37,8 @@ export default function ThemePage() {
   const [siteName, setSiteName] = useState("Perfect Pest Control");
   const [logo, setLogo] = useState<string | null>(null);
   const [favicon, setFavicon] = useState<string | null>(null);
-  const [primaryColor, setPrimaryColor] = useState("#10B981"); // Green for pest control theme
-  const [secondaryColor, setSecondaryColor] = useState("#059669"); // Darker green for pest control theme
+  const [primaryColor, setPrimaryColor] = useState("#22C55E"); // Perfect Pest Control brand color
+  const [secondaryColor, setSecondaryColor] = useState("#1F2937"); // Professional dark color
   const [previewDevice, setPreviewDevice] = useState("desktop");
   const [loading, setLoading] = useState(false);
 
@@ -110,8 +110,8 @@ export default function ThemePage() {
       if (result.success) {
         // Update local state with default values
         setSiteName("Perfect Pest Control");
-        setPrimaryColor("#10B981");
-        setSecondaryColor("#059669");
+        setPrimaryColor("#22C55E");
+        setSecondaryColor("#1F2937");
         setLogo("/perfect-pest-control-logo.png");
         setFavicon(null);
         
@@ -406,11 +406,95 @@ export default function ThemePage() {
                   Advanced Gradient Presets
                 </Label>
 
-                {/* Pest Control Themed Gradient Collection */}
+                {/* Pest Control & Safety Gradients - Vinushree Style */}
                 <div className="space-y-3">
                   <div className="text-xs font-medium text-gray-600 mb-2 flex items-center gap-2">
                     <Shield className="w-4 h-4" />
                     Pest Control & Safety Gradients
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                      Perfect Pest Control
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      {
+                        name: "Perfect Green Pro",
+                        primary: "#10B981",
+                        secondary: "#1F2937",
+                        description: "Brand + Professional",
+                        icon: "🛡️",
+                      },
+                      {
+                        name: "Perfect Pest Control Brand",
+                        primary: "#22C55E",
+                        secondary: "#1F2937",
+                        description: "Brand Theme Color",
+                        icon: "🏆",
+                      },
+                      {
+                        name: "Trust Professional",
+                        primary: "#3B82F6",
+                        secondary: "#1F2937",
+                        description: "Trust + Professional",
+                        icon: "💼",
+                      },
+                      {
+                        name: "Safety Professional",
+                        primary: "#F97316",
+                        secondary: "#1F2937",
+                        description: "Alert + Professional",
+                        icon: "⚠️",
+                      },
+                      {
+                        name: "Premium Professional",
+                        primary: "#8B5CF6",
+                        secondary: "#1F2937",
+                        description: "Premium + Professional",
+                        icon: "⭐",
+                      },
+                      {
+                        name: "Emergency Professional",
+                        primary: "#EF4444",
+                        secondary: "#1F2937",
+                        description: "Emergency + Professional",
+                        icon: "🚨",
+                      },
+                    ].map((preset) => (
+                      <button
+                        key={preset.name}
+                        onClick={() => {
+                          setPrimaryColor(preset.primary);
+                          setSecondaryColor(preset.secondary);
+                        }}
+                        className="group relative p-3 rounded-xl border-2 border-gray-200 hover:border-gray-300 transition-all hover:scale-105"
+                        title={`${preset.name} - ${preset.description}`}
+                      >
+                        <div
+                          className="w-full h-8 rounded-lg mb-2 relative overflow-hidden"
+                          style={{
+                            background: `linear-gradient(135deg, ${preset.primary} 0%, ${preset.secondary} 100%)`,
+                          }}
+                        >
+                          <div className="absolute top-1 right-1 text-xs opacity-80">
+                            {preset.icon}
+                          </div>
+                        </div>
+                        <div className="text-xs text-gray-700 font-medium">
+                          {preset.name}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {preset.description}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Original Pest Control Themed Gradient Collection */}
+                <div className="space-y-3">
+                  <div className="text-xs font-medium text-gray-600 mb-2 flex items-center gap-2">
+                    <Bug className="w-4 h-4" />
+                    Standard Pest Control Gradients
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     {[
@@ -749,10 +833,10 @@ export default function ThemePage() {
                             className="text-lg font-bold"
                             style={{ color: primaryColor }}
                           >
-                            {siteName.split(' ')[0] || 'Vinushree'}
+                            {siteName.split(' ')[0] || 'Perfect'}
                           </div>
                           <div className="text-sm text-gray-600">
-                            {siteName.includes('Tours') ? 'Tours & Travels' : siteName.split(' ').slice(1).join(' ') || 'Tours & Travels'}
+                            {siteName.includes('Pest') ? 'Pest Control Services' : siteName.split(' ').slice(1).join(' ') || 'Pest Control Services'}
                           </div>
                         </div>
                       </div>
@@ -772,82 +856,50 @@ export default function ThemePage() {
                   >
                     <div className="relative z-10">
                       <div className="text-2xl font-bold mb-3">
-                        Explore the World with Us
+                        Professional Pest Control Services
                       </div>
                       <div className="text-sm opacity-90 mb-4 max-w-md mx-auto">
-                        Your trusted travel partner for unforgettable journeys
+                        Your trusted partner for safe and effective pest management
                       </div>
                       <div className="flex gap-3 justify-center">
                         <button
                           className="px-4 py-2 rounded-lg bg-white font-medium text-sm"
                           style={{ color: primaryColor }}
                         >
-                          <Plane className="w-4 h-4 inline mr-2" />
-                          Explore Tours
+                          <Bug className="w-4 h-4 inline mr-2" />
+                          Book Service
                         </button>
                       </div>
                     </div>
                     {/* Decorative elements */}
                     <div className="absolute top-4 right-4 opacity-20">
-                      <Plane className="w-8 h-8 rotate-45" />
+                      <Shield className="w-8 h-8" />
                     </div>
                     <div className="absolute bottom-4 left-4 opacity-20">
-                      <Camera className="w-6 h-6" />
+                      <Bug className="w-6 h-6" />
                     </div>
                   </div>
 
                   {/* Featured Tours Section */}
                   <div className="p-6 bg-gray-50">
                     <div className="text-lg font-bold mb-4" style={{ color: primaryColor }}>
-                      Popular Destinations
+                      Our Services
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Tour Card 1 */}
-                      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                        <div className="h-24 bg-gradient-to-r from-blue-400 to-blue-600 relative">
-                          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                          <div className="absolute bottom-2 left-3 text-white">
-                            <div className="text-sm font-semibold">Goa Beach Tour</div>
-                            <div className="text-xs opacity-90">3 Days • 2 Nights</div>
-                          </div>
-                        </div>
-                        <CardContent className="p-3">
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-1 text-xs text-gray-600">
-                              <MapPin className="w-3 h-3" />
-                              Goa, India
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                              <span className="text-xs">4.8</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <div className="text-sm font-semibold" style={{ color: primaryColor }}>
-                              ₹12,999
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-gray-600">
-                              <Users className="w-3 h-3" />
-                              2-6 People
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Tour Card 2 */}
+                      {/* Service Card 1 */}
                       <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                         <div className="h-24 bg-gradient-to-r from-green-400 to-green-600 relative">
                           <div className="absolute inset-0 bg-black bg-opacity-20"></div>
                           <div className="absolute bottom-2 left-3 text-white">
-                            <div className="text-sm font-semibold">Kerala Backwaters</div>
-                            <div className="text-xs opacity-90">5 Days • 4 Nights</div>
+                            <div className="text-sm font-semibold">Termite Control</div>
+                            <div className="text-xs opacity-90">Complete Protection</div>
                           </div>
                         </div>
                         <CardContent className="p-3">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-1 text-xs text-gray-600">
-                              <MapPin className="w-3 h-3" />
-                              Kerala, India
+                              <Shield className="w-3 h-3" />
+                              Residential & Commercial
                             </div>
                             <div className="flex items-center gap-1">
                               <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
@@ -856,11 +908,43 @@ export default function ThemePage() {
                           </div>
                           <div className="flex items-center justify-between">
                             <div className="text-sm font-semibold" style={{ color: primaryColor }}>
-                              ₹18,999
+                              ₹2,999
                             </div>
                             <div className="flex items-center gap-1 text-xs text-gray-600">
-                              <Users className="w-3 h-3" />
-                              2-8 People
+                              <Bug className="w-3 h-3" />
+                              Safe & Effective
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Service Card 2 */}
+                      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                        <div className="h-24 bg-gradient-to-r from-orange-400 to-orange-600 relative">
+                          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                          <div className="absolute bottom-2 left-3 text-white">
+                            <div className="text-sm font-semibold">Rodent Control</div>
+                            <div className="text-xs opacity-90">Complete Elimination</div>
+                          </div>
+                        </div>
+                        <CardContent className="p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-1 text-xs text-gray-600">
+                              <Shield className="w-3 h-3" />
+                              Home & Office
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                              <span className="text-xs">4.8</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm font-semibold" style={{ color: primaryColor }}>
+                              ₹1,999
+                            </div>
+                            <div className="flex items-center gap-1 text-xs text-gray-600">
+                              <Bug className="w-3 h-3" />
+                              Quick Results
                             </div>
                           </div>
                         </CardContent>
@@ -880,11 +964,11 @@ export default function ThemePage() {
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <Mail className="w-4 h-4" />
-                        info@vinushree.com
+                        info@perfectpest.com
                       </div>
                     </div>
                     <div className="text-xs opacity-90">
-                      © 2024 Vinushree Tours & Travels. All rights reserved.
+                      © 2024 Perfect Pest Control. All rights reserved.
                     </div>
                   </div>
                 </div>

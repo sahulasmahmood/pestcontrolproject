@@ -69,10 +69,16 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const { pageKey } = await params
     const formData = await request.formData()
     const status = (formData.get("status") as string) || undefined
+    const title = ((formData.get("title") as string) || "").trim()
+    const heading = ((formData.get("heading") as string) || "").trim()
+    const description = ((formData.get("description") as string) || "").trim()
     const imageFile = formData.get("image") as File | null
 
     const update: any = {}
     if (status) update.status = status
+    if (title !== undefined) update.title = title || undefined
+    if (heading !== undefined) update.heading = heading || undefined
+    if (description !== undefined) update.description = description || undefined
 
     if (imageFile && imageFile.size > 0) {
       const bytes = await imageFile.arrayBuffer()
