@@ -14,7 +14,6 @@ interface ContactInfo {
   country: string
   businessHours?: string
   serviceHours?: string
-  servicesOffered?: string
   branchOffices?: string
   facebook?: string
   twitter?: string

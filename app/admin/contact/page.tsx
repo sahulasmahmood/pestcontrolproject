@@ -63,7 +63,6 @@ export default function ContactPage() {
     officeDescription: "",
     
     // Pest Control Specific
-    servicesOffered: "",
     branchOffices: "",
     serviceHours: "",
   });
@@ -348,19 +347,7 @@ export default function ContactPage() {
               Pest Control Services Information
             </h3>
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="servicesOffered" className="text-base font-semibold">
-                  Services Offered
-                </Label>
-                <Textarea
-                  id="servicesOffered"
-                  value={contactInfo.servicesOffered}
-                  onChange={(e) => handleInputChange("servicesOffered", e.target.value)}
-                  placeholder="Residential Pest Control, Commercial Pest Control, Termite Treatment, Rodent Control, Cockroach Control, Ant Control, Bed Bug Treatment, Mosquito Control"
-                  rows={3}
-                  className="mt-2"
-                />
-              </div>
+
               <div>
                 <Label htmlFor="branchOffices" className="text-base font-semibold">
                   Branch Offices

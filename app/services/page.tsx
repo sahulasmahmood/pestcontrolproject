@@ -3,7 +3,6 @@ import Footer from "@/components/footer";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
 import ServicesPageClient from "@/components/ServicesPageClient";
 import { ServicesPageSeo } from "@/components/Services/ServicesSeo";
-import { fetchServices } from "@/lib/services";
 
 export const dynamic = 'force-dynamic';
 
@@ -16,14 +15,41 @@ export const metadata = {
     "pest control services, pest control pricing, termite control cost, rodent removal rates, commercial pest control, residential pest management",
 };
 
+// Fetch services from API
+async function getServices() {
+  try {
+    // For server-side rendering, we can directly import and use the database
+    const connectDB = (await import("@/config/models/connectDB")).default;
+    const Service = (await import("@/config/utils/admin/services/serviceSchema")).default;
+    
+    await connectDB();
+
+    // Get services directly from database
+    const services = await Service.find({ 
+      status: "active", 
+      isDeleted: false 
+    })
+    .select('-isDeleted -__v') // Exclude internal fields
+    .sort({ featured: -1, createdAt: -1 })
+    .limit(50)
+    .lean();
+
+    // Convert MongoDB ObjectIds to strings for serialization
+    return JSON.parse(JSON.stringify(services));
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    return []; // Return empty array if API fails
+  }
+}
+
 export default async function PestControlServicesPage() {
-  const { services } = await fetchServices({ limit: 50 });
+  const servicesData = await getServices();
 
   return (
     <div className="min-h-screen">
       <ServicesPageSeo />
       <Navbar />
-      <ServicesPageClient servicesData={services} />
+      <ServicesPageClient servicesData={servicesData || []} />
       <Footer />
       <FloatingContactButtons />
     </div>

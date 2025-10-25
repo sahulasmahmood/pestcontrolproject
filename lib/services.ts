@@ -35,7 +35,57 @@ export async function fetchServices(options: {
 } = {}) {
   try {
     const { limit = 50, page = 1, serviceType, featured } = options;
-    const baseUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    
+    // Check if we're in a server environment and can access the database directly
+    if (typeof window === 'undefined') {
+      try {
+        const connectDB = (await import("@/config/models/connectDB")).default;
+        const Service = (await import("@/config/utils/admin/services/serviceSchema")).default;
+        
+        await connectDB();
+
+        // Build query for active services only
+        const query: any = { 
+          status: "active", 
+          isDeleted: false 
+        };
+        
+        if (serviceType) query.serviceType = serviceType;
+        if (featured !== undefined) query.featured = featured === true;
+
+        const skip = (page - 1) * limit;
+
+        // Get services and total count
+        const [services, totalServices] = await Promise.all([
+          Service.find(query)
+            .select('-isDeleted -__v') // Exclude internal fields
+            .sort({ featured: -1, createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+          Service.countDocuments(query)
+        ]);
+
+        const totalPages = Math.ceil(totalServices / limit);
+
+        return {
+          services: JSON.parse(JSON.stringify(services)),
+          pagination: {
+            currentPage: page,
+            totalPages,
+            totalServices,
+            limit,
+            hasNextPage: page < totalPages,
+            hasPrevPage: page > 1,
+          },
+        };
+      } catch (dbError) {
+        console.error('Database fetch failed, falling back to API:', dbError);
+      }
+    }
+    
+    // Fallback to API call for client-side or if database fails
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     
     const params = new URLSearchParams({
       limit: limit.toString(),
@@ -77,7 +127,36 @@ export async function fetchServices(options: {
 // Fetch single service by slug
 export async function fetchServiceBySlug(slug: string): Promise<ServiceData | null> {
   try {
-    const baseUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    // Check if we're in a server environment and can access the database directly
+    if (typeof window === 'undefined') {
+      try {
+        const connectDB = (await import("@/config/models/connectDB")).default;
+        const Service = (await import("@/config/utils/admin/services/serviceSchema")).default;
+        
+        await connectDB();
+        
+        // Find service by slug directly from database
+        const service = await Service.findOne({ 
+          slug, 
+          status: "active", 
+          isDeleted: false 
+        })
+        .select('-isDeleted -__v')
+        .lean();
+
+        if (!service) {
+          return null;
+        }
+
+        // Convert MongoDB ObjectId to string for serialization
+        return JSON.parse(JSON.stringify(service));
+      } catch (dbError) {
+        console.error('Database fetch failed, falling back to API:', dbError);
+      }
+    }
+    
+    // Fallback to API call for client-side or if database fails
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     
     const response = await fetch(`${baseUrl}/api/services/${slug}`, {
       cache: 'no-store',

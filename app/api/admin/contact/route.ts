@@ -24,7 +24,6 @@ export async function GET(request: NextRequest) {
         country: "India",
         businessHours: "Mon-Sat: 8AM-8PM, Emergency 24/7",
         serviceHours: "24/7 Emergency Service Available",
-        servicesOffered: "Industrial Pest Control, Commercial Pest Control, Household Pest Control, Anti Termite Treatment, Rat Control, Bed Bug Treatment, Ant Control, Mosquito Control, Fly Control, Cockroach Control, Virus & Bacteria Disinfection, Spider Control, Lizard Control, Disinfection Spray Service (Sodium Hypochloride), Sanitizer Cleaning Spray Service",
         branchOffices: "Tuticorin, Tenkasi, Nagercoil, Madurai, Ramanathapuram",
         facebook: "",
         twitter: "",
