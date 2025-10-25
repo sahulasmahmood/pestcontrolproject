@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/config/models/connectDB";
 import Service from "@/config/utils/admin/services/serviceSchema";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // GET - Fetch active services for public use
 export async function GET(request: NextRequest) {
   try {

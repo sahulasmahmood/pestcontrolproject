@@ -5,6 +5,7 @@ import ServicesPageClient from "@/components/ServicesPageClient";
 import { ServicesPageSeo } from "@/components/Services/ServicesSeo";
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // SEO metadata
 export const metadata = {

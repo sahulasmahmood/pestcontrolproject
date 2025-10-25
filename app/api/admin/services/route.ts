@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/config/models/connectDB";
 import Service from "@/config/utils/admin/services/serviceSchema";
 import { uploadToCloudinary } from "@/config/utils/cloudinary";
@@ -237,6 +238,15 @@ export async function POST(request: NextRequest) {
     
     const newService = new Service(serviceData);
     const savedService = await newService.save();
+    
+    // Revalidate pages after creating new service
+    try {
+      revalidatePath('/services');
+      revalidatePath('/');
+      revalidateTag('services');
+    } catch (revalidateError) {
+      console.error('Revalidation error:', revalidateError);
+    }
     
     return NextResponse.json({
       success: true,
