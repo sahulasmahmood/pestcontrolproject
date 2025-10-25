@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/config/models/connectDB";
 import Service from "@/config/utils/admin/services/serviceSchema";
 import { uploadToCloudinary } from "@/config/utils/cloudinary";
@@ -174,6 +175,21 @@ export async function PUT(
       { new: true, runValidators: true }
     );
 
+    // Revalidate the service detail page and services list
+    try {
+      // Revalidate old slug path if it changed
+      if (existingService.slug !== slug) {
+        revalidatePath(`/services/${existingService.slug}`);
+      }
+      // Revalidate new slug path
+      revalidatePath(`/services/${slug}`);
+      revalidatePath('/services');
+      revalidatePath('/');
+      revalidateTag('services');
+    } catch (revalidateError) {
+      console.error('Revalidation error:', revalidateError);
+    }
+
     return NextResponse.json({
       success: true,
       data: updatedService,
@@ -233,6 +249,16 @@ export async function DELETE(
     // Soft delete
     service.isDeleted = true;
     await service.save();
+
+    // Revalidate pages after deletion
+    try {
+      revalidatePath(`/services/${service.slug}`);
+      revalidatePath('/services');
+      revalidatePath('/');
+      revalidateTag('services');
+    } catch (revalidateError) {
+      console.error('Revalidation error:', revalidateError);
+    }
 
     return NextResponse.json({
       success: true,

@@ -365,7 +365,7 @@ export default function AdminDashboard() {
           ))}
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8 items-stretch">
           {/* Recent Leads */}
           <motion.div variants={fadeInUp} initial="initial" animate="animate">
             <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm h-full">
@@ -390,8 +390,8 @@ export default function AdminDashboard() {
                 </div>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="space-y-4">
-                  {recentLeads.length > 0 ? recentLeads.map((lead) => (
+                <div className="space-y-4 min-h-[280px] flex flex-col justify-start">
+                  {recentLeads.length > 0 ? recentLeads.slice(0, 3).map((lead) => (
                     <div
                       key={lead._id}
                       className="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg hover:shadow-md transition-all duration-200"
@@ -433,7 +433,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   )) : (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-8 text-gray-500 flex-1 flex flex-col justify-center">
                       <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
                       <p>No recent leads found</p>
                     </div>

@@ -4,6 +4,10 @@ import Footer from "@/components/footer";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
 import ServiceDetailClient from "@/components/ServiceDetailClient";
 
+// Force dynamic rendering to avoid stale cache
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface PageProps {
   params: {
     slug: string;
