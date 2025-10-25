@@ -64,7 +64,7 @@ export default function CompleteHome() {
   const { services, loading: servicesLoading } = useServices()
   const packagesData = staticServiceCategories
   const { contactInfo } = useContact()
-  
+
   // State for testimonials
   const [testimonials, setTestimonials] = useState<any[]>([])
   const [testimonialsLoading, setTestimonialsLoading] = useState(false)
@@ -139,7 +139,7 @@ export default function CompleteHome() {
 
     // Show only 3 featured services like Filigree
     const displayServices = services.filter(service => service.featured).slice(0, 3);
-    
+
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
         {displayServices.map((service, index) => (
@@ -161,7 +161,7 @@ export default function CompleteHome() {
                   className="object-cover group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                
+
                 {/* Service Type Badge */}
                 <div className="absolute top-4 left-4">
                   <Badge className="bg-admin-gradient text-white backdrop-blur-sm">
@@ -212,8 +212,8 @@ export default function CompleteHome() {
                   </div>
                 </div>
 
-                {/* Button always at bottom */}
-                <div className="mt-auto">
+                {/* Action buttons always at bottom */}
+                <div className="mt-auto space-y-2 sm:space-y-3">
                   <Button
                     onClick={() => handleBookNow(service.serviceName)}
                     className="w-full bg-admin-gradient transition-all duration-300 text-sm sm:text-base py-2 sm:py-2.5 hover:shadow-lg"
@@ -221,6 +221,12 @@ export default function CompleteHome() {
                     Get Quote & Book Service
                     <ArrowRight className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
+                  <Link
+                    href={`/services/${service.slug}`}
+                    className="block text-center text-admin-primary hover:text-admin-secondary transition-colors font-medium text-xs sm:text-sm py-1 sm:py-2"
+                  >
+                    View Detailed Information →
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -247,14 +253,14 @@ export default function CompleteHome() {
               <CardContent className="p-0 h-full flex flex-col">
                 {/* Enhanced image section with aspect-video */}
                 <div className="aspect-video overflow-hidden relative flex-shrink-0 rounded-t-2xl">
-                  <Image 
-                    src={pkg.image || "/placeholder.svg"} 
-                    alt={pkg.title} 
-                    fill 
-                    className="object-cover group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-500" 
+                  <Image
+                    src={pkg.image || "/placeholder.svg"}
+                    alt={pkg.title}
+                    fill
+                    className="object-cover group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                  
+
                   <div className="absolute top-4 right-4">
                     <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
                       Professional
@@ -269,7 +275,7 @@ export default function CompleteHome() {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Enhanced content section */}
                 <div className="p-4 sm:p-6 md:p-8 flex flex-col flex-grow">
                   <div className="flex-grow">
@@ -279,7 +285,7 @@ export default function CompleteHome() {
                     <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 md:mb-6 leading-relaxed line-clamp-3">
                       {pkg.description}
                     </p>
-                    
+
                     {/* Rating section */}
                     <div className="flex items-center justify-between mb-4 sm:mb-6">
                       <span className="text-lg sm:text-xl md:text-2xl font-bold text-admin-primary">
@@ -294,7 +300,7 @@ export default function CompleteHome() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Button always at bottom */}
                   <div className="mt-auto">
                     <Button
