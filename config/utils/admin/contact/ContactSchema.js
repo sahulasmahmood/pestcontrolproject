@@ -73,11 +73,6 @@ const contactSchema = new mongoose.Schema(
     },
     
     // Pest Control Services Information
-    servicesOffered: {
-      type: String,
-      trim: true,
-      maxlength: 500,
-    },
     branchOffices: {
       type: String,
       trim: true,

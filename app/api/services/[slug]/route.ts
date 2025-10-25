@@ -2,23 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/config/models/connectDB";
 import Service from "@/config/utils/admin/services/serviceSchema";
 
-// GET - Fetch service by slug for public use
+// GET - Fetch single service by slug
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     await connectDB();
+
     const { slug } = await params;
 
-    // Find active service by slug
-    const service = await Service.findOne({ 
-      slug, 
-      status: "active", 
-      isDeleted: false 
+    // Find service by slug
+    const service = await Service.findOne({
+      slug,
+      status: "active",
+      isDeleted: false
     })
-    .select('-isDeleted -__v') // Exclude internal fields
-    .lean();
+      .select('-isDeleted -__v')
+      .lean();
 
     if (!service) {
       return NextResponse.json(
@@ -30,8 +31,10 @@ export async function GET(
       );
     }
 
-    // Increment views count
-    await Service.findByIdAndUpdate(service._id, { $inc: { views: 1 } });
+    // Increment view count
+    await Service.findByIdAndUpdate(service._id, {
+      $inc: { views: 1 }
+    });
 
     return NextResponse.json({
       success: true,
