@@ -50,6 +50,7 @@ function NavbarContent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -336,26 +337,110 @@ function NavbarContent() {
               className="lg:hidden bg-white/98 backdrop-blur-xl border-t border-gray-100 shadow-xl"
             >
               <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-3 sm:space-y-4">
-                {navItems.map((item, index) => (
-                  <motion.div
-                    key={item.name}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Link
-                      href={item.href}
-                      className={`block transition-all font-semibold text-base sm:text-lg py-2.5 sm:py-3 px-2 rounded-lg hover:bg-gray-50 ${
-                        isActive(item.href)
-                          ? "text-transparent bg-clip-text bg-admin-gradient"
-                          : "text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-admin-gradient"
-                      }`}
-                      onClick={() => setIsOpen(false)}
+                {navItems.map((item, index) => {
+                  if (item.name === "Services") {
+                    return (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        {/* Services with dropdown in mobile */}
+                        <div>
+                          <button
+                            onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
+                            className={`w-full flex items-center justify-between transition-all font-semibold text-base sm:text-lg py-2.5 sm:py-3 px-2 rounded-lg hover:bg-gray-50 ${
+                              isActive(item.href)
+                                ? "text-transparent bg-clip-text bg-admin-gradient"
+                                : "text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-admin-gradient"
+                            }`}
+                          >
+                            <span>{item.name}</span>
+                            <ChevronDown
+                              className={`h-4 w-4 text-admin-primary transition-transform duration-200 ${
+                                isMobileServicesOpen ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+                          
+                          {/* Mobile Services Dropdown */}
+                          <AnimatePresence>
+                            {isMobileServicesOpen && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="pl-4 pt-2 space-y-2 max-h-64 overflow-y-auto">
+                                  {/* View All Services Link */}
+                                  <Link
+                                    href="/services"
+                                    className="block py-2 px-3 text-sm font-medium text-admin-primary hover:bg-gray-50 rounded-lg"
+                                    onClick={() => {
+                                      setIsOpen(false);
+                                      setIsMobileServicesOpen(false);
+                                    }}
+                                  >
+                                    View All Services
+                                  </Link>
+                                  
+                                  {/* Individual Services */}
+                                  {servicesLoading ? (
+                                    <div className="py-2 px-3 text-sm text-gray-500">
+                                      Loading services...
+                                    </div>
+                                  ) : pestControlServices.length === 0 ? (
+                                    <div className="py-2 px-3 text-sm text-gray-500">
+                                      No services available
+                                    </div>
+                                  ) : (
+                                    pestControlServices.map((service) => (
+                                      <Link
+                                        key={service.slug}
+                                        href={`/services/${service.slug}`}
+                                        className="block py-2 px-3 text-sm text-gray-600 hover:text-admin-primary hover:bg-gray-50 rounded-lg"
+                                        onClick={() => {
+                                          setIsOpen(false);
+                                          setIsMobileServicesOpen(false);
+                                        }}
+                                      >
+                                        {service.name}
+                                      </Link>
+                                    ))
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </motion.div>
+                    );
+                  }
+
+                  return (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
                     >
-                      {item.name}
-                    </Link>
-                  </motion.div>
-                ))}
+                      <Link
+                        href={item.href}
+                        className={`block transition-all font-semibold text-base sm:text-lg py-2.5 sm:py-3 px-2 rounded-lg hover:bg-gray-50 ${
+                          isActive(item.href)
+                            ? "text-transparent bg-clip-text bg-admin-gradient"
+                            : "text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-admin-gradient"
+                        }`}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
