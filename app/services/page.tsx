@@ -7,15 +7,6 @@ import { ServicesPageSeo } from "@/components/Services/ServicesSeo";
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// SEO metadata
-export const metadata = {
-  title: "Pest Control Services & Pricing - Perfect Pest Control",
-  description:
-    "Professional pest control services with transparent pricing. Residential and commercial pest management, termite control, rodent removal, and eco-friendly solutions.",
-  keywords:
-    "pest control services, pest control pricing, termite control cost, rodent removal rates, commercial pest control, residential pest management",
-};
-
 // Fetch services from API
 async function getServices() {
   try {
