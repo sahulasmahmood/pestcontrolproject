@@ -60,7 +60,6 @@ import {
   Loader2,
   Eye,
   Download,
-  Car,
   Package,
   Settings,
   User,
@@ -1171,11 +1170,6 @@ export default function LeadManager() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            {lead.serviceType.includes("Commercial") ? (
-                              <Package className="h-4 w-4 text-purple-600" />
-                            ) : (
-                              <Car className="h-4 w-4 text-blue-600" />
-                            )}
                             <span className="font-medium">{lead.serviceType}</span>
                           </div>
                         </TableCell>
