@@ -46,7 +46,7 @@ const staticContactInfo = {
 
 const staticThemeData = {
   siteName: "Perfect Pest Control",
-  logo: "/images/perfect-pest-control-logo.png"
+  logo: "/perfect-pest-control-logo.png"
 }
 
 export default function Footer() {

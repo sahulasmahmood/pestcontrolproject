@@ -62,13 +62,13 @@ I'm interested in booking this package. Please provide:
 
 Thank you!`;
 
-    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919876543210';
+    const whatsappNumber = contactInfo?.whatsappNumber || contactInfo?.primaryPhone || '919626341555';
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleCallNow = () => {
-    const phoneNumber = contactInfo?.primaryPhone || '+919876543210';
+    const phoneNumber = contactInfo?.primaryPhone || '+919626341555';
     window.open(`tel:${phoneNumber}`, '_self');
   };
 
