@@ -302,7 +302,7 @@ export default function Footer() {
             {/* Desktop QR Code - Hidden on mobile */}
             <div className="hidden md:block bg-white p-4 rounded-xl mb-4 w-fit">
               <QRCodeSVG
-                value={`upi://pay?pa=perfectpest@sbi&pn=${encodeURIComponent("Perfect Pest Control")}`}
+                value={`upi://pay?pa=sheikaaa17noor-1@oksbi&pn=${encodeURIComponent("Perfect Pest Control")}`}
                 size={150}
                 level="H"
                 className="rounded-lg"
@@ -313,7 +313,7 @@ export default function Footer() {
             <div className="space-y-4">
               {/* Mobile UPI App Link */}
               <a
-                href="upi://pay?pa=perfectpest@sbi&pn=Perfect%20Pest%20Control"
+                href="upi://pay?pa=sheikaaa17noor-1@oksbi&pn=Perfect%20Pest%20Control"
                 className="md:hidden flex items-center gap-3 p-3 bg-green-500/10 hover:bg-green-500/20 rounded-lg transition-all duration-300 border border-green-500/20 hover:border-green-500/30"
               >
                 <IndianRupee className="h-5 w-5 text-green-500" />
@@ -327,14 +327,15 @@ export default function Footer() {
               {/* Copyable UPI ID */}
               <div className="flex flex-col gap-2">
                 <div className="text-sm font-medium text-gray-300">UPI ID:</div>
-                <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
-                  <span className="text-sm font-mono text-gray-300">perfectpest@sbi</span>
+                <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg min-w-0">
+                  <span className="text-xs font-mono text-gray-300 truncate">sheikaaa17noor-1@oksbi</span>
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="h-8 w-8 hover:bg-white/10"
+                    className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
+                    title="Copy UPI ID"
                     onClick={() => {
-                      navigator.clipboard.writeText("perfectpest@sbi");
+                      navigator.clipboard.writeText("sheikaaa17noor-1@oksbi");
                       toast({
                         title: "UPI ID Copied",
                         description: "UPI ID has been copied to clipboard",
@@ -349,21 +350,21 @@ export default function Footer() {
               {/* Payment Apps Links */}
               <div className="flex flex-wrap gap-2">
                 <a
-                  href="phonepe://pay?pa=perfectpest@sbi&pn=Perfect%20Pest%20Control"
+                  href="phonepe://pay?pa=sheikaaa17noor-1@oksbi&pn=Perfect%20Pest%20Control"
                   className="flex items-center gap-2 px-4 py-2.5 bg-admin-gradient hover:opacity-90 rounded-lg transition-all duration-300 group"
                 >
                   <span className="text-xs font-medium text-white">PhonePe</span>
                   <ArrowRight className="h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition-all" />
                 </a>
                 <a
-                  href="gpay://upi/pay?pa=perfectpest@sbi&pn=Perfect%20Pest%20Control"
+                  href="gpay://upi/pay?pa=sheikaaa17noor-1@oksbi&pn=Perfect%20Pest%20Control"
                   className="flex items-center gap-2 px-4 py-2.5 bg-admin-gradient hover:opacity-90 rounded-lg transition-all duration-300 group"
                 >
                   <span className="text-xs font-medium text-white">Google Pay</span>
                   <ArrowRight className="h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition-all" />
                 </a>
                 <a
-                  href="paytmmp://pay?pa=perfectpest@sbi&pn=Perfect%20Pest%20Control"
+                  href="paytmmp://pay?pa=sheikaaa17noor-1@oksbi&pn=Perfect%20Pest%20Control"
                   className="flex items-center gap-2 px-4 py-2.5 bg-admin-gradient hover:opacity-90 rounded-lg transition-all duration-300 group"
                 >
                   <span className="text-xs font-medium text-white">Paytm</span>
