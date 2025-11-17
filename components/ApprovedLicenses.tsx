@@ -9,59 +9,63 @@ import Image from "next/image";
 const staticLicenses = [
   {
     id: "1",
-    name: "Pest Control License",
-    authority: "Tamil Nadu Pollution Control Board",
-    image: "/images/licenses/pest-control-license.png",
-    description: "Official pest control service license"
+    name: "Government License",
+    authority: "Government of India",
+    description: "Official government pest control license"
   },
   {
     id: "2", 
-    name: "Environmental Clearance",
-    authority: "Ministry of Environment",
-    image: "/images/licenses/environmental-clearance.png",
-    description: "Environmental safety certification"
+    name: "Principle Certificate",
+    authority: "Pest Control Authority",
+    description: "Professional principle certification"
   },
   {
     id: "3",
-    name: "Chemical Handling License",
-    authority: "Department of Factories",
-    image: "/images/licenses/chemical-handling.png", 
-    description: "Safe chemical handling certification"
-  },
-  {
-    id: "4",
-    name: "ISO 9001:2015",
-    authority: "Quality Management System",
-    image: "/images/licenses/iso-9001.png",
-    description: "International quality standard certification"
-  },
-  {
-    id: "5",
-    name: "Trade License",
-    authority: "Municipal Corporation",
-    image: "/images/licenses/trade-license.png",
-    description: "Municipal trade license"
-  },
-  {
-    id: "6",
-    name: "GST Registration",
+    name: "GST Certificate",
     authority: "Government of India",
-    image: "/images/licenses/gst-certificate.png",
     description: "Goods and Services Tax registration"
   },
   {
+    id: "4",
+    name: "MSME Certificate",
+    authority: "Ministry of MSME",
+    description: "Micro, Small & Medium Enterprise certification"
+  },
+  {
+    id: "5",
+    name: "ISO Certificate",
+    authority: "International Organization for Standardization",
+    description: "ISO quality management certification"
+  },
+  {
+    id: "6",
+    name: "IAF Certificate",
+    authority: "International Accreditation Forum",
+    description: "International accreditation certification"
+  },
+  {
     id: "7",
-    name: "Fire Safety Certificate",
-    authority: "Fire Department",
-    image: "/images/licenses/fire-safety.png",
-    description: "Fire safety compliance certificate"
+    name: "TNPMA Certificate",
+    authority: "Tamil Nadu Pest Management Association",
+    description: "Tamil Nadu pest management association certification"
   },
   {
     id: "8",
-    name: "Professional Liability Insurance",
-    authority: "Insurance Company",
-    image: "/images/licenses/insurance.png",
-    description: "Professional liability coverage"
+    name: "Fitness Certificate",
+    authority: "Health & Safety Department",
+    description: "Health and safety fitness certification"
+  },
+  {
+    id: "9",
+    name: "Training Certificate",
+    authority: "Professional Training Institute",
+    description: "Professional training and competency certification"
+  },
+  {
+    id: "10",
+    name: "Material Safety Data Sheet",
+    authority: "Chemical Safety Authority",
+    description: "Material safety data sheet compliance"
   }
 ];
 
@@ -152,13 +156,7 @@ export default function ApprovedLicenses({ showAll = false, limit = 8 }: Approve
           </p>
         </motion.div>
 
-        <div className={`grid gap-3 sm:gap-4 md:gap-6 justify-center ${
-          displayLicenses.length <= 2 
-            ? 'grid-cols-2 max-w-md mx-auto' 
-            : displayLicenses.length <= 4
-            ? 'grid-cols-2 sm:grid-cols-4 max-w-3xl mx-auto'
-            : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4'
-        }`}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 md:gap-6 justify-center max-w-6xl mx-auto">
           {displayLicenses.map((license, index) => (
             <motion.div
               key={license.id}
@@ -168,37 +166,20 @@ export default function ApprovedLicenses({ showAll = false, limit = 8 }: Approve
               viewport={{ once: true }}
               className="group"
             >
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 sm:p-4 md:p-6 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-white/30 h-full flex flex-col items-center text-center hover:-translate-y-2">
-                {/* License Logo/Image */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 mb-4 relative bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                  <Image
-                    src={license.image}
-                    alt={license.name}
-                    fill
-                    className="object-contain p-2"
-                    onError={(e) => {
-                      // Fallback to icon if image fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      target.nextElementSibling?.classList.remove('hidden');
-                    }}
-                  />
-                  <div className="hidden text-admin-primary">
-                    <Award className="h-8 w-8 sm:h-10 sm:w-10" />
-                  </div>
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-white/30 h-full flex flex-col items-center text-center hover:-translate-y-2">
+                {/* Certificate Icon */}
+                <div className="mb-4">
+                  <Award className="h-10 w-10 sm:h-12 sm:w-12 text-admin-primary" />
                 </div>
 
                 {/* License Info */}
                 <div className="flex-grow flex flex-col justify-between">
                   <div>
-                    <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-2 line-clamp-2">
+                    <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-2 line-clamp-2">
                       {license.name}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-2 line-clamp-2">
+                    <p className="text-xs text-gray-600 mb-2 line-clamp-2">
                       {license.authority}
-                    </p>
-                    <p className="text-xs text-gray-500 line-clamp-2">
-                      {license.description}
                     </p>
                   </div>
                   
@@ -223,17 +204,36 @@ export default function ApprovedLicenses({ showAll = false, limit = 8 }: Approve
           transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto border border-white/20">
-            <div className="flex items-center justify-center mb-4">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 max-w-4xl mx-auto border border-white/20">
+            <div className="flex items-center justify-center mb-6">
               <Shield className="h-8 w-8 text-green-300 mr-3" />
               <h3 className="text-xl sm:text-2xl font-bold text-white">
                 Trusted & Certified
               </h3>
             </div>
-            <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-              Perfect Pest Control operates with all necessary licenses and certifications, 
-              ensuring safe, legal, and professional pest control services for your peace of mind.
-            </p>
+            
+            {/* Certification Logos */}
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
+              {[
+                { src: "/images/certifications/iso-logo.png", alt: "ISO 9001:2015" },
+                { src: "/images/certifications/bni-logo.png", alt: "BNI Certified" },
+                { src: "/images/certifications/iaf-logo.png", alt: "IAF Accredited" },
+                { src: "/images/certifications/egac-logo.png", alt: "EGAC Accredited" },
+                { src: "/images/certifications/msme-logo.png", alt: "MSME Certificate" },
+                { src: "/images/certifications/TNPMA-logo.png", alt: "TNPMA Certificate" }
+              ].map((logo, index) => (
+                <div key={index} className="flex items-center justify-center">
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-white rounded-full overflow-hidden flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+                    <Image
+                      src={logo.src}
+                      alt={logo.alt}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </motion.div>
       </div>
