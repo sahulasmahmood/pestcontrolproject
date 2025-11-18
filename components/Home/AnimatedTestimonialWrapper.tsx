@@ -35,13 +35,22 @@ export const AnimatedTestimonialWrapper = ({ testimonials = [] }: AnimatedTestim
     role: `${testimonial.location} • ${testimonial.servicesType}`,
   }));
 
-  // Split testimonials into three columns
-  const firstColumn = transformedTestimonials.slice(0, Math.ceil(transformedTestimonials.length / 3));
-  const secondColumn = transformedTestimonials.slice(
-    Math.ceil(transformedTestimonials.length / 3),
-    Math.ceil((transformedTestimonials.length / 3) * 2)
-  );
-  const thirdColumn = transformedTestimonials.slice(Math.ceil((transformedTestimonials.length / 3) * 2));
+  // Responsive column distribution
+  // Mobile: 1 column, Tablet: 2 columns, Desktop: 3 columns
+  
+  // For 1 column (mobile) - all testimonials
+  const singleColumn = transformedTestimonials;
+  
+  // For 2 columns (tablet) - split in half
+  const halfPoint = Math.ceil(transformedTestimonials.length / 2);
+  const twoColFirst = transformedTestimonials.slice(0, halfPoint);
+  const twoColSecond = transformedTestimonials.slice(halfPoint);
+  
+  // For 3 columns (desktop) - distribute evenly
+  const thirdPoint = Math.ceil(transformedTestimonials.length / 3);
+  const threeColFirst = transformedTestimonials.filter((_, index) => index % 3 === 0);
+  const threeColSecond = transformedTestimonials.filter((_, index) => index % 3 === 1);
+  const threeColThird = transformedTestimonials.filter((_, index) => index % 3 === 2);
 
   if (activeTestimonials.length === 0) {
     return (
@@ -94,18 +103,24 @@ export const AnimatedTestimonialWrapper = ({ testimonials = [] }: AnimatedTestim
           </p>
         </motion.div>
 
-        <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
-          <TestimonialsColumn testimonials={firstColumn} duration={15} />
-          <TestimonialsColumn
-            testimonials={secondColumn}
-            className="hidden md:block"
-            duration={19}
-          />
-          <TestimonialsColumn
-            testimonials={thirdColumn}
-            className="hidden lg:block"
-            duration={17}
-          />
+        {/* Responsive columns: 1 on mobile, 2 on tablet, 3 on desktop */}
+        
+        {/* Mobile: Single column with all testimonials */}
+        <div className="flex md:hidden justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+          <TestimonialsColumn testimonials={singleColumn} duration={25} />
+        </div>
+
+        {/* Tablet: Two columns */}
+        <div className="hidden md:flex lg:hidden justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+          <TestimonialsColumn testimonials={twoColFirst} duration={18} />
+          <TestimonialsColumn testimonials={twoColSecond} duration={22} />
+        </div>
+
+        {/* Desktop: Three columns */}
+        <div className="hidden lg:flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+          <TestimonialsColumn testimonials={threeColFirst} duration={15} />
+          <TestimonialsColumn testimonials={threeColSecond} duration={19} />
+          <TestimonialsColumn testimonials={threeColThird} duration={17} />
         </div>
       </div>
     </section>
