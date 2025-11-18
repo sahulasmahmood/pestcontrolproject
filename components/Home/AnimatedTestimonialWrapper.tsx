@@ -1,8 +1,8 @@
 "use client";
 
-import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
+import { TestimonialsColumn } from "@/components/ui/testimonials-columns-1";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Star } from "lucide-react";
 import { BugPattern } from "@/components/ui/bug-pattern";
 
@@ -27,15 +27,21 @@ export const AnimatedTestimonialWrapper = ({ testimonials = [] }: AnimatedTestim
     (testimonial) => testimonial.status === "published"
   );
 
-  // Transform your testimonial data to match AnimatedTestimonials format
-  const transformedTestimonials = activeTestimonials.map((testimonial, index) => ({
-    quote: testimonial.content,
+  // Transform your testimonial data to match TestimonialsColumn format
+  const transformedTestimonials = activeTestimonials.map((testimonial) => ({
+    text: testimonial.content,
+    image: testimonial.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
     name: testimonial.name,
-    designation: `${testimonial.location} • ${testimonial.servicesType}`,
-    src: testimonial.avatar || "/placeholder.svg",
-    id: testimonial._id || `testimonial-${index}`, // Add unique identifier
-    rating: testimonial.rating, // Add rating
+    role: `${testimonial.location} • ${testimonial.servicesType}`,
   }));
+
+  // Split testimonials into three columns
+  const firstColumn = transformedTestimonials.slice(0, Math.ceil(transformedTestimonials.length / 3));
+  const secondColumn = transformedTestimonials.slice(
+    Math.ceil(transformedTestimonials.length / 3),
+    Math.ceil((transformedTestimonials.length / 3) * 2)
+  );
+  const thirdColumn = transformedTestimonials.slice(Math.ceil((transformedTestimonials.length / 3) * 2));
 
   if (activeTestimonials.length === 0) {
     return (
@@ -53,31 +59,24 @@ export const AnimatedTestimonialWrapper = ({ testimonials = [] }: AnimatedTestim
   }
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
-      {/* Enhanced Background with modern pest control pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-admin-primary/5 via-transparent to-admin-secondary/5"></div>
+    <section className="bg-background my-20 relative overflow-hidden">
+      {/* Background patterns - behind testimonial cards */}
+      <div className="absolute inset-0 pointer-events-none">
+        <BugPattern
+          width={60}
+          height={60}
+          glow={true}
+          density="low"
+          className="text-admin-primary/20 opacity-40"
+        />
+      </div>
       
-         {/* Modern Bug Pattern Background */}
-      <BugPattern
-        width={60}
-        height={60}
-        glow={true}
-        density="medium"
-        className="text-admin-primary/30 opacity-70"
-      />
-      
-      {/* Subtle gradient overlays for depth */}
-      <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-transparent to-transparent pointer-events-none"></div>
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-admin-primary/8 to-transparent pointer-events-none"></div>
-      
-      {/* Additional subtle pattern enhancement */}
-      <div className="absolute inset-0 bg-gradient-to-br from-admin-secondary/5 via-transparent to-admin-primary/5 pointer-events-none"></div>
-      <div className="container mx-auto px-2 sm:px-4 md:px-6 relative">
+      <div className="container z-10 mx-auto relative">
         <motion.div
           className="text-center mb-12 sm:mb-16 md:mb-20"
-          initial={{ opacity: 0, y: 60 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
         >
           <Badge className="mb-4 sm:mb-6 bg-admin-gradient text-white px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm">
@@ -95,11 +94,19 @@ export const AnimatedTestimonialWrapper = ({ testimonials = [] }: AnimatedTestim
           </p>
         </motion.div>
 
-        {/* Use the AnimatedTestimonials component with autoplay enabled */}
-        <AnimatedTestimonials 
-          testimonials={transformedTestimonials} 
-          autoplay={true}
-        />
+        <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+          <TestimonialsColumn testimonials={firstColumn} duration={15} />
+          <TestimonialsColumn
+            testimonials={secondColumn}
+            className="hidden md:block"
+            duration={19}
+          />
+          <TestimonialsColumn
+            testimonials={thirdColumn}
+            className="hidden lg:block"
+            duration={17}
+          />
+        </div>
       </div>
     </section>
   );
