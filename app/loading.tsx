@@ -35,10 +35,6 @@ export default function Loading() {
       {/* Main Content Skeleton */}
       <div className="flex-1 flex items-center justify-center py-20">
         <div className="text-center">
-          <div className="relative">
-            <div className="w-16 h-16 border-4 border-admin-primary/20 border-t-admin-primary rounded-full animate-spin mx-auto mb-4"></div>
-            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-admin-primary/40 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
-          </div>
           <Skeleton className="h-6 w-48 mx-auto mb-2" />
           <Skeleton className="h-4 w-32 mx-auto" />
         </div>
